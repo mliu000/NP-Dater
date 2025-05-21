@@ -2,7 +2,7 @@ const { execFile } = require("child_process");
 const path = require("path");
 
 function callSolver() {
-  const solverPath = path.join(__dirname, "../solver/main.exe");
+  const solverPath = path.join(__dirname, "../cpp/cpp_runner/main.exe");
 
   return new Promise((resolve, reject) => {
     execFile(solverPath, [], (error, stdout, stderr) => {

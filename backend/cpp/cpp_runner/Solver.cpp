@@ -1,14 +1,21 @@
 #include <iostream>
-#include "Json.hpp"
+#include  "../utility/json.hpp"
 using json = nlohmann::json;
 using namespace std;
 
+/* 
+Mu Ye Liu - May 2025
+
+Represents the 
+*/
 class Result {
 public:
     int score;
     string status;
 
-    Result(int s, string st) : score(s), status(st) {}
+    Result(int s, string st) : score(s), status(st) {
+
+    }
 };
 
 // Let the library know how to convert your class to JSON
