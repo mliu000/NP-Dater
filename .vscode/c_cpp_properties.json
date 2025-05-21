@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "StrawberryGCC",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Strawberry/c/include/c++/13.2.0",
+                "C:/Strawberry/c/include/c++/13.2.0/x86_64-w64-mingw32",
+                "C:/Strawberry/c/x86_64-w64-mingw32/include",
+                "C:/Strawberry/c/include"
+            ],
+            "defines": [],
+            "compilerPath": "C:/Strawberry/c/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
