@@ -43,3 +43,15 @@ $(OBJDIR):
 clean:
 	rm -f $(TARGET)
 	rm -rf $(OBJDIR)
+
+# Test build
+TEST_TARGET = test.exe
+TEST_SRC = ../test/CellTest.cpp ../test/DateBoardGridTest.cpp
+TEST_OBJ = $(OBJDIR)/Cell.o $(OBJDIR)/DateBoardGrid.o
+
+test: $(TEST_TARGET)
+
+$(TEST_TARGET): $(TEST_SRC) $(TEST_OBJ)
+	@echo "Building test.exe..."
+	$(CXX) $(CXXFLAGS) $^ -o $(TEST_TARGET)
+	./$(TEST_TARGET)
