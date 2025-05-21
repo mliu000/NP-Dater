@@ -1,14 +1,14 @@
 import '../Css/App.css';
 import { useState } from 'react';
-import { solvePuzzle } from './Solver';
+import { getSolverResult } from './Solver';
 
 function App() {
   const [result, setResult] = useState("");
 
   const handleClick = async () => {
     try {
-      const res = await solvePuzzle({ input: "example data" });
-      setResult(res.solution);
+      const res = await getSolverResult();
+      setResult(res.score);
     } catch (err) {
       console.error("Error calling backend:", err);
       setResult("Error occurred");

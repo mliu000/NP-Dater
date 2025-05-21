@@ -1,13 +1,23 @@
 const { execFile } = require("child_process");
 const path = require("path");
 
-function callSolver(command, input) {
-  const solverPath = path.join(__dirname, "../solver/solver.exe");
+function callSolver() {
+  const solverPath = path.join(__dirname, "../solver/main.exe");
 
   return new Promise((resolve, reject) => {
-    execFile(solverPath, [command, input], (err, stdout, stderr) => {
-      if (err) return reject(stderr);
-      resolve(stdout.trim());
+    execFile(solverPath, [], (error, stdout, stderr) => {
+      if (error) {
+        console.error("C++ Solver Error:", stderr);
+        return reject({ error: "Solver execution failed", details: stderr });
+      }
+
+      try {
+        const json = JSON.parse(stdout);
+        resolve(json);
+      } catch (parseErr) {
+        console.error("Invalid JSON output from solver:", stdout);
+        reject({ error: "Invalid JSON from solver", raw: stdout });
+      }
     });
   });
 }
