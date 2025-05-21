@@ -4,16 +4,11 @@ const cors = require("cors");
 const app = express();
 const PORT = 3001;
 
-// Middleware
-app.use(cors());               // Allow frontend requests
-app.use(express.json());       // Parse JSON request bodies
+const apiRoute = require("./api/Api");
 
-// Example endpoint
-app.post("/solve", (req, res) => {
-  const input = req.body.input;
-  // TODO: call C++ solver later
-  res.json({ result: `Solving for: ${input}` });
-});
+app.use(cors());           
+app.use(express.json());       
+app.use("/api", apiRoute);
 
 // Start server
 app.listen(PORT, () => {
