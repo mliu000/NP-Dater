@@ -6,14 +6,24 @@
 
 using namespace std;
 
-TEST_CASE("Test") {
-    REQUIRE(3 == 3);
+/*
+Mu Ye Liu - May 2025
+
+Represents test file for Cell
+*/
+
+TEST_CASE("Cell Constructor Test") {
+    Cell c(false, "");
+    REQUIRE(c.getBlocked() == false);
+    REQUIRE(c.getSpecialAttribute() == "");
 }
 
-TEST_CASE("2") {
-    REQUIRE(2 == 2);
+TEST_CASE("Cell Setter test") {
+    Cell c1(false, "");
+    Cell c2(false, "");
+    c1.setSpecialAttribute("May");
+    c2.setBlocked(true);
+    REQUIRE(c1.getSpecialAttribute() == "May");
+    REQUIRE(c2.getBlocked() == true);
 }
 
-TEST_CASE("3") {
-    REQUIRE(1 == 1);
-}
