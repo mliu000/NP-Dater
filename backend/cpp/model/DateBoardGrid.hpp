@@ -3,7 +3,9 @@
 
 #include <vector>
 #include <string>
-#include "Cell.hpp"
+#include <functional>
+#include <unordered_set>
+#include "GridCoord.hpp"
 #include  "../utility/json.hpp"
 using json = nlohmann::json;
 
@@ -23,18 +25,19 @@ public:
 
     int getWidth() const;
     int getHeight() const;
-    vector<vector<Cell>>& getCells();
-    const vector<vector<Cell>>& getCells() const;
+    unordered_set<GridCoord>& getCoords();
+    const unordered_set<GridCoord>& getCoords() const;
 
 private:
     // Width and height of the dateboard
     const int width, height;
 
-    // The cells of the board
-    vector<vector<Cell>> cells;
+    // The coordinates of the board
+    unordered_set<GridCoord> coords;
 
     // Generates the cells of the grid
-    void generateCells();
+    void generateCoords();
+
 };
 
 // To convert into json

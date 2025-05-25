@@ -4,16 +4,14 @@ using namespace std;
 
 // Constructor
 DateBoardGrid::DateBoardGrid(int w, int h) : width(w), height(h) {
-    generateCells();
+    generateCoords();
 }
 
-void DateBoardGrid::generateCells() {
+void DateBoardGrid::generateCoords() {
     for (int x = 0; x < width; x++) {
-        vector<Cell> innerCellList;
         for (int y = 0; y < height; y++) {
-            innerCellList.push_back(Cell(false, ""));
+            coords.insert(GridCoord(x, y, false, ""));
         }
-        cells.push_back(innerCellList);
     }
 }
 
@@ -22,9 +20,9 @@ void DateBoardGrid::generateCells() {
 int DateBoardGrid::getHeight() const { return height; }
 int DateBoardGrid::getWidth() const { return width; }
 
-vector<vector<Cell>>& DateBoardGrid::getCells() { return cells; }
-const vector<vector<Cell>>& DateBoardGrid::getCells() const { return cells; }
+unordered_set<GridCoord>& DateBoardGrid::getCoords() { return coords; }
+const unordered_set<GridCoord>& DateBoardGrid::getCoords() const { return coords; }
 
 void to_json(json& j, const DateBoardGrid& g) {
-    j = json{{"score", g.getCells()[0][0].getSpecialAttribute()}, {"status", g.getHeight()}};
+    j = json{{"score", g.getCoords().find(GridCoord(0, 0, false, ""))->getSpecialAttribute()}, {"status", g.getHeight()}};
 }

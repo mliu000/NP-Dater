@@ -1,20 +1,25 @@
-#ifndef CELL_HPP
-#define CELL_HPP
+#ifndef COORD_HPP
+#define COORD_HPP
 
 #include <string>
 
 using namespace std;
 
-class Cell {
+/*
+Mu Ye Liu - May 2025
+
+Represents the coord class for 
+*/
+class Coord {
 public:
 
     // Constructor
     // REQUIRES: s is an int (in string form) from "1" to "31", a 3-letter day/month, or ""
-    Cell(bool b, const string& s);
+    Coord(bool b, const string& s);
 
     ///// SETTERS /////
 
-    // Sets the blocked status
+    // Sets the blocked status of the coord
     void setBlocked(bool b);
 
     /* Sets the special attribute 
@@ -29,6 +34,8 @@ public:
     string getSpecialAttribute() const;
 
 private:
+    // DO NOT IMPLEMENT. This is simply to mark this superclass as abstract to prevent insantiation.
+    virtual void __abstract_maker__();
 
     // Represents whether or not the cell is blocked
     bool blocked;

@@ -1,16 +1,22 @@
 #include "../model/DateBoardGrid.hpp"
-#include "../model/Cell.hpp" 
+#include "../model/GridCoord.hpp" 
 
 #include <iostream>
 #include <string>
+#include <unordered_set>
+
 
 using namespace std;
 
 int main() {
     DateBoardGrid* d = new DateBoardGrid(10, 15);
 
-    vector<vector<Cell>>& grid = d->getCells();
-    grid[0][0].setSpecialAttribute("Jun");
+    unordered_set<GridCoord>& coords = d->getCoords();
+    auto it = coords.find(GridCoord(0, 0, false, ""));
+    GridCoord copy = *it;
+    coords.erase(it);
+    copy.setSpecialAttribute("May");
+    coords.insert(copy);
 
     json j = *d;
 
