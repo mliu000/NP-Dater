@@ -12,5 +12,5 @@ bool GridCoord::operator==(const GridCoord& other) const {
     return x == other.getX() && y == other.getY();
 }
 
-void Coord::__abstract_maker__() {}  // Add this in a .cpp file
+void Coord::__abstract_maker__() {}  // DO NOT CALL
 

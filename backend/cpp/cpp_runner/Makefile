@@ -50,8 +50,12 @@ clean:
 
 # Test build
 TEST_TARGET = test.exe
-TEST_SRC = ../test/CellTest.cpp ../test/DateBoardGridTest.cpp
-TEST_OBJ = $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o
+
+COORD_TEST = ../test/CoordTest.cpp
+DATEBOARDGRID_TEST = ../test/DateBoardGridTest.cpp
+
+TEST_SRC = $(COORD_TEST) $(DATEBOARDGRID_TEST)
+TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o
 
 test: $(TEST_TARGET)
 
