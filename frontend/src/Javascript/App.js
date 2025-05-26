@@ -8,7 +8,7 @@ function App() {
   const handleClick = async () => {
     try {
       const res = await getSolverResult();
-      setResult(res.score);
+      setResult(res[0].status);
     } catch (err) {
       console.error("Error calling backend:", err);
       setResult("Error occurred");

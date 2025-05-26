@@ -7,6 +7,14 @@ function callSolver() {
   return new Promise((resolve, reject) => {
     const cpp = spawn(solverPath);
 
+    const payload = {
+      x: 13, 
+      y: 17
+    }
+
+    cpp.stdin.write(JSON.stringify(payload));
+    cpp.stdin.end();
+
     let stdout = '';
     let stderr = '';
 
