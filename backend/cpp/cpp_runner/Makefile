@@ -11,7 +11,9 @@ MAIN = Main.cpp
 COORD = ../model/Coord.cpp
 DATEBOARDGRID = ../model/DateBoardGrid.cpp
 GRIDCOORD = ../model/GridCoord.cpp
-SRC = $(MAIN) $(COORD) $(DATEBOARDGRID) $(GRIDCOORD)
+TILE = ../model/Tile.cpp
+GRIDTILE = ../model/GridTile.cpp
+SRC = $(MAIN) $(COORD) $(DATEBOARDGRID) $(GRIDCOORD) $(TILE) $(GRIDTILE)
 
 # Get base names like Cell.o, Main.o
 OBJ_NAMES = $(notdir $(SRC:.cpp=.o))
@@ -39,6 +41,12 @@ $(OBJDIR)/DateBoardGrid.o: $(DATEBOARDGRID) | $(OBJDIR)
 $(OBJDIR)/GridCoord.o: $(GRIDCOORD) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(OBJDIR)/Tile.o: $(TILE) | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJDIR)/GridTile.o: $(GRIDTILE) | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 # Create build directory if it doesn't exist
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -51,11 +59,12 @@ clean:
 # Test build
 TEST_TARGET = test.exe
 
-COORD_TEST = ../test/CoordTest.cpp
+GRIDCOORD_TEST = ../test/GridCoordTest.cpp
+GRIDTILE_TEST = ../test/GridTileTest.cpp
 DATEBOARDGRID_TEST = ../test/DateBoardGridTest.cpp
 
-TEST_SRC = $(COORD_TEST) $(DATEBOARDGRID_TEST)
-TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o
+TEST_SRC = $(GRIDCOORD_TEST) $(DATEBOARDGRID_TEST) $(GRIDTILE_TEST)
+TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o $(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o
 
 test: $(TEST_TARGET)
 

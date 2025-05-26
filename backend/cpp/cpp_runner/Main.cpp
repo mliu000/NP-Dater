@@ -24,6 +24,7 @@ int main() {
             int y = j["y"];
 
             DateBoardGrid d(x, y);
+            d.blockCoordinate(x, y);
 
             json j = d;
 

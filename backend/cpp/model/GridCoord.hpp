@@ -19,6 +19,11 @@ public:
     
     // Override equals
     bool operator==(const GridCoord& otherCoord) const;
+
+protected: 
+
+    // DO NOT CALL. This is simply to mark this superclass as abstract to prevent insantiation.
+    virtual void __abstract_marker__() override; 
 };
 
 // Custom hash function for coord class

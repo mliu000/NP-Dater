@@ -12,7 +12,7 @@ using namespace std;
 /*
 Mu Ye Liu - May 2025
 
-Represents the square date board
+Represents the date board with square tiles
 */
 class DateBoardGrid {
 public:
