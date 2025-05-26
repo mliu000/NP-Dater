@@ -1,6 +1,4 @@
-#ifndef GRIDCOORD_HPP
-#define GRIDCOORD_HPP
-
+#pragma once
 #include <iostream>
 #include <functional>
 #include "Coord.hpp"
@@ -17,31 +15,18 @@ class GridCoord : public Coord {
 public: 
 
     // Constructor that just calls base coord constructor 
-    GridCoord(int x, int y, bool b, const string& s);
-
-    ///// GETTERS /////
-    int getX() const;
-    int getY() const;
-
-    // Override equals to lookup coord in set based on stack allocation with same x and y
-    bool operator==(const GridCoord& other) const;
-
-private:
-
-    // X and Y coordinates
-    const int x;
-    const int y;
-
+    GridCoord(int x, int y);
+    
+    // Override equals
+    bool operator==(const GridCoord& otherCoord) const;
 };
 
-// Custom hashing function for coord class
+// Custom hash function for coord class
 namespace std {
     template <>
     struct hash<GridCoord> {
-        std::size_t operator()(const GridCoord& c) const {
-            return static_cast<std::size_t>(c.getX()) * 31 + c.getY();
+        size_t operator()(const GridCoord& c) const {
+            return static_cast<size_t>(c.getX() * 37 + c.getY());
         }
     };
 }
-
-#endif

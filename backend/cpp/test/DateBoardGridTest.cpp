@@ -3,7 +3,7 @@
 #include "../model/GridCoord.hpp"
 
 #include <iostream>
-#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
@@ -20,10 +20,18 @@ TEST_CASE("DateBoardGrid Constructor Test") {
     REQUIRE(d.getWidth() == width);
     REQUIRE(d.getHeight() == height);   
 
-    unordered_set<GridCoord>& coords = d.getCoords();
+    const unordered_map<GridCoord, int>& coords = d.getCoords();
     REQUIRE(coords.size() == (size_t) width*height);
-    const GridCoord& randomCoord = *(coords.find(GridCoord(3, 4, false, "")));
-    REQUIRE(randomCoord.getBlocked() == false);
-    REQUIRE(randomCoord.getSpecialAttribute() == "");
-    
+    REQUIRE(coords.find(GridCoord(4, 5))->second == 0);
+    REQUIRE(coords.find(GridCoord(2, 1))->second == 0);
+}
+
+TEST_CASE("DateBoardGrid blockCoordinate Test") {
+    DateBoardGrid d(4, 6);
+    d.blockCoordinate(2, 5);
+    d.blockCoordinate(1, 2);
+
+    const unordered_map<GridCoord, int>& coords = d.getCoords();
+    REQUIRE(coords.find(GridCoord(2, 5))->second == 1);
+    REQUIRE(coords.find(GridCoord(1, 2))->second == 1);
 }

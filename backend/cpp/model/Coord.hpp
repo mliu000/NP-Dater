@@ -1,6 +1,4 @@
-#ifndef COORD_HPP
-#define COORD_HPP
-
+#pragma once
 #include <string>
 
 using namespace std;
@@ -14,34 +12,28 @@ class Coord {
 public:
 
     // Constructor
-    // REQUIRES: s is an int (in string form) from "1" to "31", a 3-letter day/month, or ""
-    Coord(bool b, const string& s);
+    Coord(int x, int y);
 
     ///// SETTERS /////
 
-    // Sets the blocked status of the coord
-    void setBlocked(bool b);
-
-    /* Sets the special attribute 
-    REQUIRES: - s: must be an int from 1 to 31 in string form, or a 3 letter string representing 
-    the first letters of day of week, or month of year, with 1st letter caps
-    */
-    void setSpecialAttribute(string s);
+    // Sets the x and y coordinates
+    void setX(int newX);
+    void setY(int newY);
 
     ///// GETTERS /////
 
-    bool getBlocked() const;
-    string getSpecialAttribute() const;
+    // Gets the x and y coordinates
+    int getX() const;
+    int getY() const;
 
 private:
-    // DO NOT IMPLEMENT. This is simply to mark this superclass as abstract to prevent insantiation.
-    virtual void __abstract_maker__();
 
-    // Represents whether or not the cell is blocked
-    bool blocked;
+    // DO NOT CALL. This is simply to mark this superclass as abstract to prevent insantiation.
+    virtual void __abstract_marker__();
 
-    // Represents whether or not the cell has special attribute. "" for no special attribute
-    string specialAttribute;
+protected:
+
+    // Represents the x and y coordinates
+    int x, y;
+
 };
-
-#endif // CELL_HPP

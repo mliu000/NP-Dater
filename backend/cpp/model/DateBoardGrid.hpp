@@ -1,10 +1,8 @@
-#ifndef DATEBOARDGRID_HPP
-#define DATEBOARDGRID_HPP
-
+#pragma once
 #include <vector>
 #include <string>
 #include <functional>
-#include <unordered_set>
+#include <unordered_map>
 #include "GridCoord.hpp"
 #include  "../utility/json.hpp"
 using json = nlohmann::json;
@@ -18,22 +16,26 @@ Represents the square date board
 */
 class DateBoardGrid {
 public:
+
     // Construct a dateBoard with given length and width
     DateBoardGrid(int w, int h);
+
+    /* Sets the coordinate at given x and y to be blocked. Do nothing if coordinate with given x 
+    and y do not exist */
+    void blockCoordinate(int x, int y);
 
     ///// GETTERS /////
 
     int getWidth() const;
     int getHeight() const;
-    unordered_set<GridCoord>& getCoords();
-    const unordered_set<GridCoord>& getCoords() const;
+    const unordered_map<GridCoord, int>& getCoords() const;
 
 private:
     // Width and height of the dateboard
     const int width, height;
 
-    // The coordinates of the board
-    unordered_set<GridCoord> coords;
+    // Represents the grid of the date puzzle, where the int = 1 for blocked, = 0 for available
+    unordered_map<GridCoord, int> coords;
 
     // Generates the cells of the grid
     void generateCoords();
@@ -42,5 +44,3 @@ private:
 
 // To convert into json
 void to_json(json& j, const DateBoardGrid& g);
-
-#endif // DATEBOARDGRID_HPP

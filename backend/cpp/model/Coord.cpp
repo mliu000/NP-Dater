@@ -3,24 +3,17 @@
 using namespace std;
 
 // Constructor
-Coord::Coord(bool b, const string& s) : blocked(b), specialAttribute(s) {}
+Coord::Coord(int x, int y) : x(x), y(y) {}; 
 
-///// SETTERS /////
+void Coord::setX(int newX) {
+    x = newX;
+} 
 
-void Coord::setBlocked(bool b) {
-    blocked = b;
-}
+void Coord::setY(int newY) {
+    y = newY;
+} 
 
-void Coord::setSpecialAttribute(string s) {
-    specialAttribute = s;
-}
+int Coord::getX() const { return x; }
+int Coord::getY() const { return y; }
 
-///// GETTERS /////
-
-bool Coord::getBlocked() const {
-    return blocked;
-}
-
-string Coord::getSpecialAttribute() const {
-    return specialAttribute;
-}
+void Coord::__abstract_marker__() {}
