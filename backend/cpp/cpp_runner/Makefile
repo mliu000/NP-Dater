@@ -13,7 +13,8 @@ DATEBOARDGRID = ../model/DateBoardGrid.cpp
 GRIDCOORD = ../model/GridCoord.cpp
 TILE = ../model/Tile.cpp
 GRIDTILE = ../model/GridTile.cpp
-SRC = $(MAIN) $(COORD) $(DATEBOARDGRID) $(GRIDCOORD) $(TILE) $(GRIDTILE)
+EXACTCOVERGRID = ../model/ExactCoverGrid.cpp
+SRC = $(MAIN) $(COORD) $(DATEBOARDGRID) $(GRIDCOORD) $(TILE) $(GRIDTILE) $(EXACTCOVERGRID)
 
 # Get base names like Cell.o, Main.o
 OBJ_NAMES = $(notdir $(SRC:.cpp=.o))
@@ -47,6 +48,9 @@ $(OBJDIR)/Tile.o: $(TILE) | $(OBJDIR)
 $(OBJDIR)/GridTile.o: $(GRIDTILE) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(OBJDIR)/ExactCoverGrid.o: $(EXACTCOVERGRID) | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 # Create build directory if it doesn't exist
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -62,9 +66,11 @@ TEST_TARGET = test.exe
 GRIDCOORD_TEST = ../test/GridCoordTest.cpp
 GRIDTILE_TEST = ../test/GridTileTest.cpp
 DATEBOARDGRID_TEST = ../test/DateBoardGridTest.cpp
+EXACTCOVERGRID_TEST = ../test/ExactCoverGridTest.cpp
 
-TEST_SRC = $(GRIDCOORD_TEST) $(DATEBOARDGRID_TEST) $(GRIDTILE_TEST)
-TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o $(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o
+TEST_SRC = $(GRIDCOORD_TEST) $(DATEBOARDGRID_TEST) $(GRIDTILE_TEST) $(EXACTCOVERGRID_TEST)
+TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o \
+	$(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o $(OBJDIR)/ExactCoverGrid.o
 
 test: $(TEST_TARGET)
 

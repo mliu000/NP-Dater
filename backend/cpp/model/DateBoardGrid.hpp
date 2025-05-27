@@ -28,14 +28,14 @@ public:
 
     int getWidth() const;
     int getHeight() const;
-    const unordered_map<GridCoord, int>& getCoords() const;
+    const unordered_map<GridCoord, bool>& getCoords() const;
 
 private:
     // Width and height of the dateboard
     const int width, height;
 
-    // Represents the grid of the date puzzle, where the int = 1 for blocked, = 0 for available
-    unordered_map<GridCoord, int> coords;
+    // Represents the grid of the date puzzle, and bool flag to indicate whether or not blocked
+    unordered_map<GridCoord, bool> coords;
 
     // Generates the cells of the grid
     void generateCoords();

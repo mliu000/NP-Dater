@@ -20,10 +20,10 @@ TEST_CASE("DateBoardGrid Constructor Test") {
     REQUIRE(d.getWidth() == width);
     REQUIRE(d.getHeight() == height);   
 
-    const unordered_map<GridCoord, int>& coords = d.getCoords();
+    const unordered_map<GridCoord, bool>& coords = d.getCoords();
     REQUIRE(coords.size() == (size_t) width*height);
-    REQUIRE(coords.find(GridCoord(4, 5))->second == 0);
-    REQUIRE(coords.find(GridCoord(2, 1))->second == 0);
+    REQUIRE(coords.find(GridCoord(4, 5))->second == false);
+    REQUIRE(coords.find(GridCoord(2, 1))->second == false);
 }
 
 TEST_CASE("DateBoardGrid blockCoordinate Test") {
@@ -31,7 +31,7 @@ TEST_CASE("DateBoardGrid blockCoordinate Test") {
     d.blockCoordinate(2, 5);
     d.blockCoordinate(1, 2);
 
-    const unordered_map<GridCoord, int>& coords = d.getCoords();
-    REQUIRE(coords.find(GridCoord(2, 5))->second == 1);
-    REQUIRE(coords.find(GridCoord(1, 2))->second == 1);
+    const unordered_map<GridCoord, bool>& coords = d.getCoords();
+    REQUIRE(coords.find(GridCoord(2, 5))->second == true);
+    REQUIRE(coords.find(GridCoord(1, 2))->second == true);
 }

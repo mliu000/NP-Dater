@@ -3,6 +3,7 @@
 #include "../model/GridCoord.hpp"
 
 #include <iostream>
+#include <unordered_set>
 
 using namespace std;
 
@@ -24,5 +25,15 @@ TEST_CASE("GridCoord x and y setter test") {
     c.setY(1);
     REQUIRE(c.getX() == 2);
     REQUIRE(c.getY() == 1);
+}
+
+TEST_CASE("GridCoord operator== test") {
+    GridCoord c1(0, 0);
+    GridCoord c2(0, 0);
+    unordered_set<GridCoord> gc;
+    gc.insert(c1);
+    gc.insert(c2);
+
+    REQUIRE(gc.size() == 1);
 }
 
