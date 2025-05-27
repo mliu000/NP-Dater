@@ -26,8 +26,8 @@ public:
 
     ///// GETTERS ///// 
     
-    const vector<GridCoord> getCoords() const;
-    const vector<GridCoord> getSoln() const;
+    const vector<GridCoord>& getCoords() const;
+    const vector<GridCoord>& getSoln() const;
 
 private:
 

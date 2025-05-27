@@ -14,10 +14,10 @@ void GridTile::rotateClockwise() {
     }
 }
 
-const vector<GridCoord> GridTile::getCoords() const {
+const vector<GridCoord>& GridTile::getCoords() const {
     return coords;
 }
 
-const vector<GridCoord> GridTile::getSoln() const {
+const vector<GridCoord>& GridTile::getSoln() const {
     return soln;
 } 

@@ -15,35 +15,47 @@ Mu Ye Liu - May 2025
 Represents test file for the ExactCoverGrid reduction class
 */
 
-
-TEST_CASE("ExactCoverGrid constructor/instantiation test") {
-    // Instantiation
-    DateBoardGrid d(2, 3);
-    d.blockCoordinate(0, 2);
-
+// Test Instance of exact cover
+struct ExactCoverFixture {
+    DateBoardGrid d;
     unordered_map<string, GridTile*> tiles;
+    ExactCoverGrid* ecg;
 
-    vector<GridCoord> t1Coords;
-    t1Coords.push_back(GridCoord(0, 0));
-    t1Coords.push_back(GridCoord(-1, 0));
-    t1Coords.push_back(GridCoord(0, 1));
+    GridTile t1, t2, t3;
 
-    GridTile t1("1", t1Coords);
+    ExactCoverFixture()
+        : d(2, 5),
+          t1("1", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1)}),
+          t2("2", {GridCoord(0, 0), GridCoord(1, 0)}),
+          t3("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(0, 1), GridCoord(1, 1)})
+    {
+        d.blockCoordinate(0, 4);
 
-    vector<GridCoord> t2Coords;
-    t2Coords.push_back(GridCoord(0, 0));
-    t2Coords.push_back(GridCoord(1, 0));
+        tiles[t1.getId()] = &t1;
+        tiles[t2.getId()] = &t2;
+        tiles[t3.getId()] = &t3;
 
-    GridTile t2("2", t2Coords);
+        ecg = new ExactCoverGrid(d, tiles);
+    }
 
-    tiles.insert({t1.getId(), &t1});
-    tiles.insert({t2.getId(), &t2});
+    ~ExactCoverFixture() {
+        delete ecg;
+    }
+};
 
-    ExactCoverGrid e(d, tiles);
+TEST_CASE_METHOD(ExactCoverFixture, "Test instance generation", "[ExactCover]") {
+    const vector<vector<const GridCoord*>>& outer = ecg->getInstance().find(&t2)->second;
 
-    // Testing
+    for (size_t i = 0; i < outer.size(); i++) {
+        const vector<const GridCoord*>& inner = outer[i];
+        for (size_t j = 0; j < inner.size(); j++) {
+            cout << "(" << inner[j]->getX() << ", " << inner[j]->getY() << ") ";
+        }
+        cout << endl;
+    }
 
-    REQUIRE(e.getInstance().size() == 2);
-    REQUIRE(e.getInstance().find(&t1)->second.size() == 5); 
-    REQUIRE(e.getInstance().find(&t2)->second.size() == 5); 
+    REQUIRE(ecg->getInstance().size() == 3);
+    REQUIRE(ecg->getInstance().find(&t1)->second.size() == 13);
+    REQUIRE(ecg->getInstance().find(&t2)->second.size() == 11);
+    REQUIRE(ecg->getInstance().find(&t3)->second.size() == 3);
 }
