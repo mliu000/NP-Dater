@@ -3,7 +3,7 @@
 using namespace std;
 
 // Constructor
-DateBoardGrid::DateBoardGrid(int w, int h) : width(w), height(h) {
+DateBoardGrid::DateBoardGrid(int w, int h) : DateBoard(w, h) {
     generateCoords();
 }
 
@@ -13,25 +13,6 @@ void DateBoardGrid::generateCoords() {
             coords.insert({Coord(x, y), false});
         }
     }
-}
-
-void DateBoardGrid::blockCoordinate(int x, int y) {
-    auto it = coords.find(Coord(x, y));
-    if (it != coords.end()) {
-        it->second = true;
-    }
-}
-
-int DateBoardGrid::getHeight() const { 
-    return height; 
-}
-
-int DateBoardGrid::getWidth() const { 
-    return width; 
-}
-
-const unordered_map<Coord, bool>& DateBoardGrid::getCoords() const { 
-    return coords; 
 }
 
 void to_json(json& j, const DateBoardGrid& g) {
