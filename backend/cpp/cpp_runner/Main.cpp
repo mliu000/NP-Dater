@@ -1,5 +1,5 @@
 #include "../model/DateBoardGrid.hpp"
-#include "../model/GridCoord.hpp" 
+#include "../model/Coord.hpp" 
 
 #include <iostream>
 #include <string>
