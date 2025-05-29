@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../model/GridCoord.hpp"
+#include "../model/Coord.hpp"
 #include "../model/Tile.hpp"
 
 using namespace std;
@@ -19,7 +19,7 @@ public:
     REQUIRES: At least one of the coordinates need to be (0, 0), with the remaining being 
               relative to it 
     */
-    GridTile(string id, vector<GridCoord> coordinates);
+    GridTile(string id, vector<Coord> coordinates);
 
     // Rotates the grid tile clockwise by 90deg
     void rotateClockwise() override;
@@ -28,18 +28,18 @@ public:
     void reflectX();
 
     // Adds Coordinates to solution
-    void addToSoln(const GridCoord& coord);
+    void addToSoln(const Coord& coord);
 
     ///// GETTERS ///// 
     
-    const vector<GridCoord>& getCoords() const;
-    const vector<GridCoord>& getSoln() const;
+    const vector<Coord>& getCoords() const;
+    const vector<Coord>& getSoln() const;
 
 private:
 
     // Set of coordinates relative to a reference (0, 0)
-    vector<GridCoord> coords;
+    vector<Coord> coords;
     
     // Solution that stores the actual coordinates that the tile should be placed
-    vector<GridCoord> soln;
+    vector<Coord> soln;
 };

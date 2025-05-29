@@ -10,7 +10,6 @@ OBJDIR = ../build
 MAIN = Main.cpp
 COORD = ../model/Coord.cpp
 DATEBOARDGRID = ../model/DateBoardGrid.cpp
-GRIDCOORD = ../model/GridCoord.cpp
 TILE = ../model/Tile.cpp
 GRIDTILE = ../model/GridTile.cpp
 EXACTCOVERGRID = ../model/ExactCoverGrid.cpp
@@ -41,9 +40,6 @@ $(OBJDIR)/Coord.o: $(COORD) | $(OBJDIR)
 $(OBJDIR)/DateBoardGrid.o: $(DATEBOARDGRID) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJDIR)/GridCoord.o: $(GRIDCOORD) | $(OBJDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 $(OBJDIR)/Tile.o: $(TILE) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -68,13 +64,13 @@ clean:
 # Test build
 TEST_TARGET = test.exe
 
-GRIDCOORD_TEST = ../test/GridCoordTest.cpp
+COORD_TEST = ../test/CoordTest.cpp
 GRIDTILE_TEST = ../test/GridTileTest.cpp
 DATEBOARDGRID_TEST = ../test/DateBoardGridTest.cpp
 EXACTCOVERGRID_TEST = ../test/ExactCoverGridTest.cpp
 
-TEST_SRC = $(GRIDCOORD_TEST) $(DATEBOARDGRID_TEST) $(GRIDTILE_TEST) $(EXACTCOVERGRID_TEST)
-TEST_OBJ = $(OBJDIR)/GridCoord.o $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o \
+TEST_SRC = $(COORD_TEST) $(DATEBOARDGRID_TEST) $(GRIDTILE_TEST) $(EXACTCOVERGRID_TEST)
+TEST_OBJ = $(OBJDIR)/Coord.o $(OBJDIR)/DateBoardGrid.o \
 	$(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o $(OBJDIR)/ExactCoverGrid.o $(OBJDIR)/Solver.o
 
 test: $(TEST_TARGET)

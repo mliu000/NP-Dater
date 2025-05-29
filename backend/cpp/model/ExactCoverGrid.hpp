@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include "DateBoardGrid.hpp"
 #include "GridTile.hpp"
-#include "GridCoord.hpp"
+#include "Coord.hpp"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ public:
     ExactCoverGrid(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt);
 
     // Gets the instance
-    const unordered_map<GridTile*, vector<vector<const GridCoord*>>>& getInstance() const;
+    const unordered_map<GridTile*, vector<vector<const Coord*>>>& getInstance() const;
 
 private:
 
@@ -37,35 +37,35 @@ private:
     /* Checks for symmetry. Return 4 if asymmetric, 2 if symmetric 180deg, and 1 if a square.
     Runtime: O(n)
     */
-    int checkSymmetry(const vector<GridCoord>& coords);
+    int checkSymmetry(const vector<Coord>& coords);
 
     /* Checks whether or not the tile needs to be reflected. Returns 2 if yes, 1 if no.
     */
-    int needsReflection(const vector<GridCoord>& coords);
+    int needsReflection(const vector<Coord>& coords);
 
     /* Normalizes a vector of coordinates, by setting all coordinates to be <= 0
     Runtime: O(n)
     */
-    void normalizeCoords(vector<GridCoord>& coords);
+    void normalizeCoords(vector<Coord>& coords);
 
     /* Checks whether or not a tile is a square
     Runtime: O(n)
     */
-    bool isSquare(const vector<GridCoord>& coords);
+    bool isSquare(const vector<Coord>& coords);
 
     /* Checks whether or not a tile is 180deg symmetric
     Runtime: O(n)*/
-    bool is180degSymmetric(const vector<GridCoord>& coords);
+    bool is180degSymmetric(const vector<Coord>& coords);
 
     /* Rotates coordinates clockwise
     Runtime: O(n)
     */
-    void rotateCoords(vector<GridCoord>& coords);
+    void rotateCoords(vector<Coord>& coords);
 
     /* Reflects the coordinates about the X-Axis
     Runtime: O(n)
     */
-    void reflectCoordsX(vector<GridCoord>& coords);
+    void reflectCoordsX(vector<Coord>& coords);
 
     /* Checks whether or not the tile placement is valid. 
     Runtime: O(1)
@@ -75,5 +75,5 @@ private:
     ///// FIELDS /////
 
     // Stores the instance of the reduced exact cover
-    unordered_map<GridTile*, vector<vector<const GridCoord*>>> instance;
+    unordered_map<GridTile*, vector<vector<const Coord*>>> instance;
 };

@@ -6,7 +6,7 @@ using namespace std;
 /*
 Mu Ye Liu - May 2025
 
-Represents the general coord class
+Represents the coord class
 */
 class Coord {
 public:
@@ -14,8 +14,8 @@ public:
     // Constructor
     Coord(int x, int y);
 
-    // Virtual destructor
-    virtual ~Coord();
+    // Override equals
+    bool operator==(const Coord& otherCoord) const;
 
     ///// SETTERS /////
 
@@ -34,7 +34,14 @@ protected:
     // Represents the x and y coordinates
     int x, y;
 
-    // DO NOT CALL. This is simply to mark this superclass as abstract to prevent insantiation.
-    virtual void __abstract_marker__() = 0; 
-
 };
+
+// Custom hash function for coord class
+namespace std {
+    template <>
+    struct hash<Coord> {
+        size_t operator()(const Coord& c) const {
+            return static_cast<size_t>(c.getX() * 37 + c.getY());
+        }
+    };
+}

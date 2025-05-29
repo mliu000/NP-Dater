@@ -3,8 +3,8 @@
 using namespace std;
 
 bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
-    const unordered_map<GridCoord, bool> coordsFromBoard = dbg.getCoords();
-    const PossibilitiesGrid& poss = ecg.getInstance();
+    const unordered_map<Coord, bool> coordsFromBoard = dbg.getCoords();
+    const Possibilities& poss = ecg.getInstance();
     int fct = dbg.getWidth();
 
     // Don't even try if the instance is invalid
@@ -12,7 +12,7 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
         return false;
     }
 
-    BoardCoordsGrid boardCoords(fct * dbg.getHeight(), 0);
+    BoardCoords boardCoords(fct * dbg.getHeight(), 0);
     vector<GridTile*> tiles;
     for (const auto& it : poss) {
         tiles.push_back(it.first);
@@ -21,9 +21,9 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
     vector<size_t> tileOrder(n); // Indices into tiles
     iota(tileOrder.begin(), tileOrder.end(), 0);
     vector<size_t> placementIdx(n, 0); // Which placement is being tried for each tile
-    vector<vector<vector<const GridCoord*>>> validPlacementsStack(n); // Valid placements for each tile at each level
+    vector<vector<vector<const Coord*>>> validPlacementsStack(n); // Valid placements for each tile at each level
     vector<bool> initialized(n, false); // Whether validPlacementsStack[level] is initialized
-    vector<PlacementGrid> soln;
+    vector<Placement> soln;
     size_t level = 0;
     while (true) {
         if (level == n) {
@@ -34,10 +34,10 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
         if (!initialized[level]) {
             size_t minIdx = level;
             size_t minCount = SIZE_MAX;
-            vector<vector<const GridCoord*>> bestValid;
+            vector<vector<const Coord*>> bestValid;
             for (size_t i = level; i < n; i++) {
                 const auto& placements = poss.find(tiles[tileOrder[i]])->second;
-                vector<vector<const GridCoord*>> valid;
+                vector<vector<const Coord*>> valid;
                 for (const auto& coords : placements) {
                     if (validGridTilePlacement(coords, boardCoords, fct)) {
                         valid.push_back(coords);
@@ -61,10 +61,10 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
                 continue;
             }
             // LCV: Sort placements by how few options they block for remaining tiles
-            vector<pair<int, vector<const GridCoord*>>> lcvPairs;
+            vector<pair<int, vector<const Coord*>>> lcvPairs;
             for (const auto& coords : bestValid) {
                 // Place temporarily
-                for (const GridCoord* coord : coords) {
+                for (const Coord* coord : coords) {
                     boardCoords[coord->getY() * fct + coord->getX()] = 1;
                 }
                 // Count total valid placements for remaining tiles
@@ -78,15 +78,15 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
                     }
                 }
                 // Unplace
-                for (const GridCoord* coord : coords) {
+                for (const Coord* coord : coords) {
                     boardCoords[coord->getY() * fct + coord->getX()] = 0;
                 }
                 lcvPairs.push_back({total, coords});
             }
             // Sort by descending total (least constraining value first)
             sort(lcvPairs.begin(), lcvPairs.end(),
-                [](const pair<int, vector<const GridCoord*>>& a, 
-                    const pair<int, vector<const GridCoord*>>& b) {
+                [](const pair<int, vector<const Coord*>>& a, 
+                    const pair<int, vector<const Coord*>>& b) {
                     return a.first > b.first;
                 });
             validPlacementsStack[level].clear();
@@ -117,7 +117,7 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
 }
 
 
-bool Solver::validGridInstance(const unordered_map<GridCoord, bool>& coords, const PossibilitiesGrid& poss) {
+bool Solver::validGridInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss) {
     // Get the instances
 
     // Get the counts for both
@@ -138,8 +138,8 @@ bool Solver::validGridInstance(const unordered_map<GridCoord, bool>& coords, con
 }
 
 
-bool Solver::validGridTilePlacement(const vector<const GridCoord*>& coords, BoardCoordsGrid& bcg, int fct) {
-    for (const GridCoord* coord: coords) {
+bool Solver::validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct) {
+    for (const Coord* coord: coords) {
         if (bcg[coord->getY() * fct + coord->getX()] == 1) {
             return false;
         }
@@ -150,9 +150,9 @@ bool Solver::validGridTilePlacement(const vector<const GridCoord*>& coords, Boar
 }
 
 
-void Solver::placeGridTile(GridTile* gt, const vector<const GridCoord*>& coords, 
-        vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct) {
-    for (const GridCoord* coord: coords) {
+void Solver::placeGridTile(GridTile* gt, const vector<const Coord*>& coords, 
+        vector<Placement>& pg, BoardCoords& bcg, int fct) {
+    for (const Coord* coord: coords) {
         bcg[coord->getY() * fct + coord->getX()] = 1;
     }
 
@@ -160,13 +160,13 @@ void Solver::placeGridTile(GridTile* gt, const vector<const GridCoord*>& coords,
 }
 
 
-void Solver::displaceGridTile(vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct) {
+void Solver::displaceGridTile(vector<Placement>& pg, BoardCoords& bcg, int fct) {
     if (pg.empty()) {
         return;
     }
 
-    PlacementGrid& latestPlacement = pg.back();
-    for (const GridCoord* coord: *latestPlacement.second) {
+    Placement& latestPlacement = pg.back();
+    for (const Coord* coord: *latestPlacement.second) {
         bcg[coord->getY() * fct + coord->getX()] = 0;
     }
 
@@ -174,10 +174,10 @@ void Solver::displaceGridTile(vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, i
 }
 
 
-void Solver::recordSolution(vector<PlacementGrid>& pg) {
-    for (PlacementGrid p: pg) {
+void Solver::recordSolution(vector<Placement>& pg) {
+    for (Placement p: pg) {
         GridTile* currTile = p.first;
-        for (const GridCoord* gc: *p.second) {
+        for (const Coord* gc: *p.second) {
             currTile->addToSoln(*gc);
         }
     }

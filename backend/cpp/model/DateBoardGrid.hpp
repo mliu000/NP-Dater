@@ -3,7 +3,7 @@
 #include <string>
 #include <functional>
 #include <unordered_map>
-#include "GridCoord.hpp"
+#include "Coord.hpp"
 #include  "../utility/json.hpp"
 using json = nlohmann::json;
 
@@ -28,14 +28,14 @@ public:
 
     int getWidth() const;
     int getHeight() const;
-    const unordered_map<GridCoord, bool>& getCoords() const;
+    const unordered_map<Coord, bool>& getCoords() const;
 
 private:
     // Width and height of the dateboard
     const int width, height;
 
     // Represents the grid of the date puzzle, and bool flag to indicate whether or not blocked
-    unordered_map<GridCoord, bool> coords;
+    unordered_map<Coord, bool> coords;
 
     // Generates the cells of the grid
     void generateCoords();

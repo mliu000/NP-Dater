@@ -5,8 +5,9 @@ using namespace std;
 // Constructor
 Coord::Coord(int x, int y) : x(x), y(y) {}; 
 
-// Destructor
-Coord::~Coord() {}
+bool Coord::operator==(const Coord& otherCoord) const {
+    return x == otherCoord.x && y == otherCoord.y;
+}
 
 void Coord::setX(int newX) {
     x = newX;

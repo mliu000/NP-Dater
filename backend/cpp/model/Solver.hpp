@@ -4,14 +4,14 @@
 #include <vector>
 #include "../model/DateBoardGrid.hpp"
 #include "../model/GridTile.hpp"
-#include "../model/GridCoord.hpp"
+#include "../model/Coord.hpp"
 #include "../model/ExactCoverGrid.hpp"
 
 using namespace std;
 
-using PossibilitiesGrid = unordered_map<GridTile*, vector<vector<const GridCoord*>>>; // From ExactCover
-using BoardCoordsGrid = vector<uint8_t>; // From the DateBoard
-using PlacementGrid = pair<GridTile*, const vector<const GridCoord*>*>; 
+using Possibilities = unordered_map<GridTile*, vector<vector<const Coord*>>>; // From ExactCover
+using BoardCoords = vector<uint8_t>; // From the DateBoard
+using Placement = pair<GridTile*, const vector<const Coord*>*>; 
 
 /*
 Mu Ye Liu - May 2025
@@ -38,19 +38,19 @@ private:
     /* Checks the validity of the input. Makes sure that the total number of unblocked coords is 
     equal to the number of coords all tiles can cover together while non-overlapping
     Returns true if =, false if not.*/
-    static bool validGridInstance(const unordered_map<GridCoord, bool>& coords, const PossibilitiesGrid& poss);
+    static bool validGridInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
 
     // Checks the validity of the placement. Returns true if valid, false if invalid
-    static bool validGridTilePlacement(const vector<const GridCoord*>& coords, BoardCoordsGrid& bcg, 
+    static bool validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, 
         int fct);
 
     // Places a tile and updates the grid
-    static void placeGridTile(GridTile* gt, const vector<const GridCoord*>& coords, 
-        vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct);
+    static void placeGridTile(GridTile* gt, const vector<const Coord*>& coords, 
+        vector<Placement>& pg, BoardCoords& bcg, int fct);
 
     // Removes a tile and updates the grid
-    static void displaceGridTile(vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct);
+    static void displaceGridTile(vector<Placement>& pg, BoardCoords& bcg, int fct);
 
     // Finally, once algorithm is finished, record the solution for each of the tiles. 
-    static void recordSolution(vector<PlacementGrid>& pg);
+    static void recordSolution(vector<Placement>& pg);
 };

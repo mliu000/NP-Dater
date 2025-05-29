@@ -1,6 +1,5 @@
 #include "../utility/Catch.hpp"
-#include "../model/GridCoord.hpp"
-#include "../model/GridCoord.hpp"
+#include "../model/Coord.hpp"
 #include "../model/ExactCoverGrid.hpp"
 #include "../model/Solver.hpp"
 
@@ -29,10 +28,10 @@ struct ExactCoverFixture {
 
     ExactCoverFixture()
         : d(2, 7),
-          t1("1", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1), GridCoord(0, 2)}),
-          t2("2", {GridCoord(0, 0), GridCoord(1, 0)}),
-          t3("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(0, 1), GridCoord(1, 1)}),
-          t4("4", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1)})
+          t1("1", {Coord(0, 0), Coord(-1, 0), Coord(0, 1), Coord(0, 2)}),
+          t2("2", {Coord(0, 0), Coord(1, 0)}),
+          t3("3", {Coord(0, 0), Coord(1, 0), Coord(0, 1), Coord(1, 1)}),
+          t4("4", {Coord(0, 0), Coord(-1, 0), Coord(0, 1)})
     {
         d.blockCoordinate(0, 6);
 
@@ -55,7 +54,7 @@ struct ExactCoverFixture {
 
 // Helper function that checks that the solution is valid
 bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTile*>& tiles) {
-    const unordered_map<GridCoord, bool>& coords = dbg.getCoords();
+    const unordered_map<Coord, bool>& coords = dbg.getCoords();
     size_t freeCoordsCount = 0;
     for (const auto& it : coords) {
         if (!it.second) {
@@ -63,10 +62,10 @@ bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTil
         }
     }
 
-    unordered_set<GridCoord> coveredCoords;
+    unordered_set<Coord> coveredCoords;
     for (const auto& it : tiles) {
-        const vector<GridCoord>& soln = it.second->getSoln();
-        for (const GridCoord& coord : soln) {
+        const vector<Coord>& soln = it.second->getSoln();
+        for (const Coord& coord : soln) {
             coveredCoords.insert(coord);
         }
     }
@@ -79,9 +78,9 @@ bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTil
 
 TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCover]") {
     /*
-    const vector<vector<const GridCoord*>>& outer = ecg->getInstance().find(&t1)->second;
+    const vector<vector<const Coord*>>& outer = ecg->getInstance().find(&t1)->second;
     for (size_t i = 0; i < outer.size(); i++) {
-        const vector<const GridCoord*>& inner = outer[i];
+        const vector<const Coord*>& inner = outer[i];
         for (size_t j = 0; j < inner.size(); j++) {
             cout << "(" << inner[j]->getX() << ", " << inner[j]->getY() << ") ";
         }
@@ -120,9 +119,9 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
     d1.blockCoordinate(0, 4);
     unordered_map<string, GridTile*> tiles1;
 
-    GridTile t11("1", {GridCoord(0, 0), GridCoord(0, 1)});
-    GridTile t12("2", {GridCoord(0, 0), GridCoord(1, 0)});
-    GridTile t13("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(0, 1), GridCoord(1, 1)});
+    GridTile t11("1", {Coord(0, 0), Coord(0, 1)});
+    GridTile t12("2", {Coord(0, 0), Coord(1, 0)});
+    GridTile t13("3", {Coord(0, 0), Coord(1, 0), Coord(0, 1), Coord(1, 1)});
 
     tiles1.insert({t11.getId(), &t11});
     tiles1.insert({t12.getId(), &t12});
@@ -142,9 +141,9 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     d2.blockCoordinate(0, 4);
     unordered_map<string, GridTile*> tiles2;
 
-    GridTile t21("1", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(1, 1), GridCoord(1, 2), GridCoord(0, 2)});
-    GridTile t22("2", {GridCoord(0, 0), GridCoord(0, 1)});
-    GridTile t23("3", {GridCoord(0, 0), GridCoord(0, 1)});
+    GridTile t21("1", {Coord(0, 0), Coord(1, 0), Coord(1, 1), Coord(1, 2), Coord(0, 2)});
+    GridTile t22("2", {Coord(0, 0), Coord(0, 1)});
+    GridTile t23("3", {Coord(0, 0), Coord(0, 1)});
 
     tiles2.insert({t21.getId(), &t21});
     tiles2.insert({t22.getId(), &t22});
@@ -173,16 +172,16 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     d3.blockCoordinate(3, 6);
     unordered_map<string, GridTile*> tiles3;
 
-    GridTile t31("1", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(2, 0), GridCoord(3, 0)});
-    GridTile t32("2", {GridCoord(0, 0), GridCoord(0, 1), GridCoord(1, 0), GridCoord(2, 0), GridCoord(2, 1)});
-    GridTile t33("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(2, 0), GridCoord(3, 0), GridCoord(3, -1)});
-    GridTile t34("4", {GridCoord(0, 0), GridCoord(0, 1), GridCoord(1, 1), GridCoord(2, 1), GridCoord(2, 2)});
-    GridTile t35("5", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(1, 1), GridCoord(2, 1), GridCoord(3, 1)});
-    GridTile t36("6", {GridCoord(0, 0), GridCoord(0, 1), GridCoord(0, 2), GridCoord(1, 2), GridCoord(2, 2)});
-    GridTile t37("7", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(2, 0), GridCoord(1, 1), GridCoord(2, 1)});
-    GridTile t38("8", {GridCoord(0, 0), GridCoord(0, 1), GridCoord(1, 1), GridCoord(2, 1)});
-    GridTile t39("9", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(1, 1), GridCoord(2, 1)});
-    GridTile t310("10", {GridCoord(0, 0), GridCoord(0, 1), GridCoord(0, 2), GridCoord(-1, 2), GridCoord(1, 2)});
+    GridTile t31("1", {Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(3, 0)});
+    GridTile t32("2", {Coord(0, 0), Coord(0, 1), Coord(1, 0), Coord(2, 0), Coord(2, 1)});
+    GridTile t33("3", {Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(3, 0), Coord(3, -1)});
+    GridTile t34("4", {Coord(0, 0), Coord(0, 1), Coord(1, 1), Coord(2, 1), Coord(2, 2)});
+    GridTile t35("5", {Coord(0, 0), Coord(1, 0), Coord(1, 1), Coord(2, 1), Coord(3, 1)});
+    GridTile t36("6", {Coord(0, 0), Coord(0, 1), Coord(0, 2), Coord(1, 2), Coord(2, 2)});
+    GridTile t37("7", {Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(1, 1), Coord(2, 1)});
+    GridTile t38("8", {Coord(0, 0), Coord(0, 1), Coord(1, 1), Coord(2, 1)});
+    GridTile t39("9", {Coord(0, 0), Coord(1, 0), Coord(1, 1), Coord(2, 1)});
+    GridTile t310("10", {Coord(0, 0), Coord(0, 1), Coord(0, 2), Coord(-1, 2), Coord(1, 2)});
 
     tiles3.insert({t31.getId(), &t31});
     tiles3.insert({t32.getId(), &t32});

@@ -14,7 +14,7 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
 
     // Iterate through all the GridTiles: O(m)
     for (auto &it: gt) { 
-        vector<vector<const GridCoord*>> outer;
+        vector<vector<const Coord*>> outer;
 
         // Check the symmetry of the tiles and whether or not reflection is required: O(n)
         int symm = checkSymmetry(it.second->getCoords());
@@ -30,14 +30,14 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
                     // Iterate through all possible rotations (4 possible rotations): O(1)
                     for (int r = 0; r < symm; r++) {
                         bool valid = true;
-                        vector<const GridCoord*> inner;
+                        vector<const Coord*> inner;
 
                         // Iterate over all all the coords the tile covers relative to reference: O(n/m)
-                        for (const GridCoord& coord: it.second->getCoords()) {
+                        for (const Coord& coord: it.second->getCoords()) {
                             int currX = x + coord.getX();
                             int currY = y + coord.getY();
                             if (validPlacement(currX, currY, dbg)) {
-                                inner.push_back(&dbg.getCoords().find(GridCoord(currX, currY))->first);
+                                inner.push_back(&dbg.getCoords().find(Coord(currX, currY))->first);
                             } else {
                                 valid = false;
                                 break;
@@ -81,14 +81,14 @@ bool ExactCoverGrid::validPlacement(int x, int y, DateBoardGrid& dbg) {
         return false;
     }
 
-    const unordered_map<GridCoord, bool>& coords = dbg.getCoords();
-    auto it = coords.find(GridCoord(x, y));
+    const unordered_map<Coord, bool>& coords = dbg.getCoords();
+    auto it = coords.find(Coord(x, y));
 
     return it != coords.end() && !it->second;
 }
 
 
-int ExactCoverGrid::checkSymmetry(const vector<GridCoord>& coords) {
+int ExactCoverGrid::checkSymmetry(const vector<Coord>& coords) {
     // Check Square
     if (isSquare(coords)) {
         return 1;
@@ -103,15 +103,15 @@ int ExactCoverGrid::checkSymmetry(const vector<GridCoord>& coords) {
     return 4;
 }
 
-int ExactCoverGrid::needsReflection(const vector<GridCoord>& coords) {
+int ExactCoverGrid::needsReflection(const vector<Coord>& coords) {
     // Check if the tile is square, if so, no reflection needed
     if (isSquare(coords)) {
         return 1;
     }
 
     // Check whether or not the tile needs reflection
-    vector<GridCoord> original = coords;
-    vector<GridCoord> reference = coords;
+    vector<Coord> original = coords;
+    vector<Coord> reference = coords;
     normalizeCoords(original);
     normalizeCoords(reference);
 
@@ -122,8 +122,8 @@ int ExactCoverGrid::needsReflection(const vector<GridCoord>& coords) {
     // to reflect the tile.
     int rotationsNotTheSame = 0;
     for (int i = 0; i < 4; i++) {
-        unordered_set<GridCoord> referenceSet(reference.begin(), reference.end());
-        for (GridCoord& coord: original) {
+        unordered_set<Coord> referenceSet(reference.begin(), reference.end());
+        for (Coord& coord: original) {
             if (referenceSet.find(coord) == referenceSet.end()) {
                 rotationsNotTheSame++;
                 break;
@@ -137,10 +137,10 @@ int ExactCoverGrid::needsReflection(const vector<GridCoord>& coords) {
     return rotationsNotTheSame == 4 ? 2 : 1;
 }
 
-bool ExactCoverGrid::isSquare(const vector<GridCoord>& coords) {
+bool ExactCoverGrid::isSquare(const vector<Coord>& coords) {
     // Start by normalizing
-    vector<GridCoord> toRotate = coords;
-    vector<GridCoord> toReflectX = coords;
+    vector<Coord> toRotate = coords;
+    vector<Coord> toReflectX = coords;
     normalizeCoords(toRotate);
     normalizeCoords(toReflectX);
 
@@ -148,9 +148,9 @@ bool ExactCoverGrid::isSquare(const vector<GridCoord>& coords) {
     rotateCoords(toRotate);
     reflectCoordsX(toReflectX);
 
-    unordered_set<GridCoord> reflectedCoordsSet(toReflectX.begin(), toReflectX.end());
+    unordered_set<Coord> reflectedCoordsSet(toReflectX.begin(), toReflectX.end());
 
-    for (GridCoord& rotatedCoord: toRotate) {
+    for (Coord& rotatedCoord: toRotate) {
         if (reflectedCoordsSet.find(rotatedCoord) == reflectedCoordsSet.end()) {
             return false;
         }
@@ -160,19 +160,19 @@ bool ExactCoverGrid::isSquare(const vector<GridCoord>& coords) {
 } 
 
 
-bool ExactCoverGrid::is180degSymmetric(const vector<GridCoord>& coords) {
+bool ExactCoverGrid::is180degSymmetric(const vector<Coord>& coords) {
     // Start by normalizing
-    vector<GridCoord> toNormalizeOriginal = coords;
+    vector<Coord> toNormalizeOriginal = coords;
     normalizeCoords(toNormalizeOriginal);
 
-    vector<GridCoord> toRotateAndNormalize = toNormalizeOriginal;
+    vector<Coord> toRotateAndNormalize = toNormalizeOriginal;
     rotateCoords(toRotateAndNormalize);
     rotateCoords(toRotateAndNormalize);
     normalizeCoords(toRotateAndNormalize);
 
-    unordered_set<GridCoord> finalCoordsSet(toRotateAndNormalize.begin(), toRotateAndNormalize.end());
+    unordered_set<Coord> finalCoordsSet(toRotateAndNormalize.begin(), toRotateAndNormalize.end());
 
-    for (GridCoord& coord: toNormalizeOriginal) {
+    for (Coord& coord: toNormalizeOriginal) {
         if (finalCoordsSet.find(coord) == finalCoordsSet.end()) {
             return false;
         }
@@ -182,13 +182,13 @@ bool ExactCoverGrid::is180degSymmetric(const vector<GridCoord>& coords) {
 }
 
 
-void ExactCoverGrid::normalizeCoords(vector<GridCoord>& coords) {
+void ExactCoverGrid::normalizeCoords(vector<Coord>& coords) {
     // Set all coords to -inf so the first x coord will always be recorded
     int maxX = numeric_limits<int>::min();
     int maxY = numeric_limits<int>::min();
 
     // Get the max x and y coordinates
-    for (GridCoord& coord: coords) {
+    for (Coord& coord: coords) {
         int currX = coord.getX();
         int currY = coord.getY();
         if (currX > maxX) {
@@ -200,15 +200,15 @@ void ExactCoverGrid::normalizeCoords(vector<GridCoord>& coords) {
     }
 
     // Normalize all the coordinates
-    for (GridCoord& coord: coords) {
+    for (Coord& coord: coords) {
         coord.setX(coord.getX() - maxX);
         coord.setY(coord.getY() - maxY);
     }
 }
 
 
-void ExactCoverGrid::rotateCoords(vector<GridCoord>& coords) {
-    for (GridCoord& coord: coords) {
+void ExactCoverGrid::rotateCoords(vector<Coord>& coords) {
+    for (Coord& coord: coords) {
         int oldX = coord.getX();
         int oldY = coord.getY();
 
@@ -218,8 +218,8 @@ void ExactCoverGrid::rotateCoords(vector<GridCoord>& coords) {
 }
 
 
-void ExactCoverGrid::reflectCoordsX(vector<GridCoord>& coords) {
-    for (GridCoord& coord: coords) {
+void ExactCoverGrid::reflectCoordsX(vector<Coord>& coords) {
+    for (Coord& coord: coords) {
         int oldX = coord.getX();
 
         coord.setX(-oldX);
@@ -227,6 +227,6 @@ void ExactCoverGrid::reflectCoordsX(vector<GridCoord>& coords) {
 }
 
 
-const unordered_map<GridTile*, vector<vector<const GridCoord*>>>& ExactCoverGrid::getInstance() const {
+const unordered_map<GridTile*, vector<vector<const Coord*>>>& ExactCoverGrid::getInstance() const {
     return instance;
 }
