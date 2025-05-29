@@ -3,12 +3,12 @@
 using namespace std;
 
 // Constructor
-ExactCoverGrid::ExactCoverGrid(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt) {
+ExactCoverGrid::ExactCoverGrid(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
     createInstance(dbg, gt);
 }
 
 
-void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt) {
+void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
     int width = dbg.getWidth();
     int height = dbg.getHeight();
 
@@ -72,7 +72,7 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
 }
 
 
-bool ExactCoverGrid::validPlacement(int x, int y, DateBoardGrid& dbg) {
+bool ExactCoverGrid::validPlacement(int x, int y, DateBoard& dbg) {
     bool withinX = x >= 0 && x < dbg.getWidth();
     bool withinY = y >= 0 && y < dbg.getHeight();
 
@@ -227,6 +227,6 @@ void ExactCoverGrid::flip(vector<Coord>& coords) {
 }
 
 
-const unordered_map<GridTile*, vector<vector<const Coord*>>>& ExactCoverGrid::getInstance() const {
+const unordered_map<Tile*, vector<vector<const Coord*>>>& ExactCoverGrid::getInstance() const {
     return instance;
 }

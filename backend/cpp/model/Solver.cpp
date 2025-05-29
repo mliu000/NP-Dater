@@ -13,7 +13,7 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
     }
 
     BoardCoords boardCoords(fct * dbg.getHeight(), 0);
-    vector<GridTile*> tiles;
+    vector<Tile*> tiles;
     for (const auto& it : poss) {
         tiles.push_back(it.first);
     }
@@ -150,7 +150,7 @@ bool Solver::validGridTilePlacement(const vector<const Coord*>& coords, BoardCoo
 }
 
 
-void Solver::placeGridTile(GridTile* gt, const vector<const Coord*>& coords, 
+void Solver::placeGridTile(Tile* gt, const vector<const Coord*>& coords, 
         vector<Placement>& pg, BoardCoords& bcg, int fct) {
     for (const Coord* coord: coords) {
         bcg[coord->getY() * fct + coord->getX()] = 1;
@@ -176,7 +176,7 @@ void Solver::displaceGridTile(vector<Placement>& pg, BoardCoords& bcg, int fct) 
 
 void Solver::recordSolution(vector<Placement>& pg) {
     for (Placement p: pg) {
-        GridTile* currTile = p.first;
+        Tile* currTile = p.first;
         for (const Coord* gc: *p.second) {
             currTile->addToSoln(*gc);
         }

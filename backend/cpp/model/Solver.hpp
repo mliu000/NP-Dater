@@ -9,9 +9,9 @@
 
 using namespace std;
 
-using Possibilities = unordered_map<GridTile*, vector<vector<const Coord*>>>; // From ExactCover
+using Possibilities = unordered_map<Tile*, vector<vector<const Coord*>>>; // From ExactCover
 using BoardCoords = vector<uint8_t>; // From the DateBoard
-using Placement = pair<GridTile*, const vector<const Coord*>*>; 
+using Placement = pair<Tile*, const vector<const Coord*>*>; 
 
 /*
 Mu Ye Liu - May 2025
@@ -45,7 +45,7 @@ private:
         int fct);
 
     // Places a tile and updates the grid
-    static void placeGridTile(GridTile* gt, const vector<const Coord*>& coords, 
+    static void placeGridTile(Tile* gt, const vector<const Coord*>& coords, 
         vector<Placement>& pg, BoardCoords& bcg, int fct);
 
     // Removes a tile and updates the grid

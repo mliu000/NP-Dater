@@ -20,10 +20,10 @@ public:
     REQUIRES: the total number of coords that all tiles must cover in total when none of them are 
               overlapping must be equal to the number of unblocked tiles. 
     */
-    ExactCoverGrid(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt);
+    ExactCoverGrid(DateBoard& dbg, unordered_map<string, Tile*>& gt);
 
     // Gets the instance
-    const unordered_map<GridTile*, vector<vector<const Coord*>>>& getInstance() const;
+    const unordered_map<Tile*, vector<vector<const Coord*>>>& getInstance() const;
 
 private:
 
@@ -32,7 +32,7 @@ private:
     /* Creates the instance
     Runtime (m tiles and n blocks): O(n^2)
     */ 
-    void createInstance(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt);
+    void createInstance(DateBoard& dbg, unordered_map<string, Tile*>& gt);
 
     /* Checks for symmetry. Return 4 if asymmetric, 2 if symmetric 180deg, and 1 if a square.
     Runtime: O(n)
@@ -70,10 +70,10 @@ private:
     /* Checks whether or not the tile placement is valid. 
     Runtime: O(1)
     */
-    bool validPlacement(int x, int y, DateBoardGrid& dbg);
+    bool validPlacement(int x, int y, DateBoard& dbg);
 
     ///// FIELDS /////
 
     // Stores the instance of the reduced exact cover
-    unordered_map<GridTile*, vector<vector<const Coord*>>> instance;
+    unordered_map<Tile*, vector<vector<const Coord*>>> instance;
 };

@@ -21,7 +21,7 @@ Represents test file for the ExactCoverGrid reduction class
 // Test Instance of exact cover
 struct ExactCoverFixture {
     DateBoardGrid d;
-    unordered_map<string, GridTile*> tiles;
+    unordered_map<string, Tile*> tiles;
     ExactCoverGrid* ecg;
 
     GridTile t1, t2, t3, t4;
@@ -53,7 +53,7 @@ struct ExactCoverFixture {
 ///// HELPER FUNCTIONS /////
 
 // Helper function that checks that the solution is valid
-bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTile*>& tiles) {
+bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, Tile*>& tiles) {
     const unordered_map<Coord, bool>& coords = dbg.getCoords();
     size_t freeCoordsCount = 0;
     for (const auto& it : coords) {
@@ -120,7 +120,7 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
     // Create a smaller instance with not enough tile coverage
     DateBoardGrid d1(2, 5);
     d1.blockCoordinate(0, 4);
-    unordered_map<string, GridTile*> tiles1;
+    unordered_map<string, Tile*> tiles1;
 
     GridTile t11("1", {Coord(0, 0), Coord(0, 1)});
     GridTile t12("2", {Coord(0, 0), Coord(1, 0)});
@@ -142,7 +142,7 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     // Create a smaller instance with not enough tile coverage
     DateBoardGrid d2(2, 5);
     d2.blockCoordinate(0, 4);
-    unordered_map<string, GridTile*> tiles2;
+    unordered_map<string, Tile*> tiles2;
 
     GridTile t21("1", {Coord(0, 0), Coord(1, 0), Coord(1, 1), Coord(1, 2), Coord(0, 2)});
     GridTile t22("2", {Coord(0, 0), Coord(0, 1)});
@@ -173,7 +173,7 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     d3.blockCoordinate(5, 0);
     d3.blockCoordinate(0, 2);
     d3.blockCoordinate(3, 6);
-    unordered_map<string, GridTile*> tiles3;
+    unordered_map<string, Tile*> tiles3;
 
     GridTile t31("1", {Coord(0, 0), Coord(1, 0), Coord(2, 0), Coord(3, 0)});
     GridTile t32("2", {Coord(0, 0), Coord(0, 1), Coord(1, 0), Coord(2, 0), Coord(2, 1)});
