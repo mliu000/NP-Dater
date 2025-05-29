@@ -25,15 +25,12 @@ public:
     // Gets the instance
     const unordered_map<GridTile*, vector<vector<const GridCoord*>>>& getInstance() const;
 
-    ///// SOLVER /////
-    static void solve(ExactCoverGrid ecgInstance);
-
 private:
 
     ///// HELPER FUNCTIONS /////
 
     /* Creates the instance
-    Runtime (k tiles and n blocks): O(n^2)
+    Runtime (m tiles and n blocks): O(n^2)
     */ 
     void createInstance(DateBoardGrid& dbg, unordered_map<string, GridTile*>& gt);
 

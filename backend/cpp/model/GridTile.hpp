@@ -24,6 +24,9 @@ public:
     // Rotates the grid tile clockwise by 90deg
     void rotateClockwise() override;
 
+    // Adds Coordinates to solution
+    void addToSoln(const GridCoord& coord);
+
     ///// GETTERS ///// 
     
     const vector<GridCoord>& getCoords() const;

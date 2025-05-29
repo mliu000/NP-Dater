@@ -14,6 +14,10 @@ void GridTile::rotateClockwise() {
     }
 }
 
+void GridTile::addToSoln(const GridCoord& coord) {
+    soln.push_back(coord);
+}
+
 const vector<GridCoord>& GridTile::getCoords() const {
     return coords;
 }

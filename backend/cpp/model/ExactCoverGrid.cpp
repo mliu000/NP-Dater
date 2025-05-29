@@ -12,12 +12,12 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
     int width = dbg.getWidth();
     int height = dbg.getHeight();
 
-    // Iterate through all the GridTiles: O(k)
-    for (auto it = gt.begin(); it != gt.end(); it++) { 
+    // Iterate through all the GridTiles: O(m)
+    for (auto &it: gt) { 
         vector<vector<const GridCoord*>> outer;
 
         // Check the symmetry of the tiles: O(n)
-        int symm = checkSymmetry(it->second->getCoords());
+        int symm = checkSymmetry(it.second->getCoords());
 
         // Iterate through all possible tile placements via the reference points: O(n)
         for (int x = 0; x < width; x++) {
@@ -28,8 +28,8 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
                     bool valid = true;
                     vector<const GridCoord*> inner;
 
-                    // Iterate over all all the coords the tile covers relative to reference: O(n/k)
-                    for (const GridCoord& coord: it->second->getCoords()) {
+                    // Iterate over all all the coords the tile covers relative to reference: O(n/m)
+                    for (const GridCoord& coord: it.second->getCoords()) {
                         int currX = x + coord.getX();
                         int currY = y + coord.getY();
                         if (validPlacement(currX, currY, dbg)) {
@@ -45,17 +45,17 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
                         outer.push_back(inner);
                     }
 
-                    it->second->rotateClockwise(); // O(n) worst case
+                    it.second->rotateClockwise(); // O(n) worst case
                 }
 
                 // Reset the tile's rotation allow coordinates to generate correctly. O(n) worse case
                 for (int i = symm; i < 4; i++) {
-                    it->second->rotateClockwise();
+                    it.second->rotateClockwise();
                 }
             }
         }
 
-        instance.insert({it->second, outer});
+        instance.insert({it.second, outer});
     }
 }
 
@@ -186,9 +186,4 @@ void ExactCoverGrid::reflectCoordsX(vector<GridCoord>& coords) {
 
 const unordered_map<GridTile*, vector<vector<const GridCoord*>>>& ExactCoverGrid::getInstance() const {
     return instance;
-}
-
-
-void ExactCoverGrid::solve(ExactCoverGrid ecgInstance) {
-    // TODO
 }
