@@ -41,8 +41,7 @@ private:
     static bool validGridInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
 
     // Checks the validity of the placement. Returns true if valid, false if invalid
-    static bool validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, 
-        int fct);
+    static bool validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct);
 
     // Places a tile and updates the grid
     static void placeGridTile(Tile* gt, const vector<const Coord*>& coords, 

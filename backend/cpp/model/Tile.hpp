@@ -25,8 +25,13 @@ public:
 
     // Flips the tile
     virtual void flip() = 0;
-    
 
+    // Checks for symmetry: Runtime: O(n)
+    virtual int checkSymmetry() = 0;
+
+    // Checks whether or not the tile needs to be reflected. Runtime: O(n)
+    virtual int needsReflection() = 0;
+    
     // Adds Coordinates to solution
     void addToSoln(const Coord& coord);
 

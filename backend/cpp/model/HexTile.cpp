@@ -23,3 +23,13 @@ void HexTile::flip() {
         coord.setY(x);
     }
 }
+
+int HexTile::checkSymmetry() {
+    // TODO: Implement symmetry check for hexagonal tiles
+    return 0;
+}
+
+int HexTile::needsReflection() {
+    // TODO: Implement reflection check for hexagonal tiles
+    return 1; // Assuming no reflection needed for 
+}

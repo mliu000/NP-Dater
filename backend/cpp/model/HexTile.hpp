@@ -26,4 +26,10 @@ public:
 
     // Flips the tile by reflecting it across the y-axis (negating x-coordinates)
     void flip() override;
+
+    // Checks for symmetry: Runtime: O(n)
+    int checkSymmetry() override;
+
+    // Checks whether or not the tile needs to be reflected. Runtime: O(n)
+    int needsReflection() override;
 };
