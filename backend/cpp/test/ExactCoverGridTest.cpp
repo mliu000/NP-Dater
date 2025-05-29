@@ -62,15 +62,18 @@ bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTil
         }
     }
 
+    int totalCoordsFromTileSoln = 0;
     unordered_set<Coord> coveredCoords;
     for (const auto& it : tiles) {
         const vector<Coord>& soln = it.second->getSoln();
+        totalCoordsFromTileSoln += soln.size();
         for (const Coord& coord : soln) {
             coveredCoords.insert(coord);
         }
     }
 
-    return coveredCoords.size() == freeCoordsCount;
+    return coveredCoords.size() == freeCoordsCount
+        && totalCoordsFromTileSoln == static_cast<int>(freeCoordsCount);
 }
 
 ///// TEST CASES /////
