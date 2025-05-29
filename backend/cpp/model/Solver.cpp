@@ -3,12 +3,15 @@
 using namespace std;
 
 bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
-    BoardCoordsGrid boardCoords = dbg.getCoords();
+    const unordered_map<GridCoord, bool> coordsFromBoard = dbg.getCoords();
     const PossibilitiesGrid& poss = ecg.getInstance();
+    int fct = dbg.getWidth();
 
-    if (!validGridInstance(boardCoords, poss)) {
+    if (!validGridInstance(coordsFromBoard, poss)) {
         return false;
     }
+
+    BoardCoordsGrid boardCoords(fct * dbg.getHeight(), 0);
 
     // Prepare a list of tiles to place
     vector<GridTile*> tiles;
@@ -17,12 +20,12 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
     }
 
     vector<PlacementGrid> soln;
-    return solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln);
+    return solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln, fct);
 }
 
 // Helper function for MRV-based recursive backtracking
 bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const PossibilitiesGrid& poss, 
-    vector<GridTile*>& tiles, vector<PlacementGrid>& soln) {
+    vector<GridTile*>& tiles, vector<PlacementGrid>& soln, int fct) {
     if (tiles.empty()) {
         recordSolution(soln);
         return true;
@@ -36,7 +39,7 @@ bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const Possibil
         const auto& placements = poss.find(tiles[i])->second;
         vector<vector<const GridCoord*>> valid;
         for (const auto& coords : placements) {
-            if (validGridTilePlacement(coords, boardCoords)) {
+            if (validGridTilePlacement(coords, boardCoords, fct)) {
                 valid.push_back(coords);
             }
         }
@@ -54,11 +57,11 @@ bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const Possibil
     // Remove tile from list for recursion
     tiles.erase(tiles.begin() + minIdx);
     for (const auto& coords : validPlacements) {
-        placeGridTile(tile, coords, soln, boardCoords);
-        if (solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln)) {
+        placeGridTile(tile, coords, soln, boardCoords, fct);
+        if (solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln, fct)) {
             return true;
         }
-        displaceGridTile(soln, boardCoords);
+        displaceGridTile(soln, boardCoords, fct);
     }
     // Restore tile to list
     tiles.insert(tiles.begin() + minIdx, tile);
@@ -66,7 +69,7 @@ bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const Possibil
 }
 
 
-bool Solver::validGridInstance(const BoardCoordsGrid& coords, const PossibilitiesGrid& poss) {
+bool Solver::validGridInstance(const unordered_map<GridCoord, bool>& coords, const PossibilitiesGrid& poss) {
     // Get the instances
 
     // Get the counts for both
@@ -87,9 +90,9 @@ bool Solver::validGridInstance(const BoardCoordsGrid& coords, const Possibilitie
 }
 
 
-bool Solver::validGridTilePlacement(const vector<const GridCoord*>& coords, BoardCoordsGrid& bcg) {
+bool Solver::validGridTilePlacement(const vector<const GridCoord*>& coords, BoardCoordsGrid& bcg, int fct) {
     for (const GridCoord* coord: coords) {
-        if (bcg[*coord]) {
+        if (bcg[coord->getY() * fct + coord->getX()] == 1) {
             return false;
         }
     }
@@ -100,23 +103,23 @@ bool Solver::validGridTilePlacement(const vector<const GridCoord*>& coords, Boar
 
 
 void Solver::placeGridTile(GridTile* gt, const vector<const GridCoord*>& coords, 
-        vector<PlacementGrid>& pg, BoardCoordsGrid& bcg) {
+        vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct) {
     for (const GridCoord* coord: coords) {
-        bcg[*coord] = true;
+        bcg[coord->getY() * fct + coord->getX()] = 1;
     }
 
     pg.push_back({gt, &coords});
 }
 
 
-void Solver::displaceGridTile(vector<PlacementGrid>& pg, BoardCoordsGrid& bcg) {
+void Solver::displaceGridTile(vector<PlacementGrid>& pg, BoardCoordsGrid& bcg, int fct) {
     if (pg.empty()) {
         return;
     }
 
     PlacementGrid& latestPlacement = pg.back();
     for (const GridCoord* coord: *latestPlacement.second) {
-        bcg[*coord] = false;
+        bcg[coord->getY() * fct + coord->getX()] = 0;
     }
 
     pg.pop_back();
