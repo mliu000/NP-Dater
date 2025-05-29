@@ -3,7 +3,7 @@
 using namespace std;
 
 // Constructor
-GridTile::GridTile(string id, vector<Coord> coordinates) : Tile(id), coords(coordinates) {}
+GridTile::GridTile(string id, vector<Coord> coordinates) : Tile(id, coordinates) {}
 
 void GridTile::rotateClockwise() {
     for (Coord& coord: coords) {
@@ -19,16 +19,4 @@ void GridTile::reflectX() {
         int x = coord.getX();
         coord.setX(-x);
     }
-}
-
-void GridTile::addToSoln(const Coord& coord) {
-    soln.push_back(coord);
-}
-
-const vector<Coord>& GridTile::getCoords() const {
-    return coords;
-}
-
-const vector<Coord>& GridTile::getSoln() const {
-    return soln;
 }

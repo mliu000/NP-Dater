@@ -25,21 +25,5 @@ public:
     void rotateClockwise() override;
 
     // Reflects the grid tile across the x-axis
-    void reflectX();
-
-    // Adds Coordinates to solution
-    void addToSoln(const Coord& coord);
-
-    ///// GETTERS ///// 
-    
-    const vector<Coord>& getCoords() const;
-    const vector<Coord>& getSoln() const;
-
-private:
-
-    // Set of coordinates relative to a reference (0, 0)
-    vector<Coord> coords;
-    
-    // Solution that stores the actual coordinates that the tile should be placed
-    vector<Coord> soln;
+    void reflectX() override;
 };
