@@ -55,9 +55,9 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
                 if (level == 0) break;
                 initialized[level] = false;
                 placementIdx[level] = 0;
-                --level;
+                level--;
                 displaceGridTile(soln, boardCoords, fct);
-                ++placementIdx[level];
+                placementIdx[level]++;
                 continue;
             }
             // LCV: Sort placements by how few options they block for remaining tiles
@@ -85,7 +85,8 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
             }
             // Sort by descending total (least constraining value first)
             sort(lcvPairs.begin(), lcvPairs.end(),
-                [](const pair<int, vector<const GridCoord*>>& a, const pair<int, vector<const GridCoord*>>& b) {
+                [](const pair<int, vector<const GridCoord*>>& a, 
+                    const pair<int, vector<const GridCoord*>>& b) {
                     return a.first > b.first;
                 });
             validPlacementsStack[level].clear();
@@ -107,9 +108,9 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
             initialized[level] = false;
             placementIdx[level] = 0;
             if (level == 0) break;
-            --level;
+            level--;
             displaceGridTile(soln, boardCoords, fct);
-            ++placementIdx[level];
+            placementIdx[level]++;
         }
     }
     return false;

@@ -51,6 +51,32 @@ struct ExactCoverFixture {
 };
 
 
+///// HELPER FUNCTIONS /////
+
+// Helper function that checks that the solution is valid
+bool validSolution(const DateBoardGrid& dbg, const unordered_map<string, GridTile*>& tiles) {
+    const unordered_map<GridCoord, bool>& coords = dbg.getCoords();
+    size_t freeCoordsCount = 0;
+    for (const auto& it : coords) {
+        if (!it.second) {
+            freeCoordsCount++;
+        }
+    }
+
+    unordered_set<GridCoord> coveredCoords;
+    for (const auto& it : tiles) {
+        const vector<GridCoord>& soln = it.second->getSoln();
+        for (const GridCoord& coord : soln) {
+            coveredCoords.insert(coord);
+        }
+    }
+
+    return coveredCoords.size() == freeCoordsCount;
+}
+
+///// TEST CASES /////
+
+
 TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCover]") {
     /*
     const vector<vector<const GridCoord*>>& outer = ecg->getInstance().find(&t1)->second;
@@ -85,6 +111,7 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[
     */
 
     REQUIRE(solvable);
+    REQUIRE(validSolution(d, tiles));
 }
 
 TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[ExactCover]") {
@@ -106,6 +133,7 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
     bool solvable = Solver::solveDatePuzzleGrid(d1, ecg1);
 
     REQUIRE(!solvable);
+    REQUIRE(!validSolution(d1, tiles1));
 }
 
 TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
@@ -127,6 +155,7 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     bool solvable = Solver::solveDatePuzzleGrid(d2, ecg2);
 
     REQUIRE(!solvable);
+    REQUIRE(!validSolution(d2, tiles2));
 }
 
 
@@ -175,6 +204,5 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     cout << "Solver took " << duration.count() << "ms" << endl;
 
     REQUIRE(solvable);
+    REQUIRE(validSolution(d3, tiles3));
 }
-
-
