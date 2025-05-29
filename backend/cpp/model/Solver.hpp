@@ -34,9 +34,6 @@ public:
 
 private:
 
-    static bool solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const PossibilitiesGrid& poss, 
-        std::vector<GridTile*>& tiles, std::vector<PlacementGrid>& soln, int fct);
-
     /* Checks the validity of the input. Makes sure that the total number of unblocked coords is 
     equal to the number of coords all tiles can cover together while non-overlapping
     Returns true if =, false if not.*/

@@ -12,59 +12,72 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
     }
 
     BoardCoordsGrid boardCoords(fct * dbg.getHeight(), 0);
-
-    // Prepare a list of tiles to place
     vector<GridTile*> tiles;
     for (const auto& it : poss) {
         tiles.push_back(it.first);
     }
-
+    size_t n = tiles.size();
+    vector<size_t> tileOrder(n); // Indices into tiles
+    iota(tileOrder.begin(), tileOrder.end(), 0);
+    vector<size_t> placementIdx(n, 0); // Which placement is being tried for each tile
+    vector<vector<vector<const GridCoord*>>> validPlacementsStack(n); // Valid placements for each tile at each level
+    vector<bool> initialized(n, false); // Whether validPlacementsStack[level] is initialized
     vector<PlacementGrid> soln;
-    return solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln, fct);
-}
-
-// Helper function for MRV-based recursive backtracking
-bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const PossibilitiesGrid& poss, 
-    vector<GridTile*>& tiles, vector<PlacementGrid>& soln, int fct) {
-    if (tiles.empty()) {
-        recordSolution(soln);
-        return true;
-    }
-
-    // MRV: Find the tile with the fewest valid placements
-    int minIdx = -1;
-    size_t minCount = SIZE_MAX;
-    vector<vector<const GridCoord*>> validPlacements;
-    for (size_t i = 0; i < tiles.size(); ++i) {
-        const auto& placements = poss.find(tiles[i])->second;
-        vector<vector<const GridCoord*>> valid;
-        for (const auto& coords : placements) {
-            if (validGridTilePlacement(coords, boardCoords, fct)) {
-                valid.push_back(coords);
-            }
-        }
-        if (valid.size() < minCount) {
-            minCount = valid.size();
-            minIdx = static_cast<int>(i);
-            validPlacements = valid;
-        }
-        if (minCount == 0) break; // Early exit if any tile has no valid placements
-    }
-    if (minCount == 0) return false; // Dead end
-
-    // Try all valid placements for the most constrained tile
-    GridTile* tile = tiles[minIdx];
-    // Remove tile from list for recursion
-    tiles.erase(tiles.begin() + minIdx);
-    for (const auto& coords : validPlacements) {
-        placeGridTile(tile, coords, soln, boardCoords, fct);
-        if (solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln, fct)) {
+    size_t level = 0;
+    while (true) {
+        if (level == n) {
+            recordSolution(soln);
             return true;
         }
-        displaceGridTile(soln, boardCoords, fct);
+        // Only compute MRV and valid placements if not initialized at this level
+        if (!initialized[level]) {
+            size_t minIdx = level;
+            size_t minCount = SIZE_MAX;
+            for (size_t i = level; i < n; ++i) {
+                const auto& placements = poss.find(tiles[tileOrder[i]])->second;
+                vector<vector<const GridCoord*>> valid;
+                for (const auto& coords : placements) {
+                    if (validGridTilePlacement(coords, boardCoords, fct)) {
+                        valid.push_back(coords);
+                    }
+                }
+                if (valid.size() < minCount) {
+                    minCount = valid.size();
+                    minIdx = i;
+                    validPlacementsStack[level] = valid;
+                }
+                if (minCount == 0) break;
+            }
+            if (minCount == 0) {
+                // Dead end, backtrack
+                if (level == 0) break;
+                initialized[level] = false;
+                placementIdx[level] = 0;
+                --level;
+                displaceGridTile(soln, boardCoords, fct);
+                ++placementIdx[level];
+                continue;
+            }
+            // Swap the chosen tile to the current level
+            swap(tileOrder[level], tileOrder[minIdx]);
+            placementIdx[level] = 0;
+            initialized[level] = true;
+        }
+        // Try all valid placements for the current tile at this level
+        if (placementIdx[level] < validPlacementsStack[level].size()) {
+            const auto& coords = validPlacementsStack[level][placementIdx[level]];
+            placeGridTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct);
+            ++level;
+        } else {
+            // No more placements at this level, backtrack
+            initialized[level] = false;
+            placementIdx[level] = 0;
+            if (level == 0) break;
+            --level;
+            displaceGridTile(soln, boardCoords, fct);
+            ++placementIdx[level];
+        }
     }
-    // Restore tile to list
-    tiles.insert(tiles.begin() + minIdx, tile);
     return false;
 }
 
