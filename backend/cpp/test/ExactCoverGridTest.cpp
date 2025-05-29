@@ -171,8 +171,8 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     auto start = high_resolution_clock::now();
     bool solvable = Solver::solveDatePuzzleGrid(d3, ecg3);
     auto end = high_resolution_clock::now();
-    auto duration = duration_cast<seconds>(end - start);
-    cout << "Solver took " << duration.count() << "sec" << endl;
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Solver took " << duration.count() << "ms" << endl;
 
     REQUIRE(solvable);
 }

@@ -28,7 +28,8 @@ public:
 
     /* Attempts to solve the instance of Exact Cover. 
     Returns true if the instance can be solved, false if it cannot. 
-    Runtime (m tiles and n coordinates): O(n^m) worst case, but greatly reduced through pruning. 
+    Runtime (m tiles and n coordinates): O(n^m) worst case, but grealy reduced through pruning, 
+    backtracking, and MRV and LCV heuristics.
     */
     static bool solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg);
 
