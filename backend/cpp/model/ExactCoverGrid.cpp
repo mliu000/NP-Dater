@@ -16,42 +16,54 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
     for (auto &it: gt) { 
         vector<vector<const GridCoord*>> outer;
 
-        // Check the symmetry of the tiles: O(n)
+        // Check the symmetry of the tiles and whether or not reflection is required: O(n)
         int symm = checkSymmetry(it.second->getCoords());
+        int reflect = needsReflection(it.second->getCoords());
 
         // Iterate through all possible tile placements via the reference points: O(n)
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
 
-                // Iterate through all possible rotations (4 possible rotations): O(1)
-                for (int r = 0; r < symm; r++) {
-                    bool valid = true;
-                    vector<const GridCoord*> inner;
+                // Iterate through all possible reflections if needed: O(1)
+                for (int f = 0; f < reflect; f++) {
 
-                    // Iterate over all all the coords the tile covers relative to reference: O(n/m)
-                    for (const GridCoord& coord: it.second->getCoords()) {
-                        int currX = x + coord.getX();
-                        int currY = y + coord.getY();
-                        if (validPlacement(currX, currY, dbg)) {
-                            inner.push_back(&dbg.getCoords().find(GridCoord(currX, currY))->first);
-                        } else {
-                            valid = false;
-                            break;
+                    // Iterate through all possible rotations (4 possible rotations): O(1)
+                    for (int r = 0; r < symm; r++) {
+                        bool valid = true;
+                        vector<const GridCoord*> inner;
+
+                        // Iterate over all all the coords the tile covers relative to reference: O(n/m)
+                        for (const GridCoord& coord: it.second->getCoords()) {
+                            int currX = x + coord.getX();
+                            int currY = y + coord.getY();
+                            if (validPlacement(currX, currY, dbg)) {
+                                inner.push_back(&dbg.getCoords().find(GridCoord(currX, currY))->first);
+                            } else {
+                                valid = false;
+                                break;
+                            }
                         }
+
+                        // Add to inner list to outer list if placement is valid
+                        if (valid) {
+                            outer.push_back(inner);
+                        }
+
+                        it.second->rotateClockwise(); // O(n) worst case
                     }
 
-                    // Add to inner list to outer list if placement is valid
-                    if (valid) {
-                        outer.push_back(inner);
+                    // Reset the tile's rotation allow coordinates to generate correctly. O(n) worse case
+                    for (int i = symm; i < 4; i++) {
+                        it.second->rotateClockwise();
                     }
 
-                    it.second->rotateClockwise(); // O(n) worst case
+                    it.second->reflectX(); // O(n) worst case
                 }
 
-                // Reset the tile's rotation allow coordinates to generate correctly. O(n) worse case
-                for (int i = symm; i < 4; i++) {
-                    it.second->rotateClockwise();
+                for (int k = reflect; k < 2; k++) {
+                    it.second->reflectX(); // O(n) worst case
                 }
+                
             }
         }
 
@@ -78,14 +90,12 @@ bool ExactCoverGrid::validPlacement(int x, int y, DateBoardGrid& dbg) {
 
 int ExactCoverGrid::checkSymmetry(const vector<GridCoord>& coords) {
     // Check Square
-    bool square = isSquare(coords);
-    if (square) {
+    if (isSquare(coords)) {
         return 1;
     }
 
     // Check 180deg symmetry
-    bool is180deg = is180degSymmetric(coords); 
-    if (is180deg) {
+    if (is180degSymmetric(coords)) {
         return 2;
     }
 
@@ -93,6 +103,39 @@ int ExactCoverGrid::checkSymmetry(const vector<GridCoord>& coords) {
     return 4;
 }
 
+int ExactCoverGrid::needsReflection(const vector<GridCoord>& coords) {
+    // Check if the tile is square, if so, no reflection needed
+    if (isSquare(coords)) {
+        return 1;
+    }
+
+    // Check whether or not the tile needs reflection
+    vector<GridCoord> original = coords;
+    vector<GridCoord> reference = coords;
+    normalizeCoords(original);
+    normalizeCoords(reference);
+
+    reflectCoordsX(reference);
+    normalizeCoords(reference);
+
+    // If we notice that none of the rotations after the reflection are the same, then we need
+    // to reflect the tile.
+    int rotationsNotTheSame = 0;
+    for (int i = 0; i < 4; i++) {
+        unordered_set<GridCoord> referenceSet(reference.begin(), reference.end());
+        for (GridCoord& coord: original) {
+            if (referenceSet.find(coord) == referenceSet.end()) {
+                rotationsNotTheSame++;
+                break;
+            }
+        }
+        rotateCoords(reference);
+        normalizeCoords(reference);
+    }
+
+    // Otherwise, no reflection is needed
+    return rotationsNotTheSame == 4 ? 2 : 1;
+}
 
 bool ExactCoverGrid::isSquare(const vector<GridCoord>& coords) {
     // Start by normalizing

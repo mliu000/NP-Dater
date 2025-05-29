@@ -7,8 +7,10 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 /*
 Mu Ye Liu - May 2025
@@ -23,19 +25,21 @@ struct ExactCoverFixture {
     unordered_map<string, GridTile*> tiles;
     ExactCoverGrid* ecg;
 
-    GridTile t1, t2, t3;
+    GridTile t1, t2, t3, t4;
 
     ExactCoverFixture()
-        : d(2, 5),
-          t1("1", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1)}),
+        : d(2, 7),
+          t1("1", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1), GridCoord(0, 2)}),
           t2("2", {GridCoord(0, 0), GridCoord(1, 0)}),
-          t3("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(0, 1), GridCoord(1, 1)})
+          t3("3", {GridCoord(0, 0), GridCoord(1, 0), GridCoord(0, 1), GridCoord(1, 1)}),
+          t4("4", {GridCoord(0, 0), GridCoord(-1, 0), GridCoord(0, 1)})
     {
-        d.blockCoordinate(0, 4);
+        d.blockCoordinate(0, 6);
 
         tiles.insert({t1.getId(), &t1});
         tiles.insert({t2.getId(), &t2});
         tiles.insert({t3.getId(), &t3});
+        tiles.insert({t4.getId(), &t4});
 
         ecg = new ExactCoverGrid(d, tiles);
 
@@ -59,14 +63,15 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCov
     }
     */
 
-    REQUIRE(ecg->getInstance().size() == 3);
-    REQUIRE(ecg->getInstance().find(&t1)->second.size() == 13);
-    REQUIRE(ecg->getInstance().find(&t2)->second.size() == 11);
-    REQUIRE(ecg->getInstance().find(&t3)->second.size() == 3);
+    REQUIRE(ecg->getInstance().size() == 4);
+    REQUIRE(ecg->getInstance().find(&t1)->second.size() == 17);
+    REQUIRE(ecg->getInstance().find(&t2)->second.size() == 17);
+    REQUIRE(ecg->getInstance().find(&t3)->second.size() == 5);
+    REQUIRE(ecg->getInstance().find(&t4)->second.size() == 21);
 }
 
 TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[ExactCover]") {
-    //bool solvable = Solver::solveDatePuzzleGrid(d, *ecg);
+    bool solvable = Solver::solveDatePuzzleGrid(d, *ecg);
 
     /*
     for (auto& it: tiles) {
@@ -79,7 +84,7 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[
     }
     */
 
-    //REQUIRE(solvable);
+    REQUIRE(solvable);
 }
 
 TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[ExactCover]") {
@@ -98,9 +103,9 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
 
     ExactCoverGrid ecg1(d1, tiles1);
 
-    //bool solvable = Solver::solveDatePuzzleGrid(d1, ecg1);
+    bool solvable = Solver::solveDatePuzzleGrid(d1, ecg1);
 
-    //REQUIRE(!solvable);
+    REQUIRE(!solvable);
 }
 
 TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
@@ -119,10 +124,11 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
 
     ExactCoverGrid ecg2(d2, tiles2);
 
-    //bool solvable = Solver::solveDatePuzzleGrid(d2, ecg2);
+    bool solvable = Solver::solveDatePuzzleGrid(d2, ecg2);
 
-    //REQUIRE(!solvable);
+    REQUIRE(!solvable);
 }
+
 
 TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     // Create a smaller instance with not enough tile coverage
@@ -162,8 +168,13 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
 
     ExactCoverGrid ecg3(d3, tiles3);
 
+    auto start = high_resolution_clock::now();
     bool solvable = Solver::solveDatePuzzleGrid(d3, ecg3);
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<seconds>(end - start);
+    cout << "Solver took " << duration.count() << "sec" << endl;
 
     REQUIRE(solvable);
 }
+
 

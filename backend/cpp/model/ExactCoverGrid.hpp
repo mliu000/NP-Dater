@@ -39,6 +39,10 @@ private:
     */
     int checkSymmetry(const vector<GridCoord>& coords);
 
+    /* Checks whether or not the tile needs to be reflected. Returns 2 if yes, 1 if no.
+    */
+    int needsReflection(const vector<GridCoord>& coords);
+
     /* Normalizes a vector of coordinates, by setting all coordinates to be <= 0
     Runtime: O(n)
     */

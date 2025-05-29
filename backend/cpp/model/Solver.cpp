@@ -6,47 +6,62 @@ bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
     BoardCoordsGrid boardCoords = dbg.getCoords();
     const PossibilitiesGrid& poss = ecg.getInstance();
 
-    // First, check validity of the solution
     if (!validGridInstance(boardCoords, poss)) {
         return false;
     }
 
-    // Initialize the indices
-    vector<pair<GridTile*, int>> indices;
-    for (auto& it: poss) {
-        indices.push_back({it.first, 0});
+    // Prepare a list of tiles to place
+    vector<GridTile*> tiles;
+    for (const auto& it : poss) {
+        tiles.push_back(it.first);
     }
 
     vector<PlacementGrid> soln;
+    return solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln);
+}
 
-    int i = 0; // Index counter
-
-    while (i >= 0) {
-        cout << i << endl;
-        if (indices[i].second == static_cast<int>(poss.find(indices[i].first)->second.size())) {
-            // Case where we exhaust all the possible placements for the tile.
-            indices[i].second = 0;
-            displaceGridTile(soln, boardCoords);
-            i--;
-        } else {
-            // Case where we still have possible placements left.
-            const vector<const GridCoord*>& currCoords = poss.find(indices[i].first)->second[indices[i].second];
-            indices[i].second++;
-            if (validGridTilePlacement(currCoords, boardCoords)) {
-                placeGridTile(indices[i].first, currCoords, soln, boardCoords);
-                i++;
-            }
-        }
-        
-        // Finished the algorithm
-        if (i == static_cast<int>(indices.size())) {
-            recordSolution(soln);
-            return true;
-        }
-
+// Helper function for MRV-based recursive backtracking
+bool Solver::solveDatePuzzleGridMRV(BoardCoordsGrid& boardCoords, const PossibilitiesGrid& poss, 
+    vector<GridTile*>& tiles, vector<PlacementGrid>& soln) {
+    if (tiles.empty()) {
+        recordSolution(soln);
+        return true;
     }
 
-    // If algorithm finishes without a soln, then return false;
+    // MRV: Find the tile with the fewest valid placements
+    int minIdx = -1;
+    size_t minCount = SIZE_MAX;
+    vector<vector<const GridCoord*>> validPlacements;
+    for (size_t i = 0; i < tiles.size(); ++i) {
+        const auto& placements = poss.find(tiles[i])->second;
+        vector<vector<const GridCoord*>> valid;
+        for (const auto& coords : placements) {
+            if (validGridTilePlacement(coords, boardCoords)) {
+                valid.push_back(coords);
+            }
+        }
+        if (valid.size() < minCount) {
+            minCount = valid.size();
+            minIdx = static_cast<int>(i);
+            validPlacements = valid;
+        }
+        if (minCount == 0) break; // Early exit if any tile has no valid placements
+    }
+    if (minCount == 0) return false; // Dead end
+
+    // Try all valid placements for the most constrained tile
+    GridTile* tile = tiles[minIdx];
+    // Remove tile from list for recursion
+    tiles.erase(tiles.begin() + minIdx);
+    for (const auto& coords : validPlacements) {
+        placeGridTile(tile, coords, soln, boardCoords);
+        if (solveDatePuzzleGridMRV(boardCoords, poss, tiles, soln)) {
+            return true;
+        }
+        displaceGridTile(soln, boardCoords);
+    }
+    // Restore tile to list
+    tiles.insert(tiles.begin() + minIdx, tile);
     return false;
 }
 

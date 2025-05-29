@@ -42,3 +42,16 @@ TEST_CASE("GridTile rotate test") {
     REQUIRE(g.getCoords()[1] == GridCoord(-1, 0));
     REQUIRE(g.getCoords()[2] == GridCoord(-1, -1));
 }
+
+TEST_CASE("GridTile reflect test") {
+    vector<GridCoord> vgc;
+    vgc.push_back(GridCoord(0, 0));
+    vgc.push_back(GridCoord(1, 0));
+    vgc.push_back(GridCoord(1, 1));
+
+    GridTile g("123", vgc);
+    g.reflectX();
+    REQUIRE(g.getCoords()[0] == GridCoord(0, 0));
+    REQUIRE(g.getCoords()[1] == GridCoord(-1, 0));
+    REQUIRE(g.getCoords()[2] == GridCoord(-1, 1));
+}

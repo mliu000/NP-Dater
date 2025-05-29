@@ -14,6 +14,13 @@ void GridTile::rotateClockwise() {
     }
 }
 
+void GridTile::reflectX() {
+    for (GridCoord& coord: coords) {
+        int x = coord.getX();
+        coord.setX(-x);
+    }
+}
+
 void GridTile::addToSoln(const GridCoord& coord) {
     soln.push_back(coord);
 }
