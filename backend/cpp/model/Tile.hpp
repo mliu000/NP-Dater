@@ -23,8 +23,8 @@ public:
     // Rotates the string clockwise by one dimension
     virtual void rotateClockwise() = 0;
 
-    // Reflects the tile across the x-axis
-    virtual void reflectX() = 0;
+    // Flips the tile
+    virtual void flip() = 0;
     
 
     // Adds Coordinates to solution
@@ -39,7 +39,7 @@ public:
 protected:
     // Unique Id for this tile and set of coordinates
     string id;
-    
+
     // Set of coordinates relative to a reference (0, 0)
     vector<Coord> coords;
     

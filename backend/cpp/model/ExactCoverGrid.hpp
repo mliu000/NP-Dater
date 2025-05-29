@@ -65,7 +65,7 @@ private:
     /* Reflects the coordinates about the X-Axis
     Runtime: O(n)
     */
-    void reflectCoordsX(vector<Coord>& coords);
+    void flip(vector<Coord>& coords);
 
     /* Checks whether or not the tile placement is valid. 
     Runtime: O(1)

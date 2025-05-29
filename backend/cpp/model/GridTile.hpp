@@ -8,7 +8,7 @@ using namespace std;
 /*
 Mu Ye Liu - May 2025
 
-Represents the tile class, which includes coordinates, the allows for rotations
+Represents the Grid tile class, which includes coordinates, the allows for rotations
 The (0, 0) coordinate will always be the reference point. Extends the Tile superclass 
 */
 class GridTile : public Tile {
@@ -24,6 +24,6 @@ public:
     // Rotates the grid tile clockwise by 90deg
     void rotateClockwise() override;
 
-    // Reflects the grid tile across the x-axis
-    void reflectX() override;
+    // Flips the tile
+    void flip() override;
 };

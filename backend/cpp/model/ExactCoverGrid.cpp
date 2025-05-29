@@ -57,11 +57,11 @@ void ExactCoverGrid::createInstance(DateBoardGrid& dbg, unordered_map<string, Gr
                         it.second->rotateClockwise();
                     }
 
-                    it.second->reflectX(); // O(n) worst case
+                    it.second->flip(); // O(n) worst case
                 }
 
                 for (int k = reflect; k < 2; k++) {
-                    it.second->reflectX(); // O(n) worst case
+                    it.second->flip(); // O(n) worst case
                 }
                 
             }
@@ -115,7 +115,7 @@ int ExactCoverGrid::needsReflection(const vector<Coord>& coords) {
     normalizeCoords(original);
     normalizeCoords(reference);
 
-    reflectCoordsX(reference);
+    flip(reference);
     normalizeCoords(reference);
 
     // If we notice that none of the rotations after the reflection are the same, then we need
@@ -140,15 +140,15 @@ int ExactCoverGrid::needsReflection(const vector<Coord>& coords) {
 bool ExactCoverGrid::isSquare(const vector<Coord>& coords) {
     // Start by normalizing
     vector<Coord> toRotate = coords;
-    vector<Coord> toReflectX = coords;
+    vector<Coord> toFlip = coords;
     normalizeCoords(toRotate);
-    normalizeCoords(toReflectX);
+    normalizeCoords(toFlip);
 
     // Rotate and reflect the coordinates, store one of them in unordered map, check symmetry
     rotateCoords(toRotate);
-    reflectCoordsX(toReflectX);
+    flip(toFlip);
 
-    unordered_set<Coord> reflectedCoordsSet(toReflectX.begin(), toReflectX.end());
+    unordered_set<Coord> reflectedCoordsSet(toFlip.begin(), toFlip.end());
 
     for (Coord& rotatedCoord: toRotate) {
         if (reflectedCoordsSet.find(rotatedCoord) == reflectedCoordsSet.end()) {
@@ -218,7 +218,7 @@ void ExactCoverGrid::rotateCoords(vector<Coord>& coords) {
 }
 
 
-void ExactCoverGrid::reflectCoordsX(vector<Coord>& coords) {
+void ExactCoverGrid::flip(vector<Coord>& coords) {
     for (Coord& coord: coords) {
         int oldX = coord.getX();
 

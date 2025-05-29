@@ -14,7 +14,7 @@ void GridTile::rotateClockwise() {
     }
 }
 
-void GridTile::reflectX() {
+void GridTile::flip() {
     for (Coord& coord: coords) {
         int x = coord.getX();
         coord.setX(-x);
