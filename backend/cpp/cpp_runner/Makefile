@@ -15,10 +15,10 @@ DATEBOARDHEX = ../model/DateBoardHex.cpp
 TILE = ../model/Tile.cpp
 HEXTILE = ../model/HexTile.cpp
 GRIDTILE = ../model/GridTile.cpp
-EXACTCOVERGRID = ../model/ExactCoverGrid.cpp
+EXACTCOVER = ../model/ExactCover.cpp
 SOLVER = ../model/Solver.cpp
 SRC = $(MAIN) $(COORD) $(DATEBOARDGRID) $(DATEBOARDHEX) $(DATEBOARD) $(GRIDCOORD) $(TILE) \
-	$(GRIDTILE) $(HEXTILE) $(EXACTCOVERGRID) $(SOLVER)
+	$(GRIDTILE) $(HEXTILE) $(EXACTCOVER) $(SOLVER)
 
 # Get base names like Cell.o, Main.o
 OBJ_NAMES = $(notdir $(SRC:.cpp=.o))
@@ -58,7 +58,7 @@ $(OBJDIR)/GridTile.o: $(GRIDTILE) | $(OBJDIR)
 $(OBJDIR)/HexTile.o: $(HEXTILE) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJDIR)/ExactCoverGrid.o: $(EXACTCOVERGRID) | $(OBJDIR)
+$(OBJDIR)/ExactCover.o: $(EXACTCOVER) | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJDIR)/Solver.o: $(SOLVER) | $(OBJDIR)
@@ -79,11 +79,11 @@ TEST_TARGET = test.exe
 COORD_TEST = ../test/CoordTest.cpp
 TILE_TEST = ../test/TileTest.cpp
 DATEBOARD_TEST = ../test/DateBoardTest.cpp
-EXACTCOVERGRID_TEST = ../test/ExactCoverGridTest.cpp
+EXACTCOVER_TEST = ../test/ExactCoverTest.cpp
 
-TEST_SRC = $(COORD_TEST) $(DATEBOARD_TEST) $(TILE_TEST) $(EXACTCOVERGRID_TEST)
+TEST_SRC = $(COORD_TEST) $(DATEBOARD_TEST) $(TILE_TEST) $(EXACTCOVER_TEST)
 TEST_OBJ = $(OBJDIR)/Coord.o $(OBJDIR)/DateBoard.o $(OBJDIR)/DateBoardGrid.o $(OBJDIR)/DateBoardHex.o \
-	$(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o $(OBJDIR)/HexTile.o $(OBJDIR)/ExactCoverGrid.o \
+	$(OBJDIR)/Tile.o $(OBJDIR)/GridTile.o $(OBJDIR)/HexTile.o $(OBJDIR)/ExactCover.o \
 	$(OBJDIR)/Solver.o
 
 test: $(TEST_TARGET)

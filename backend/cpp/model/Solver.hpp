@@ -5,7 +5,7 @@
 #include "../model/DateBoardGrid.hpp"
 #include "../model/GridTile.hpp"
 #include "../model/Coord.hpp"
-#include "../model/ExactCoverGrid.hpp"
+#include "../model/ExactCover.hpp"
 
 using namespace std;
 
