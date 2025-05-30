@@ -7,6 +7,8 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
     const Possibilities& poss = ecg.getInstance();
     int fct = dbg.getWidth();
 
+    int radius = dynamic_cast<DateBoardHex*>(&dbg) ? dynamic_cast<DateBoardHex*>(&dbg)->getRadius() : 0;
+
     // Don't even try if the instance is invalid
     if (!validInstance(coordsFromBoard, poss)) {
         return false;
@@ -39,7 +41,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
                 const auto& placements = poss.find(tiles[tileOrder[i]])->second;
                 vector<vector<const Coord*>> valid;
                 for (const auto& coords : placements) {
-                    if (validTilePlacement(coords, boardCoords, fct)) {
+                    if (validTilePlacement(coords, boardCoords, fct, radius)) {
                         valid.push_back(coords);
                     }
                 }
@@ -56,7 +58,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
                 initialized[level] = false;
                 placementIdx[level] = 0;
                 level--;
-                displaceTile(soln, boardCoords, fct);
+                displaceTile(soln, boardCoords, fct, radius);
                 placementIdx[level]++;
                 continue;
             }
@@ -65,21 +67,21 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
             for (const auto& coords : bestValid) {
                 // Place temporarily
                 for (const Coord* coord : coords) {
-                    boardCoords[coord->getY() * fct + coord->getX()] = 1;
+                    boardCoords[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 1;
                 }
                 // Count total valid placements for remaining tiles
                 int total = 0;
                 for (size_t j = level + 1; j < n; ++j) {
                     const auto& placements = poss.find(tiles[tileOrder[j]])->second;
                     for (const auto& c : placements) {
-                        if (validTilePlacement(c, boardCoords, fct)) {
+                        if (validTilePlacement(c, boardCoords, fct, radius)) {
                             total++;
                         }
                     }
                 }
                 // Unplace
                 for (const Coord* coord : coords) {
-                    boardCoords[coord->getY() * fct + coord->getX()] = 0;
+                    boardCoords[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 0;
                 }
                 lcvPairs.push_back({total, coords});
             }
@@ -101,7 +103,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
         // Try all valid placements for the current tile at this level
         if (placementIdx[level] < validPlacementsStack[level].size()) {
             const auto& coords = validPlacementsStack[level][placementIdx[level]];
-            placeTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct);
+            placeTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct, radius);
             ++level;
         } else {
             // No more placements at this level, backtrack
@@ -109,7 +111,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
             placementIdx[level] = 0;
             if (level == 0) break;
             level--;
-            displaceTile(soln, boardCoords, fct);
+            displaceTile(soln, boardCoords, fct, radius);
             placementIdx[level]++;
         }
     }
@@ -133,9 +135,9 @@ bool Solver::validInstance(const unordered_map<Coord, bool>& coords, const Possi
 }
 
 
-bool Solver::validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct) {
+bool Solver::validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct, int radius) {
     for (const Coord* coord: coords) {
-        if (bcg[coord->getY() * fct + coord->getX()] == 1) {
+        if (bcg[(coord->getY() + radius) * fct + (coord->getX() + radius)]) {
             return false;
         }
     }
@@ -144,21 +146,21 @@ bool Solver::validTilePlacement(const vector<const Coord*>& coords, BoardCoords&
 
 
 void Solver::placeTile(Tile* gt, const vector<const Coord*>& coords, 
-        vector<Placement>& pg, BoardCoords& bcg, int fct) {
+        vector<Placement>& pg, BoardCoords& bcg, int fct, int radius) {
     for (const Coord* coord: coords) {
-        bcg[coord->getY() * fct + coord->getX()] = 1;
+        bcg[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 1;
     }
     pg.push_back({gt, &coords});
 }
 
 
-void Solver::displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct) {
+void Solver::displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct, int radius) {
     if (pg.empty()) {
         return;
     }
     Placement& latestPlacement = pg.back();
     for (const Coord* coord: *latestPlacement.second) {
-        bcg[coord->getY() * fct + coord->getX()] = 0;
+        bcg[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 0;
     }
     pg.pop_back();
 }

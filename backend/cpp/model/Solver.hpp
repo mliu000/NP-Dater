@@ -43,14 +43,14 @@ private:
     static bool validInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
 
     // Checks the validity of the placement. Returns true if valid, false if invalid
-    static bool validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct);
+    static bool validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct, int radius);
 
     // Places a tile and updates the grid
     static void placeTile(Tile* gt, const vector<const Coord*>& coords, 
-        vector<Placement>& pg, BoardCoords& bcg, int fct);
+        vector<Placement>& pg, BoardCoords& bcg, int fct, int radius);
 
     // Removes a tile and updates the grid
-    static void displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct);
+    static void displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct, int radius);
 
     // Finally, once algorithm is finished, record the solution for each of the tiles. 
     static void recordSolution(vector<Placement>& pg);
