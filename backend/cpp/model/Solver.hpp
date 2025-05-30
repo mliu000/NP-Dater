@@ -33,24 +33,24 @@ public:
     Runtime (m tiles and n coordinates): O(n^m) worst case, but grealy reduced through pruning, 
     backtracking, and MRV and LCV heuristics.
     */
-    static bool solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg);
+    static bool solveDatePuzzle(DateBoard& dbg, ExactCover& ecg);
 
 private:
 
     /* Checks the validity of the input. Makes sure that the total number of unblocked coords is 
     equal to the number of coords all tiles can cover together while non-overlapping
     Returns true if =, false if not.*/
-    static bool validGridInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
+    static bool validInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
 
     // Checks the validity of the placement. Returns true if valid, false if invalid
-    static bool validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct);
+    static bool validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct);
 
     // Places a tile and updates the grid
-    static void placeGridTile(Tile* gt, const vector<const Coord*>& coords, 
+    static void placeTile(Tile* gt, const vector<const Coord*>& coords, 
         vector<Placement>& pg, BoardCoords& bcg, int fct);
 
     // Removes a tile and updates the grid
-    static void displaceGridTile(vector<Placement>& pg, BoardCoords& bcg, int fct);
+    static void displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct);
 
     // Finally, once algorithm is finished, record the solution for each of the tiles. 
     static void recordSolution(vector<Placement>& pg);

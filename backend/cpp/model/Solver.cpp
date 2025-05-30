@@ -2,13 +2,13 @@
 
 using namespace std;
 
-bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
+bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
     const unordered_map<Coord, bool> coordsFromBoard = dbg.getCoords();
     const Possibilities& poss = ecg.getInstance();
     int fct = dbg.getWidth();
 
     // Don't even try if the instance is invalid
-    if (!validGridInstance(coordsFromBoard, poss)) {
+    if (!validInstance(coordsFromBoard, poss)) {
         return false;
     }
 
@@ -39,7 +39,7 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
                 const auto& placements = poss.find(tiles[tileOrder[i]])->second;
                 vector<vector<const Coord*>> valid;
                 for (const auto& coords : placements) {
-                    if (validGridTilePlacement(coords, boardCoords, fct)) {
+                    if (validTilePlacement(coords, boardCoords, fct)) {
                         valid.push_back(coords);
                     }
                 }
@@ -56,7 +56,7 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
                 initialized[level] = false;
                 placementIdx[level] = 0;
                 level--;
-                displaceGridTile(soln, boardCoords, fct);
+                displaceTile(soln, boardCoords, fct);
                 placementIdx[level]++;
                 continue;
             }
@@ -72,7 +72,7 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
                 for (size_t j = level + 1; j < n; ++j) {
                     const auto& placements = poss.find(tiles[tileOrder[j]])->second;
                     for (const auto& c : placements) {
-                        if (validGridTilePlacement(c, boardCoords, fct)) {
+                        if (validTilePlacement(c, boardCoords, fct)) {
                             total++;
                         }
                     }
@@ -101,7 +101,7 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
         // Try all valid placements for the current tile at this level
         if (placementIdx[level] < validPlacementsStack[level].size()) {
             const auto& coords = validPlacementsStack[level][placementIdx[level]];
-            placeGridTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct);
+            placeTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct);
             ++level;
         } else {
             // No more placements at this level, backtrack
@@ -109,7 +109,7 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
             placementIdx[level] = 0;
             if (level == 0) break;
             level--;
-            displaceGridTile(soln, boardCoords, fct);
+            displaceTile(soln, boardCoords, fct);
             placementIdx[level]++;
         }
     }
@@ -117,59 +117,49 @@ bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
 }
 
 
-bool Solver::validGridInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss) {
-    // Get the instances
-
+bool Solver::validInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss) {
     // Get the counts for both
     int unblockedCoords = 0;
     int availableTileCoverage = 0;
-
     for (auto& it: coords) {
         if (!it.second) {
             unblockedCoords++;
         }
     }
-
     for (auto& it: poss) {
         availableTileCoverage += it.first->getCoords().size();
     }
-
     return unblockedCoords == availableTileCoverage;
 }
 
 
-bool Solver::validGridTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct) {
+bool Solver::validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct) {
     for (const Coord* coord: coords) {
         if (bcg[coord->getY() * fct + coord->getX()] == 1) {
             return false;
         }
     }
-    
-    // Return true if no blocked coords are found
     return true;
 }
 
 
-void Solver::placeGridTile(Tile* gt, const vector<const Coord*>& coords, 
+void Solver::placeTile(Tile* gt, const vector<const Coord*>& coords, 
         vector<Placement>& pg, BoardCoords& bcg, int fct) {
     for (const Coord* coord: coords) {
         bcg[coord->getY() * fct + coord->getX()] = 1;
     }
-
     pg.push_back({gt, &coords});
 }
 
 
-void Solver::displaceGridTile(vector<Placement>& pg, BoardCoords& bcg, int fct) {
+void Solver::displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct) {
     if (pg.empty()) {
         return;
     }
-
     Placement& latestPlacement = pg.back();
     for (const Coord* coord: *latestPlacement.second) {
         bcg[coord->getY() * fct + coord->getX()] = 0;
     }
-
     pg.pop_back();
 }
 

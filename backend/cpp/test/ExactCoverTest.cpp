@@ -98,7 +98,7 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCov
 }
 
 TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[ExactCover]") {
-    bool solvable = Solver::solveDatePuzzleGrid(d, *ecg);
+    bool solvable = Solver::solveDatePuzzle(d, *ecg);
 
     /*
     for (auto& it: tiles) {
@@ -131,7 +131,7 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
 
     ExactCover ecg1(d1, tiles1);
 
-    bool solvable = Solver::solveDatePuzzleGrid(d1, ecg1);
+    bool solvable = Solver::solveDatePuzzle(d1, ecg1);
 
     REQUIRE(!solvable);
     REQUIRE(!validSolution(d1, tiles1));
@@ -153,7 +153,7 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
 
     ExactCover ecg2(d2, tiles2);
 
-    bool solvable = Solver::solveDatePuzzleGrid(d2, ecg2);
+    bool solvable = Solver::solveDatePuzzle(d2, ecg2);
 
     REQUIRE(!solvable);
     REQUIRE(!validSolution(d2, tiles2));
@@ -199,7 +199,7 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     ExactCover ecg3(d3, tiles3);
 
     auto start = high_resolution_clock::now();
-    bool solvable = Solver::solveDatePuzzleGrid(d3, ecg3);
+    bool solvable = Solver::solveDatePuzzle(d3, ecg3);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
     cout << "Grid Solver took " << duration.count() << "ms" << endl;
