@@ -125,7 +125,7 @@ bool HexTile::is180degSymmetric() {
     
     unordered_set<Coord> rotatedSet(toRotateCoords.begin(), toRotateCoords.end());
     
-    for (const Coord& coord : coords) {
+    for (const Coord& coord : toNormalizeOriginal) {
         if (rotatedSet.find(coord) == rotatedSet.end()) {
             return false; 
         }

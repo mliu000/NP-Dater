@@ -166,7 +166,7 @@ TEST_CASE("HexTile symmetry and reflection test") {
     vhc2.push_back(Coord(1, 0));
 
     HexTile h2("2", vhc2);
-    //REQUIRE(h2.checkSymmetry() == 3);
+    REQUIRE(h2.checkSymmetry() == 3);
     REQUIRE(h2.needsReflection() == 1);
 
     // 180deg symmetric tile that requires reflection
@@ -177,7 +177,7 @@ TEST_CASE("HexTile symmetry and reflection test") {
     vhc3.push_back(Coord(-1, 1));
     HexTile h3("3", vhc3);
 
-    //REQUIRE(h3.checkSymmetry() == 3);
+    REQUIRE(h3.checkSymmetry() == 3);
     REQUIRE(h3.needsReflection() == 2);
 
     // Hexagonal tile
@@ -185,7 +185,7 @@ TEST_CASE("HexTile symmetry and reflection test") {
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             if (abs(i + j) <= 1) {
-                vhc4.push_back(Coord(i, j));
+                vhc4.push_back(Coord(i - 4, j - 7)); 
             }
         }
     }
