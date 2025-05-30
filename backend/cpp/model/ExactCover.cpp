@@ -9,8 +9,12 @@ ExactCoverGrid::ExactCoverGrid(DateBoard& dbg, unordered_map<string, Tile*>& gt)
 
 
 void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
-    int width = dbg.getWidth();
-    int height = dbg.getHeight();
+    int symmFct = dynamic_cast<DateBoardGrid*>(&dbg) ? 4 : 6; 
+    int xStart = dynamic_cast<DateBoardGrid*>(&dbg) ? 0 : -dynamic_cast<DateBoardHex*>(&dbg)->getRadius();
+    int xEnd = dynamic_cast<DateBoardGrid*>(&dbg) ? dbg.getWidth() : dynamic_cast<DateBoardHex*>(&dbg)->getRadius() + 1;
+    int yStart = dynamic_cast<DateBoardGrid*>(&dbg) ? 0 : -dynamic_cast<DateBoardHex*>(&dbg)->getRadius();
+    int yEnd = dynamic_cast<DateBoardGrid*>(&dbg) ? dbg.getHeight() : dynamic_cast<DateBoardHex*>(&dbg)->getRadius() + 1; 
+    
 
     // Iterate through all the GridTiles: O(m)
     for (auto &it: gt) { 
@@ -21,8 +25,8 @@ void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>
         int reflect = it.second->needsReflection();
 
         // Iterate through all possible tile placements via the reference points: O(n)
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = xStart; x < xEnd; x++) {
+            for (int y = yStart; y < yEnd; y++) {
 
                 // Iterate through all possible reflections if needed: O(1)
                 for (int f = 0; f < reflect; f++) {
@@ -53,7 +57,7 @@ void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>
                     }
 
                     // Reset the tile's rotation allow coordinates to generate correctly. O(n) worse case
-                    for (int i = symm; i < 4; i++) {
+                    for (int i = symm; i < symmFct; i++) {
                         it.second->rotateClockwise();
                     }
 
@@ -73,6 +77,7 @@ void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>
 
 
 bool ExactCoverGrid::validPlacement(int x, int y, DateBoard& dbg) {
+    /*
     bool withinX = x >= 0 && x < dbg.getWidth();
     bool withinY = y >= 0 && y < dbg.getHeight();
 
@@ -80,6 +85,7 @@ bool ExactCoverGrid::validPlacement(int x, int y, DateBoard& dbg) {
     if (!(withinX && withinY)) {
         return false;
     }
+    */
 
     const unordered_map<Coord, bool>& coords = dbg.getCoords();
     auto it = coords.find(Coord(x, y));

@@ -18,6 +18,9 @@ public:
     // Construct a dateBoard with given length and width
     DateBoardHex(int r);
 
+    // Get the radius of the hexagonal grid
+    int getRadius() const;
+
 protected: 
 
     // Radius of the hexagonal grid

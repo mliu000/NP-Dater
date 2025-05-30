@@ -18,3 +18,7 @@ void DateBoardHex::generateCoords() {
         }
     }
 }
+
+int DateBoardHex::getRadius() const {
+    return radius;
+}

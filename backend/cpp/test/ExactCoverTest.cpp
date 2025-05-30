@@ -209,23 +209,31 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
 }
 
 TEST_CASE("Hex: Generate simple instance", "[ExactCover]") {
-    DateBoardHex d(2);
+    DateBoardHex d(1);
     unordered_map<string, Tile*> tiles;
 
-    GridTile t1("1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
-    GridTile t2("2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
-    GridTile t3("3", {Coord(0, 0)});
+    HexTile t1("Hex 1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
+    HexTile t2("Hex 2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
+    HexTile t3("Hex 3", {Coord(0, 0)});
 
     tiles.insert({t1.getId(), &t1});
     tiles.insert({t2.getId(), &t2});
     tiles.insert({t3.getId(), &t3});
 
     ExactCoverGrid ecg(d, tiles);
-
-    /*
+    
+    const auto& instance = ecg.getInstance();
+    const auto& t1Instance = instance.find(&t1)->second;
+    for (const auto& coords : t1Instance) {
+        for (const Coord* coord : coords) {
+            cout << "(" << coord->getX() << ", " << coord->getY() << ") ";
+        }
+        cout << endl;
+    }
+    
     REQUIRE(ecg.getInstance().size() == 3);
     REQUIRE(ecg.getInstance().find(&t1)->second.size() == 3);
-    REQUIRE(ecg.getInstance().find(&t2)->second.size() == );
+    REQUIRE(ecg.getInstance().find(&t2)->second.size() == 12);
     REQUIRE(ecg.getInstance().find(&t3)->second.size() == 7);
-    */
+    
 }
