@@ -45,7 +45,7 @@ private:
     /* Normalizes a vector of coordinates, by setting all coordinates to be <= 0
     Runtime: O(n)
     */
-    void normalizeCoords(vector<Coord>& coordsParam);
+    void normalizeCoords(vector<Coord>& coordsParam) override;
 
     /* Checks whether or not a tile is a square
     Runtime: O(n)

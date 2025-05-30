@@ -70,8 +70,8 @@ $(OBJDIR):
 
 # Clean up
 clean:
-	rm -f $(TARGET)
-	rm -rf $(OBJDIR)
+	del /q $(TARGET) $(TEST_TARGET) 2>nul || exit 0
+	if exist $(OBJDIR) rmdir /s /q $(OBJDIR)
 
 # Test build
 TEST_TARGET = test.exe

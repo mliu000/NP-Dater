@@ -42,6 +42,12 @@ public:
     const vector<Coord>& getSoln() const;
 
 protected:
+
+    /* Normalizes a vector of coordinates, by setting all coordinates to be <= 0
+    Runtime: O(n)
+    */
+    virtual void normalizeCoords(vector<Coord>& coordsParam) = 0;
+
     // Unique Id for this tile and set of coordinates
     string id;
 

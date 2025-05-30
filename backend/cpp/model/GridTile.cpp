@@ -124,12 +124,8 @@ void GridTile::normalizeCoords(vector<Coord>& coordsParam) {
     for (Coord& coord: coordsParam) {
         int currX = coord.getX();
         int currY = coord.getY();
-        if (currX > maxX) {
-            maxX = currX;
-        }
-        if (currY > maxY) {
-            maxY = currY;
-        }
+        maxX = max(maxX, currX);
+        maxY = max(maxY, currY);
     }
 
     // Normalize all the coordinates

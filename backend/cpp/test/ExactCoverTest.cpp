@@ -17,7 +17,6 @@ Mu Ye Liu - May 2025
 Represents test file for the ExactCoverGrid reduction class
 */
 
-
 // Test Instance of exact cover
 struct ExactCoverFixture {
     DateBoardGrid d;
@@ -207,4 +206,26 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
 
     REQUIRE(solvable);
     REQUIRE(validSolution(d3, tiles3));
+}
+
+TEST_CASE("Hex: Generate simple instance", "[ExactCover]") {
+    DateBoardHex d(2);
+    unordered_map<string, Tile*> tiles;
+
+    GridTile t1("1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
+    GridTile t2("2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
+    GridTile t3("3", {Coord(0, 0)});
+
+    tiles.insert({t1.getId(), &t1});
+    tiles.insert({t2.getId(), &t2});
+    tiles.insert({t3.getId(), &t3});
+
+    ExactCoverGrid ecg(d, tiles);
+
+    /*
+    REQUIRE(ecg.getInstance().size() == 3);
+    REQUIRE(ecg.getInstance().find(&t1)->second.size() == 3);
+    REQUIRE(ecg.getInstance().find(&t2)->second.size() == );
+    REQUIRE(ecg.getInstance().find(&t3)->second.size() == 7);
+    */
 }
