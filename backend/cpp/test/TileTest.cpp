@@ -193,4 +193,16 @@ TEST_CASE("HexTile symmetry and reflection test") {
     HexTile h4("4", vhc4);
     REQUIRE(h4.checkSymmetry() == 1);
     REQUIRE(h4.needsReflection() == 1);
+
+    // 120deg symmetric tile
+    vector<Coord> vhc5;
+    vhc5.push_back(Coord(0, 0));
+    vhc5.push_back(Coord(1, 0));
+    vhc5.push_back(Coord(-1, 1));
+    vhc5.push_back(Coord(0, -1));
+
+    HexTile h5("5", vhc5);
+    REQUIRE(h5.checkSymmetry() == 2);
+    REQUIRE(h5.needsReflection() == 1);
+
 }

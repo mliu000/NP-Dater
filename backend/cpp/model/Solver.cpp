@@ -62,39 +62,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
                 placementIdx[level]++;
                 continue;
             }
-            // LCV: Sort placements by how few options they block for remaining tiles
-            vector<pair<int, vector<const Coord*>>> lcvPairs;
-            for (const auto& coords : bestValid) {
-                // Place temporarily
-                for (const Coord* coord : coords) {
-                    boardCoords[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 1;
-                }
-                // Count total valid placements for remaining tiles
-                int total = 0;
-                for (size_t j = level + 1; j < n; ++j) {
-                    const auto& placements = poss.find(tiles[tileOrder[j]])->second;
-                    for (const auto& c : placements) {
-                        if (validTilePlacement(c, boardCoords, fct, radius)) {
-                            total++;
-                        }
-                    }
-                }
-                // Unplace
-                for (const Coord* coord : coords) {
-                    boardCoords[(coord->getY() + radius) * fct + (coord->getX() + radius)] = 0;
-                }
-                lcvPairs.push_back({total, coords});
-            }
-            // Sort by descending total (least constraining value first)
-            sort(lcvPairs.begin(), lcvPairs.end(),
-                [](const pair<int, vector<const Coord*>>& a, 
-                    const pair<int, vector<const Coord*>>& b) {
-                    return a.first > b.first;
-                });
-            validPlacementsStack[level].clear();
-            for (const auto& p : lcvPairs) {
-                validPlacementsStack[level].push_back(p.second);
-            }
+            validPlacementsStack[level] = bestValid;
             // Swap the chosen tile to the current level
             swap(tileOrder[level], tileOrder[minIdx]);
             placementIdx[level] = 0;
@@ -104,7 +72,7 @@ bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
         if (placementIdx[level] < validPlacementsStack[level].size()) {
             const auto& coords = validPlacementsStack[level][placementIdx[level]];
             placeTile(tiles[tileOrder[level]], coords, soln, boardCoords, fct, radius);
-            ++level;
+            level++;
         } else {
             // No more placements at this level, backtrack
             initialized[level] = false;

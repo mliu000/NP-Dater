@@ -30,6 +30,11 @@ int HexTile::checkSymmetry() {
         return 1; // Hexagon is symmetric
     }
 
+    
+    if (is120degSymmetric()) {
+        return 2; 
+    }
+
     if (is180degSymmetric()) {
         return 3;
     }
@@ -40,7 +45,7 @@ int HexTile::checkSymmetry() {
 
 int HexTile::needsReflection() {
     // If hexagon, then no reflection needed
-    if (isHexagon()) {
+    if (isHexagon() || is120degSymmetric()) {
         return 1; 
     }
 
@@ -107,6 +112,29 @@ bool HexTile::isHexagon() {
 
     return true;
 
+}
+
+bool HexTile::is120degSymmetric() {
+    // Create a copy of the coordinates to rotate, as well as the original coordinates to normalize
+    vector<Coord> toNormalizeOriginal = coords;
+    vector<Coord> toRotateCoords = coords;
+    normalizeCoords(toNormalizeOriginal);
+    normalizeCoords(toRotateCoords);
+
+    // Rotate the coordinates two times (120 degrees) and normalize them
+    rotateCoordsClockwise(toRotateCoords);
+    rotateCoordsClockwise(toRotateCoords);
+    normalizeCoords(toRotateCoords);
+    
+    unordered_set<Coord> rotatedSet(toRotateCoords.begin(), toRotateCoords.end());
+    
+    for (const Coord& coord : toNormalizeOriginal) {
+        if (rotatedSet.find(coord) == rotatedSet.end()) {
+            return false; 
+        }
+    }
+
+    return true;
 }
 
 

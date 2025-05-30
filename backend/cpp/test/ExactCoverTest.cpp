@@ -208,24 +208,27 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     REQUIRE(validSolution(d3, tiles3));
 }
 
-TEST_CASE("Hex: Generate simple instance", "[ExactCover]") {
+TEST_CASE("Hex: Generate simple instances", "[ExactCover]") {
     DateBoardHex d(1);
     unordered_map<string, Tile*> tiles;
 
     HexTile t1("Hex 1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
     HexTile t2("Hex 2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
     HexTile t3("Hex 3", {Coord(0, 0)});
+    HexTile t4("Hex 4", {Coord(0, 0), Coord(0, 1), Coord(-1, 1)});
 
     tiles.insert({t1.getId(), &t1});
     tiles.insert({t2.getId(), &t2});
     tiles.insert({t3.getId(), &t3});
+    tiles.insert({t4.getId(), &t4});
 
     ExactCover ecg(d, tiles);
     
-    REQUIRE(ecg.getInstance().size() == 3);
+    REQUIRE(ecg.getInstance().size() == 4);
     REQUIRE(ecg.getInstance().find(&t1)->second.size() == 3);
     REQUIRE(ecg.getInstance().find(&t2)->second.size() == 12);
     REQUIRE(ecg.getInstance().find(&t3)->second.size() == 7);
+    REQUIRE(ecg.getInstance().find(&t4)->second.size() == 6);
     
 }
 
@@ -300,6 +303,7 @@ TEST_CASE("Hex: Invalid instance with tile mismatch", "[ExactCover]") {
     REQUIRE(!validSolution(d, tiles));
 }
 
+
 TEST_CASE("Hex: Valid hard instance", "[ExactCover]") {
     DateBoardHex d(4);
 
@@ -358,4 +362,6 @@ TEST_CASE("Hex: Valid hard instance", "[ExactCover]") {
     REQUIRE(solvable);
     REQUIRE(validSolution(d, tiles));
 }
+
+
 

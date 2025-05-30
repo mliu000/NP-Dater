@@ -29,7 +29,7 @@ public:
     void flip() override;
 
     /* Checks for symmetry: Runtime: O(n)
-    Returns 1 if hexagon, 3 if 180deg symmetric, and 6 if asymmetric
+    Returns 1 if hexagon, 2 if 120 deg symmetric, 3 if 180deg symmetric, and 6 if asymmetric
     */
     int checkSymmetry() override;
 
@@ -46,6 +46,9 @@ private:
 
     // Checks if the tile is 180deg symmetric
     bool is180degSymmetric();
+
+    // Checks if the tile is 120deg symmetric
+    bool is120degSymmetric();
 
     // Flips the coordinates of the tile
     bool flipCoords(vector<Coord>& coordsParam) const;
