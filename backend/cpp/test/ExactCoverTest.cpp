@@ -264,9 +264,8 @@ TEST_CASE("Hex: Simple value instance solvable", "[ExactCover]") {
 TEST_CASE("Hex: Simple value instance but not solvable", "[ExactCover]") {
     DateBoardHex d(1);
     unordered_map<string, Tile*> tiles;
-
-    HexTile t1("Hex 1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
-    HexTile t2("Hex 2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
+    HexTile t1("Hex 1", {Coord(0, 0), Coord(0, 1), Coord(0, 2)});
+    HexTile t2("Hex 2", {Coord(0, 0), Coord(0, 1), Coord(0, 2)});
     HexTile t3("Hex 3", {Coord(0, 0)});
 
     tiles.insert({t1.getId(), &t1});
@@ -301,26 +300,62 @@ TEST_CASE("Hex: Invalid instance with tile mismatch", "[ExactCover]") {
     REQUIRE(!validSolution(d, tiles));
 }
 
-/* TODO: Create this test case
 TEST_CASE("Hex: Valid hard instance", "[ExactCover]") {
-    DateBoardHex d(2);
+    DateBoardHex d(4);
+
+    d.blockCoordinate(0, 4);
+    d.blockCoordinate(1, 3);
+    d.blockCoordinate(2, 2);
+    d.blockCoordinate(3, 1);
+    d.blockCoordinate(4, 0);
+    d.blockCoordinate(4, -1);
+    d.blockCoordinate(4, -3);
+    d.blockCoordinate(4, -4);
+    d.blockCoordinate(3, -4);
+    d.blockCoordinate(1, -4);
+    d.blockCoordinate(0, -4);
+    d.blockCoordinate(-1, -3);
+    d.blockCoordinate(-3, -1);
+    d.blockCoordinate(-4, 0);
+    d.blockCoordinate(-4, 1);
+    d.blockCoordinate(-4, 3);
+    d.blockCoordinate(-4, 4);
+    d.blockCoordinate(-3, 4);
+    d.blockCoordinate(-1, 4);
+    d.blockCoordinate(0, 2);
     unordered_map<string, Tile*> tiles;
 
-    HexTile t1("Hex 1", {Coord(0, 0), Coord(1, 0), Coord(2, 0)});
-    HexTile t2("Hex 2", {Coord(0, 0), Coord(0, 1), Coord(1, 1)});
-    HexTile t3("Hex 3", {Coord(0, 0), Coord(1, 0), Coord(1, -1)});
-    HexTile t4("Hex 4", {Coord(0, 0), Coord(-1, 0), Coord(-1, -1)});
+    HexTile t1("Hex 1", {Coord(0, 0), Coord(1, -1), Coord(-1, 1), Coord(0, -1)});
+    HexTile t2("Hex 2", {Coord(0, 0), Coord(1, 0), Coord(-1, 0), Coord(1, -1), Coord(0, -1)});
+    HexTile t3("Hex 3", {Coord(0, 0), Coord(1, 0), Coord(-1, 0), Coord(0, -1)});
+    HexTile t4("Hex 4", {Coord(0, 0), Coord(0, -1), Coord(0, -2), Coord(0, -3)});
+    HexTile t5("Hex 5", {Coord(0, 0), Coord(0, -1), Coord(1, -2), Coord(1, -3)});
+    HexTile t6("Hex 6", {Coord(0, 0), Coord(0, -1), Coord(0, -2), Coord(-1, 1)});
+    HexTile t7("Hex 7", {Coord(0, 0), Coord(0, -1), Coord(-1, 0), Coord(-1, -1)});
+    HexTile t8("Hex 8", {Coord(0, 0), Coord(0, -1), Coord(1, 0), Coord(-1, 1)});
+    HexTile t9("Hex 9", {Coord(0, 0), Coord(0, -1), Coord(0, -2), Coord(1, 0)});
+    HexTile t10("Hex 10", {Coord(0, 0), Coord(0, -1), Coord(1, -2), Coord(2, -2)});
 
     tiles.insert({t1.getId(), &t1});
     tiles.insert({t2.getId(), &t2});
     tiles.insert({t3.getId(), &t3});
     tiles.insert({t4.getId(), &t4});
+    tiles.insert({t5.getId(), &t5});
+    tiles.insert({t6.getId(), &t6});
+    tiles.insert({t7.getId(), &t7});
+    tiles.insert({t8.getId(), &t8});
+    tiles.insert({t9.getId(), &t9});
+    tiles.insert({t10.getId(), &t10});
 
     ExactCover ecg(d, tiles);
 
+    auto start = high_resolution_clock::now();
     bool solvable = Solver::solveDatePuzzle(d, ecg);
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Hex Solver took " << duration.count() << "ms" << endl;
 
     REQUIRE(solvable);
     REQUIRE(validSolution(d, tiles));
 }
-*/
+
