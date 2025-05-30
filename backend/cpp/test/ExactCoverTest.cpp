@@ -21,7 +21,7 @@ Represents test file for the ExactCoverGrid reduction class
 struct ExactCoverFixture {
     DateBoardGrid d;
     unordered_map<string, Tile*> tiles;
-    ExactCoverGrid* ecg;
+    ExactCover* ecg;
 
     GridTile t1, t2, t3, t4;
 
@@ -39,7 +39,7 @@ struct ExactCoverFixture {
         tiles.insert({t3.getId(), &t3});
         tiles.insert({t4.getId(), &t4});
 
-        ecg = new ExactCoverGrid(d, tiles);
+        ecg = new ExactCover(d, tiles);
 
     }
 
@@ -129,7 +129,7 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
     tiles1.insert({t12.getId(), &t12});
     tiles1.insert({t13.getId(), &t13});
 
-    ExactCoverGrid ecg1(d1, tiles1);
+    ExactCover ecg1(d1, tiles1);
 
     bool solvable = Solver::solveDatePuzzleGrid(d1, ecg1);
 
@@ -151,7 +151,7 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     tiles2.insert({t22.getId(), &t22});
     tiles2.insert({t23.getId(), &t23});
 
-    ExactCoverGrid ecg2(d2, tiles2);
+    ExactCover ecg2(d2, tiles2);
 
     bool solvable = Solver::solveDatePuzzleGrid(d2, ecg2);
 
@@ -196,13 +196,13 @@ TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
     tiles3.insert({t39.getId(), &t39});
     tiles3.insert({t310.getId(), &t310});
 
-    ExactCoverGrid ecg3(d3, tiles3);
+    ExactCover ecg3(d3, tiles3);
 
     auto start = high_resolution_clock::now();
     bool solvable = Solver::solveDatePuzzleGrid(d3, ecg3);
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
-    cout << "Solver took " << duration.count() << "ms" << endl;
+    cout << "Grid Solver took " << duration.count() << "ms" << endl;
 
     REQUIRE(solvable);
     REQUIRE(validSolution(d3, tiles3));
@@ -220,16 +220,7 @@ TEST_CASE("Hex: Generate simple instance", "[ExactCover]") {
     tiles.insert({t2.getId(), &t2});
     tiles.insert({t3.getId(), &t3});
 
-    ExactCoverGrid ecg(d, tiles);
-    
-    const auto& instance = ecg.getInstance();
-    const auto& t1Instance = instance.find(&t1)->second;
-    for (const auto& coords : t1Instance) {
-        for (const Coord* coord : coords) {
-            cout << "(" << coord->getX() << ", " << coord->getY() << ") ";
-        }
-        cout << endl;
-    }
+    ExactCover ecg(d, tiles);
     
     REQUIRE(ecg.getInstance().size() == 3);
     REQUIRE(ecg.getInstance().find(&t1)->second.size() == 3);

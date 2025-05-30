@@ -3,12 +3,12 @@
 using namespace std;
 
 // Constructor
-ExactCoverGrid::ExactCoverGrid(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
+ExactCover::ExactCover(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
     createInstance(dbg, gt);
 }
 
 
-void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
+void ExactCover::createInstance(DateBoard& dbg, unordered_map<string, Tile*>& gt) {
     int symmFct = dynamic_cast<DateBoardGrid*>(&dbg) ? 4 : 6; 
     int xStart = dynamic_cast<DateBoardGrid*>(&dbg) ? 0 : -dynamic_cast<DateBoardHex*>(&dbg)->getRadius();
     int xEnd = dynamic_cast<DateBoardGrid*>(&dbg) ? dbg.getWidth() : dynamic_cast<DateBoardHex*>(&dbg)->getRadius() + 1;
@@ -76,16 +76,7 @@ void ExactCoverGrid::createInstance(DateBoard& dbg, unordered_map<string, Tile*>
 }
 
 
-bool ExactCoverGrid::validPlacement(int x, int y, DateBoard& dbg) {
-    /*
-    bool withinX = x >= 0 && x < dbg.getWidth();
-    bool withinY = y >= 0 && y < dbg.getHeight();
-
-    // Make sure that lookup is only attempted if x and y are in bounds
-    if (!(withinX && withinY)) {
-        return false;
-    }
-    */
+bool ExactCover::validPlacement(int x, int y, DateBoard& dbg) {
 
     const unordered_map<Coord, bool>& coords = dbg.getCoords();
     auto it = coords.find(Coord(x, y));
@@ -94,6 +85,6 @@ bool ExactCoverGrid::validPlacement(int x, int y, DateBoard& dbg) {
 }
 
 
-const unordered_map<Tile*, vector<vector<const Coord*>>>& ExactCoverGrid::getInstance() const {
+const unordered_map<Tile*, vector<vector<const Coord*>>>& ExactCover::getInstance() const {
     return instance;
 }

@@ -3,7 +3,9 @@
 #include <unordered_map>
 #include <vector>
 #include "../model/DateBoardGrid.hpp"
+#include "../model/DateBoardHex.hpp"
 #include "../model/GridTile.hpp"
+#include "../model/HexTile.hpp"
 #include "../model/Coord.hpp"
 #include "../model/ExactCover.hpp"
 
@@ -31,7 +33,7 @@ public:
     Runtime (m tiles and n coordinates): O(n^m) worst case, but grealy reduced through pruning, 
     backtracking, and MRV and LCV heuristics.
     */
-    static bool solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg);
+    static bool solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg);
 
 private:
 

@@ -15,14 +15,14 @@ Mu Ye Liu - May 2025
 
 Represents the class that reduces to exact cover. 
 */
-class ExactCoverGrid {
+class ExactCover {
 public:
 
     /* Constructor
     REQUIRES: the total number of coords that all tiles must cover in total when none of them are 
               overlapping must be equal to the number of unblocked tiles. 
     */
-    ExactCoverGrid(DateBoard& dbg, unordered_map<string, Tile*>& gt);
+    ExactCover(DateBoard& dbg, unordered_map<string, Tile*>& gt);
 
     // Gets the instance
     const unordered_map<Tile*, vector<vector<const Coord*>>>& getInstance() const;

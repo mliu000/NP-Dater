@@ -2,7 +2,7 @@
 
 using namespace std;
 
-bool Solver::solveDatePuzzleGrid(DateBoardGrid& dbg, ExactCoverGrid& ecg) {
+bool Solver::solveDatePuzzleGrid(DateBoard& dbg, ExactCover& ecg) {
     const unordered_map<Coord, bool> coordsFromBoard = dbg.getCoords();
     const Possibilities& poss = ecg.getInstance();
     int fct = dbg.getWidth();
