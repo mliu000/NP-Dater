@@ -31,10 +31,6 @@ struct TileInfo {
     int placementIndex;
     vector<bitset<MAX_COORDS>> placements;
     vector<int> domain;
-
-    struct TileInfoComparator {
-        bool operator()(const TileInfo* a, const TileInfo* b) const;
-    };
 };
 
 class Solver {

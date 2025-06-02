@@ -2,12 +2,6 @@
 
 using namespace std;
 
-bool TileInfo::TileInfoComparator::operator()(const TileInfo* a, const TileInfo* b) const {
-    // Compare based on the size of the domain
-    return a->domain.size() > b->domain.size() || 
-        (a->domain.size() == b->domain.size() && a->placementIndex >= b->placementIndex);
-}
-
 bool Solver::solveDatePuzzle(DateBoard& dbg, ExactCover& ecg) {
     // Check if instance is valid. If not, then return false without attempting to solve
     if (!validInstance(dbg.getCoords(), ecg.getInstance())) {
