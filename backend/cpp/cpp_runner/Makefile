@@ -1,10 +1,24 @@
+# Detect OS
+ifeq ($(OS),Windows_NT)
+    EXE_EXT = .exe
+    RM = del /q
+    RMDIR = if exist $(OBJDIR) rmdir /s /q $(OBJDIR)
+    MKDIR = if not exist $(OBJDIR) mkdir $(OBJDIR)
+	OBJDIR = ../build
+else
+    EXE_EXT =
+    RM = rm -f
+    RMDIR = rm -rf $(OBJDIR)
+    MKDIR = mkdir -p $(OBJDIR)
+	OBJDIR = ../build_mac_linux
+endif
+
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra
+CXXFLAGS = -std=c++11 -Wall -Wextra -g
 
 # Executable and object directory
-TARGET = main.exe
-OBJDIR = ../build
+TARGET = main$(EXE_EXT)
 
 # Source files
 MAIN = Main.cpp
@@ -74,7 +88,7 @@ clean:
 	if exist $(OBJDIR) rmdir /s /q $(OBJDIR)
 
 # Test build
-TEST_TARGET = test.exe
+TEST_TARGET = test$(EXE_EXT)
 
 COORD_TEST = ../test/CoordTest.cpp
 TILE_TEST = ../test/TileTest.cpp

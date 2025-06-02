@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <climits>
 #include "../model/Coord.hpp"
 
 using namespace std;
