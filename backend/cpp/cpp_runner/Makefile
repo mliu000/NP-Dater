@@ -91,4 +91,3 @@ test: $(TEST_TARGET)
 $(TEST_TARGET): $(TEST_SRC) $(TEST_OBJ)
 	@echo "Building test.exe..."
 	$(CXX) $(CXXFLAGS) $^ -o $(TEST_TARGET)
-	./$(TEST_TARGET)

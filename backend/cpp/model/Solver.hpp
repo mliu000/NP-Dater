@@ -2,6 +2,9 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <bitset>
+#include <utility>
+#include <queue>
 #include "../model/DateBoardGrid.hpp"
 #include "../model/DateBoardHex.hpp"
 #include "../model/GridTile.hpp"
@@ -12,14 +15,28 @@
 using namespace std;
 
 using Possibilities = unordered_map<Tile*, vector<vector<const Coord*>>>; // From ExactCover
-using BoardCoords = vector<uint8_t>; // From the DateBoard
-using Placement = pair<Tile*, const vector<const Coord*>*>; 
 
 /*
 Mu Ye Liu - May 2025
 
-Represents a static utility class that will store all the solvers. 
+Represents a static utility class that will store all the solvers, as well as the struct to store
+the tile states for solving purposes.
 */
+constexpr int MAX_COORDS = 256;
+
+
+struct TileInfo {
+    Tile* tile;
+    uint8_t id; // For tie-breaking purposes
+    int placementIndex;
+    vector<bitset<MAX_COORDS>> placements;
+    vector<int> domain;
+
+    struct TileInfoComparator {
+        bool operator()(const TileInfo* a, const TileInfo* b) const;
+    };
+};
+
 class Solver {
 public:
 
@@ -37,21 +54,28 @@ public:
 
 private:
 
+    ///// HELPER FUNCTIONS /////
+
     /* Checks the validity of the input. Makes sure that the total number of unblocked coords is 
     equal to the number of coords all tiles can cover together while non-overlapping
     Returns true if =, false if not.*/
     static bool validInstance(const unordered_map<Coord, bool>& coords, const Possibilities& poss);
 
-    // Checks the validity of the placement. Returns true if valid, false if invalid
-    static bool validTilePlacement(const vector<const Coord*>& coords, BoardCoords& bcg, int fct, int radius);
+    // Converts the DateBoard to a bitset representation
+    static bitset<MAX_COORDS>boardToBitset(DateBoard& dbg, int rad);
 
-    // Places a tile and updates the grid
-    static void placeTile(Tile* gt, const vector<const Coord*>& coords, 
-        vector<Placement>& pg, BoardCoords& bcg, int fct, int radius);
+    // Converts the exact cover instance to a vector of TileInfo pointers stored in a priority queue
+    static void convertExactCoverToTileInfo(ExactCover& ecg, vector<TileInfo*>& vti, int rad, int fct);
 
-    // Removes a tile and updates the grid
-    static void displaceTile(vector<Placement>& pg, BoardCoords& bcg, int fct, int radius);
+    // Undoes the last placement, and returns a pointer to the TileInfo that was undone.
+    static TileInfo* undoLastPlacement(bitset<MAX_COORDS>& bsb, vector<TileInfo*>& vti, 
+        vector<pair<TileInfo*, int>>& soln, vector<vector<pair<TileInfo*, int>>>& rms);
 
     // Finally, once algorithm is finished, record the solution for each of the tiles. 
-    static void recordSolution(vector<Placement>& pg);
+    static void recordSolution(const vector<pair<TileInfo*, int>>& soln, int rad, int fct);
+
+    // Deallocate the memory for the TileInfo pointers
+    static void deallocateTileInfoPointers(vector<TileInfo*>& tileInfos);
+    
+    
 };

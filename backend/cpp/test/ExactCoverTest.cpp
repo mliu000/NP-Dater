@@ -82,7 +82,7 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCov
     /*
     const vector<vector<const Coord*>>& outer = ecg->getInstance().find(&t1)->second;
     for (size_t i = 0; i < outer.size(); i++) {
-        const vector<const Coord*>& inner = outer[i];
+        const vector<const Coord*>& inner = outer[i];even 
         for (size_t j = 0; j < inner.size(); j++) {
             cout << "(" << inner[j]->getX() << ", " << inner[j]->getY() << ") ";
         }
@@ -97,6 +97,7 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test instance generation", "[ExactCov
     REQUIRE(ecg->getInstance().find(&t4)->second.size() == 21);
 }
 
+
 TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[ExactCover]") {
     bool solvable = Solver::solveDatePuzzle(d, *ecg);
 
@@ -110,10 +111,12 @@ TEST_CASE_METHOD(ExactCoverFixture, "Grid: Test solve simple valid instance", "[
         cout << endl;
     }
     */
+    
 
     REQUIRE(solvable);
     REQUIRE(validSolution(d, tiles));
 }
+
 
 TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[ExactCover]") {
     // Create a smaller instance with not enough tile coverage
@@ -137,6 +140,7 @@ TEST_CASE("Grid: Test solve simple invalid instance tile coverage mismatch", "[E
     REQUIRE(!validSolution(d1, tiles1));
 }
 
+
 TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     // Create a smaller instance with not enough tile coverage
     DateBoardGrid d2(2, 5);
@@ -158,6 +162,7 @@ TEST_CASE("Grid: Test solve valid but unsolvable instance", "[ExactCover]") {
     REQUIRE(!solvable);
     REQUIRE(!validSolution(d2, tiles2));
 }
+
 
 
 TEST_CASE("Grid: Test solve valid hard instance", "[ExactCover]") {
@@ -248,18 +253,6 @@ TEST_CASE("Hex: Simple value instance solvable", "[ExactCover]") {
 
     bool solvable = Solver::solveDatePuzzle(d, ecg);
 
-    // Print out the solution for each tile
-    /*
-    for (auto& it: tiles) {
-        const vector<Coord>& soln = it.second->getSoln();
-        cout << it.first << ": ";
-        for (const Coord& solnCoord: soln) {
-            cout << "(" << solnCoord.getX() << ", " << solnCoord.getY() << ") ";
-        }
-        cout << endl;
-    }
-    */
-
     REQUIRE(solvable);
     REQUIRE(validSolution(d, tiles));
 }
@@ -302,7 +295,6 @@ TEST_CASE("Hex: Invalid instance with tile mismatch", "[ExactCover]") {
     REQUIRE(!solvable);
     REQUIRE(!validSolution(d, tiles));
 }
-
 
 TEST_CASE("Hex: Valid hard instance", "[ExactCover]") {
     DateBoardHex d(4);
@@ -362,6 +354,4 @@ TEST_CASE("Hex: Valid hard instance", "[ExactCover]") {
     REQUIRE(solvable);
     REQUIRE(validSolution(d, tiles));
 }
-
-
 
