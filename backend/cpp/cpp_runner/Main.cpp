@@ -17,7 +17,22 @@ using json = nlohmann::json;
 using namespace std;
 using namespace std::chrono;
 
+void deallocateMemory(DateBoard* db, unordered_map<string, Tile*>& tiles) {
+    // Deallocate the dateboard if not nullptr
+    if (db) {
+        delete db;
+    }
+    // Ensures only gets deleted if there are items in the list.
+    for (const auto& tile: tiles) {
+        delete tile.second;
+    }
+}
+
 int main() {
+
+    // Instantiate the date structures that involve dynamic memory allocation
+    DateBoard* db = nullptr;
+    unordered_map<string, Tile*> tiles;
 
     try {
         // Create the buffer, and wait for the input from express.js
@@ -30,7 +45,6 @@ int main() {
         // Extract the json input and convert it into objects
         // j["inputType"] = 0 = Grid, 1 = Hex
         int type = j["inputType"];
-        DateBoard* db = nullptr;
         if (type == 0) {
             // Grid
             int width = j["width"];
@@ -49,7 +63,6 @@ int main() {
         }
 
         // Iterate through the tiles and create them
-        unordered_map<string, Tile*> tiles;
         for (const auto& tileJson: j["tiles"]) {
             string id = tileJson["id"];
             vector<Coord> coords;
@@ -74,6 +87,7 @@ int main() {
 
         if (!valid) {
             cerr << "No solution found." << endl;
+            deallocateMemory(db, tiles);
             return 3;
         }
 
@@ -87,19 +101,18 @@ int main() {
         returnJson["timeToSolve"] = duration.count();
 
         // Output the result so the express.js can read it
-        cout << returnJson.dump(4) << endl;
+        cout << returnJson.dump() << endl;
 
         // In the end, delete the dynamically allocated memory
-        delete db;
-        for (const auto& tile: tiles) {
-            delete tile.second;
-        }
+        deallocateMemory(db, tiles);
 
     } catch (const json::parse_error& e) {
         cerr << "JSON parsing error: " << e.what() << endl;
+        deallocateMemory(db, tiles);
         return 1;
     } catch (const exception& e) {
         cerr << "Unhandled error: " << e.what() << endl;
+        deallocateMemory(db, tiles);
         return 2;
     }
     

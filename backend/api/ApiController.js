@@ -4,7 +4,8 @@ const { callSolver } = require("./ApiService");
 
 router.post("/solve", async (req, res) => {
   try {
-    const result = await callSolver();
+    const payload = req.body;
+    const result = await callSolver(payload);
     res.json(result);
   } catch (e) {
     res.status(500).json({ error: e });

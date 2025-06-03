@@ -1,16 +1,14 @@
 const { spawn } = require("child_process");
 const path = require("path");
 
-function callSolver() {
-  const solverPath = path.join(__dirname, "../cpp/cpp_runner/main.exe");
+function callSolver(payload = {}) {
+  // Determine the path to C++ based on platform
+  const fileName = process.platform === "win32" ? "main.exe" : "main";
+  const solverPath = path.join(__dirname, `../cpp/cpp_runner/${fileName}`);
+
 
   return new Promise((resolve, reject) => {
     const cpp = spawn(solverPath);
-
-    const payload = {
-      x: 13, 
-      y: 17
-    }
 
     cpp.stdin.write(JSON.stringify(payload));
     cpp.stdin.end();
@@ -41,8 +39,6 @@ function callSolver() {
       }
     });
 
-    // If you're not passing input, just close stdin
-    cpp.stdin.end();
   });
 }
 
