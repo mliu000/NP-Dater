@@ -3,6 +3,8 @@
 #include <vector>
 #include <climits>
 #include "../model/Coord.hpp"
+#include "../utility/json.hpp"
+using json = nlohmann::json;
 
 using namespace std;
 
@@ -59,3 +61,5 @@ protected:
     vector<Coord> soln;
 
 };
+
+void to_json(json& j, const Tile& t);

@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include "../utility/json.hpp"
+using json = nlohmann::json;
 
 using namespace std;
 
@@ -45,3 +47,5 @@ namespace std {
         }
     };
 }
+
+void to_json(json& j, const Coord& c);

@@ -19,3 +19,7 @@ void Coord::setY(int newY) {
 
 int Coord::getX() const { return x; }
 int Coord::getY() const { return y; }
+
+void to_json(json& j, const Coord& c) {
+    j = json{{"x", c.getX()}, {"y", c.getY()}};
+}

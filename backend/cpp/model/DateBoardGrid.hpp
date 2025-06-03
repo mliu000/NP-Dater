@@ -5,8 +5,6 @@
 #include <unordered_map>
 #include "Coord.hpp"
 #include "DateBoard.hpp"
-#include  "../utility/json.hpp"
-using json = nlohmann::json;
 
 using namespace std;
 
@@ -28,6 +26,3 @@ private:
     void generateCoords() override;
 
 };
-
-// To convert into json
-void to_json(json& j, const DateBoardGrid& g);

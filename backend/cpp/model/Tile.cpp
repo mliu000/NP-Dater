@@ -23,3 +23,7 @@ const vector<Coord>& Tile::getSoln() const {
 string Tile::getId() const {
     return id;
 }
+
+void to_json(json& j, const Tile& t) {
+    j = {{"id", t.getId()}, {"soln", t.getSoln()}};
+}

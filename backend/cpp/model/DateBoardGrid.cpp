@@ -14,7 +14,3 @@ void DateBoardGrid::generateCoords() {
         }
     }
 }
-
-void to_json(json& j, const DateBoardGrid& g) {
-    j = json{{"score", g.getCoords().find(Coord(0, 0))->second}, {"status", g.getHeight()}};
-}

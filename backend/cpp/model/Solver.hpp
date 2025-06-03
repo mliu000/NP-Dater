@@ -5,6 +5,8 @@
 #include <bitset>
 #include <utility>
 #include <queue>
+#include <cstdint>
+#include <algorithm>
 #include "../model/DateBoardGrid.hpp"
 #include "../model/DateBoardHex.hpp"
 #include "../model/GridTile.hpp"
