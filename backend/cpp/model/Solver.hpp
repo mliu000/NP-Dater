@@ -24,7 +24,7 @@ Mu Ye Liu - May 2025
 Represents a static utility class that will store all the solvers, as well as the struct to store
 the tile states for solving purposes.
 */
-constexpr int MAX_COORDS = 256;
+constexpr int MAX_COORDS = 128;
 
 
 struct TileInfo {
