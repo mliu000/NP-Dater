@@ -1,0 +1,18 @@
+/* Stores the Custom Fredoka font */
+@font-face {
+    font-family: 'Fredoka';
+    src: url('./fredoka_font/Fredoka-Regular.ttf');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Fredoka';
+    src: url('./fredoka_font/Fredoka-Medium.ttf');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Fredoka';
+    src: url('./fredoka_font/Fredoka-SemiBold.ttf');
+    font-weight: 600;
+}
