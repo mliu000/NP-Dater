@@ -1,0 +1,50 @@
+/* Represents the general underlying settings and frequently used variables for my react app */
+
+:root {
+    background-color: rgb(172, 219, 255);
+
+    /* Variables */
+    --text-color: rgb(43, 43, 43);
+    --black-color: rgba(0, 0, 0, 0.8);
+    --moderate-gray: rgb(146, 146, 146);
+    --header-color: rgb(233, 233, 233);
+
+}
+
+h1, h2 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+}
+
+h3, h4, h5 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+p {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 400;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+/* Component specific styles */
+
+.title {
+    font-size: clamp(0vw, 10vw, 15vh);
+    color: var(--header-color);
+    text-shadow: 0 0 2vh var(--black-color);
+}

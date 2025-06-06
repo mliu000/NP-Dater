@@ -1,0 +1,9 @@
+/* Styles that are specific to the front page, but are still global */
+
+.curved-line {
+    width: 20vw;
+    height: 50px;
+    border: 0.7vw solid var(--black-color);
+    border-top: none;
+    border-radius: 0 0 50vw 50vw;
+}
