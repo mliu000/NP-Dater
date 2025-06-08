@@ -9,32 +9,35 @@
     border-radius: 0 0 50vw 50vw;
 }
 
-/* Render a square div with boarder */
-.square {
-    width: 10vw;
-    height: 20vw;
-    border: 0.7vw solid var(--black-color);
-    border-radius: 1vh;
-}
-
 /* Generate an infinitely rotating div clockwise*/
 .rotating-tile-infinite-clockwise {
-    border-radius: 1vh;
     animation: rotate-infinite-clockwise 10s linear infinite;
 }
-
+    
 /* Generate an infinitely rotating div counter-clockwise */
 .rotating-tile-infinite-counter-clockwise {
-    border-radius: 1vh;
     animation: rotate-infinite-counter-clockwise 10s linear infinite;
 }
 
 /* Component specific styles */
 
 .title {
-    font-size: clamp(0vw, 10vw, 15vh);
+    font-size: clamp(5vh, 10vw, 15vh);
     color: var(--header-color);
     text-shadow: 0 0 2vh var(--black-color);
+}
+
+/* Hexagon tile styling */
+.hexagon {
+    aspect-ratio: 1 / 0.866; /* ~1.1547 */
+    clip-path: polygon(
+        50% 0%,
+        100% 25%,
+        100% 75%,
+        50% 100%,
+        0% 75%,
+        0% 25%
+    );
 }
 
 /* ///// KEYFRAMES ///// */
