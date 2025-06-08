@@ -1,14 +1,32 @@
 /* Represents the general underlying settings and frequently used variables for my react app */
 
 :root {
-    background-color: rgb(172, 219, 255);
-
     /* Variables */
     --text-color: rgb(43, 43, 43);
     --black-color: rgba(0, 0, 0, 0.8);
     --moderate-gray: rgb(146, 146, 146);
     --header-color: rgb(233, 233, 233);
 
+}
+
+/* General page with scrollable width but not height */
+html, body {
+    width: 100vw;
+    height: 100vh;
+    min-width: 800px;
+    min-height: 600px;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(172, 219, 255);
+    overflow: auto;
+}
+
+#root {
+    position: relative; 
+    width: 100%;
+    height: 100%;
+    min-width: 800px;
+    min-height: 600px;
 }
 
 h1, h2 {
@@ -39,12 +57,4 @@ p {
     button {
         background-color: #f9f9f9;
     }
-}
-
-/* Component specific styles */
-
-.title {
-    font-size: clamp(0vw, 10vw, 15vh);
-    color: var(--header-color);
-    text-shadow: 0 0 2vh var(--black-color);
 }

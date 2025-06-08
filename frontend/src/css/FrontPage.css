@@ -1,9 +1,60 @@
 /* Styles that are specific to the front page, but are still global */
 
+/* Curved line */
 .curved-line {
     width: 20vw;
-    height: 50px;
+    height: 100vh;
     border: 0.7vw solid var(--black-color);
     border-top: none;
     border-radius: 0 0 50vw 50vw;
+}
+
+/* Render a square div with boarder */
+.square {
+    width: 10vw;
+    height: 20vw;
+    border: 0.7vw solid var(--black-color);
+    border-radius: 1vh;
+}
+
+/* Generate an infinitely rotating div clockwise*/
+.rotating-tile-infinite-clockwise {
+    border-radius: 1vh;
+    animation: rotate-infinite-clockwise 10s linear infinite;
+}
+
+/* Generate an infinitely rotating div counter-clockwise */
+.rotating-tile-infinite-counter-clockwise {
+    border-radius: 1vh;
+    animation: rotate-infinite-counter-clockwise 10s linear infinite;
+}
+
+/* Component specific styles */
+
+.title {
+    font-size: clamp(0vw, 10vw, 15vh);
+    color: var(--header-color);
+    text-shadow: 0 0 2vh var(--black-color);
+}
+
+/* ///// KEYFRAMES ///// */
+
+/* Keyframes for infinite rotation clockwise */
+@keyframes rotate-infinite-clockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Keyframes for infinite rotation counter-clockwise */
+@keyframes rotate-infinite-counter-clockwise {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(-360deg);
+    }
 }
