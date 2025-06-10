@@ -3,7 +3,7 @@ Mu Ye Liu - June 2025
 
 Represents the HexGrid class for generating hexagonal grid coordinates
 */
-export class HexGrid {
+export default class HexGrid {
 
     /* Constuctor
     REQUIRES: - radius: must be a positive integer (default is 1)

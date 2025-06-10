@@ -1,4 +1,4 @@
-import { Tile } from '../model/Tile';
+import Tile from '../model/Tile';
 import { useNavigate } from 'react-router-dom';
 import '../css/FrontPage.css'
 
@@ -213,10 +213,16 @@ function SetUpMainButtons() {
             display: 'flex',
             flexDirection: 'column'
         }}>
-            <button className="front-cover-buttons" onClick={() => navigate('/main-page')}>
+            <button className="typical-button" onClick={() => navigate('/main-page')} style={{
+                width: '100%',
+                height: '30%'
+            }}>
                 Start Program
             </button>
-            <button className="front-cover-buttons" onClick={() => navigate('/instructions-page')}>
+            <button className="typical-button" onClick={() => navigate('/instructions-page')} style={{
+                width: '100%',
+                height: '30%'
+            }}>
                 Instructions
             </button>
         </div>

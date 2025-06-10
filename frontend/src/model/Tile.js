@@ -4,7 +4,7 @@ Mu Ye Liu - June 2025
 Represents the Tile class for creating tiles in a grid or hexagonal layout
 */
 
-export class Tile {
+export default class Tile {
 
     /* Constructor to the tile
     REQUIRES: - id: Must be a string
