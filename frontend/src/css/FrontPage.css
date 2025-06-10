@@ -15,7 +15,7 @@
 .title {
     font-size: clamp(5vh, 10vw, 15vh);
     color: var(--header-color);
-    text-shadow: 0 0 2vh var(--black-color);
+    text-shadow: 0 0 1vw var(--black-color);
 }
 
 /* Hexagon tile styling */
@@ -40,6 +40,26 @@
     box-shadow: 0 0 2vw rgba(0, 0, 0, 0.3);
     z-index: -1; /* behind the actual hexagon */
     overflow: visible;
+}
+
+/* Front cover buttons with drop shadow, blue background, rounded corners, white border*/
+.front-cover-buttons {
+    width: 100%;
+    height: 30%;
+    background-color: var(--moderate-gray);
+    color: white;
+    border: 0.2vw solid white;
+    border-radius: 5vw;
+    box-shadow: 0 0 0.3vw var(--box-shadow-color);
+    font-size: clamp(1.5rem, 2vw, 2.5rem);
+    margin: 5%;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.front-cover-buttons:hover {
+    background-color: var(--text-color);
+    transform: scale(1.05);
 }
 
 /* ///// KEYFRAMES ///// */

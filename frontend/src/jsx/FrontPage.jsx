@@ -92,7 +92,7 @@ function renderGridTiles(tiles, placements) {
                             gridRow:    gridRow,
                             backgroundColor: tile.color,
                             boxSizing: 'border-box',
-                            boxShadow: '0 0 0.2vw rgba(0, 0, 0, 0.3)'
+                            boxShadow: '0 0 0.2vw var(--box-shadow-color)',
                         }}
                     />
                 );
@@ -115,7 +115,7 @@ function renderHexTiles(tiles, placements) {
             width: `${width}%`,
             aspectRatio: `${aspectRatio}`,
             transform: 'translate(-50%, -50%)',
-            filter: 'drop-shadow(0 0 0.2vw rgba(0, 0, 0, 0.6))'
+            filter: 'drop-shadow(0 0 0.2vw var(--box-shadow-color))'
         }}>
             {tile.coords.map(([x, y], hexIdx) => {
                 const z = -x - y;
@@ -191,6 +191,45 @@ function SetUpTitle() {
     );
 }
 
+// Sets up the main buttons
+function SetUpMainButtons() {
+    return (
+        <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: '80%',
+            width: '30%',
+            height: '30%',
+            transform: 'translate(-50%, -50%)',
+            display: 'flex',
+            flexDirection: 'column'
+        }}>
+            <button className="front-cover-buttons">Start Program</button>
+            <button className="front-cover-buttons">Instructions</button>
+        </div>
+    );
+}
+
+// Sets up the slogan below the title
+function SetUpSlogan() {
+    return (
+        <h1
+            className="slogan"
+            style={{
+                position: 'absolute',
+                left: '50%',
+                top: '30%',
+                width: '30%',
+                transform: 'translate(-50%)',
+                margin: '0',
+                textAlign: 'center',
+                color: 'var(--header-color)',
+        }}>
+            Tired of spending hours on a date puzzle? NP-Dater to the rescue!
+        </h1>
+    );
+}
+
 // Create a function that toggles dark mode
 
 ///// MAIN FUNCTION /////
@@ -201,6 +240,8 @@ export default function FrontPage() {
         <>
             <SetUpTitle/>
             <SetUpBackgroundTiles/>
+            <SetUpMainButtons/>
+            <SetUpSlogan/>
         </>
     );
 }

@@ -3,6 +3,7 @@
 :root {
     /* Variables */
     --text-color: rgb(43, 43, 43);
+    --box-shadow-color: rgba(0, 0, 0, 0.3);
     --black-color: rgba(0, 0, 0, 0.8);
     --moderate-gray: rgb(146, 146, 146);
     --header-color: rgb(233, 233, 233);
@@ -32,16 +33,24 @@ html, body {
 h1, h2 {
     font-family: 'Fredoka', sans-serif;
     font-weight: 600;
+    text-shadow: 0 0 0.5vw var(--black-color);
 }
 
 h3, h4, h5 {
     font-family: 'Fredoka', sans-serif;
     font-weight: 500;
+    text-shadow: 0 0 0.2vw var(--black-color);
 }
 
 p {
     font-family: 'Fredoka', sans-serif;
     font-weight: 400;
+}
+
+button {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 @media (prefers-color-scheme: light) {
