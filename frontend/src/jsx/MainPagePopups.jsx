@@ -157,6 +157,21 @@ function RenderPopupTemplate({ title, arbitrary, buttons }) {
 
 ///// RENDER FUNCTIONS /////
 
+function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
+    return (
+        <RenderPopupTemplate
+            title="Existing Puzzles:"
+            arbitrary={null}
+            buttons={[
+                {
+                    label: "Select",
+                    onClick: () => setDisplayedPopup('createNewPuzzle')
+                }
+            ]}
+        />
+    );
+}
+
 // Renders the create new puzzle popup
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [inputValue, setInputValue] = useState(''); // Default is empty string
@@ -229,13 +244,16 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
     );
 }
 
-export default function MainPagePopups() {
+export default function MainPagePopups({ displayedPopup, setDisplayedPopup }) {
     // REQUIRES: one of the following: 'startup', 'createNewPuzzle', 'pickExistingPuzzle', ''
-    const [displayedPopup, setDisplayedPopup] = useState('startup');
     return (
         <>
-            {displayedPopup === 'startup' && <RenderStartupOptionsPopup setDisplayedPopup={setDisplayedPopup} />}
-            {displayedPopup === 'createNewPuzzle' && <RenderCreateNewPuzzlePopup setDisplayedPopup={setDisplayedPopup} />}
+            {displayedPopup === 'startup' && <RenderStartupOptionsPopup
+                setDisplayedPopup={setDisplayedPopup} />}
+            {displayedPopup === 'createNewPuzzle' && <RenderCreateNewPuzzlePopup
+                setDisplayedPopup={setDisplayedPopup} />}
+            {displayedPopup === 'pickExistingPuzzle' && <RenderChooseExistingPuzzlePopup
+                setDisplayedPopup={setDisplayedPopup} />}
         </>
     );
 }

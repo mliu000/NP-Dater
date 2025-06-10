@@ -43,3 +43,25 @@
     color: var(--dark-header-color);
     font-size: 1.5vw;
 }
+
+.left-side-tile-list {
+    position: relative;
+    width: 35%;
+    height: 100%;
+    background-color: var(--dark-header-color);
+    border-right: 0.5vw solid var(--header-color);
+}
+
+.left-side-tile-list-scroll-pane {
+    position: absolute;
+    height: 80%;
+    top: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
