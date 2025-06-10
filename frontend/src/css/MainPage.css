@@ -24,3 +24,9 @@
     width: 90%;
     max-width: 600px;
 }
+
+.popup-content h2 {
+    text-align: center;
+    color: var(--dark-header-color);
+    font-size: 1.5vw;
+}
