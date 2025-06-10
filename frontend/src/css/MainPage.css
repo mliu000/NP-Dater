@@ -1,13 +1,13 @@
 /* Represents the styling for the main page of the application */
 
 .popup-background {
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--box-shadow-color);
-    z-index: 2;
+    background-color: var(--dim-background-color);
+    z-index: 100;
     overflow: auto;
 }
 
@@ -46,7 +46,7 @@
 
 .left-side-tile-list {
     position: relative;
-    width: 35%;
+    width: 30%;
     height: 100%;
     background-color: var(--dark-header-color);
     border-right: 0.5vw solid var(--header-color);
@@ -54,14 +54,31 @@
 
 .left-side-tile-list-scroll-pane {
     position: absolute;
-    height: 80%;
-    top: 10%;
-    width: 100%;
+    top: 12%;
+    left: 10%;
+    width: 80%;
+    height: 75%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: top;
     align-items: center;
-    overflow-y: auto;
+    overflow-y: scroll;
     scrollbar-width: none;
-    -ms-overflow-style: none;
+}
+
+.tile-window {
+    width: 98%;
+    height: 25%;
+    border-radius: 2vw;
+    background-color: var(--box-shadow-color);
+    border: 0.2vw solid var(--header-color);
+    margin: 1vw;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease;
+}
+
+.tile-window:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }

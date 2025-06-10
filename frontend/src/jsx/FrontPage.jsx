@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import Tile from '../model/Tile';
 import { useNavigate } from 'react-router-dom';
 import '../css/FrontPage.css'
-import { use } from 'react';
 
 /* 
 Mu Ye Liu - June 2025

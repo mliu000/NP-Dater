@@ -3,6 +3,10 @@ import Tile from '../model/Tile.js';
 import MainPagePopups from './MainPagePopups.jsx';
 import '../css/MainPage.css';
 
+// To store the tiles the name of the puzzle
+const tiles = [];
+let name = '';
+
 /* 
 Mu Ye Liu - June 2025
 
@@ -11,29 +15,45 @@ Represents the instructions page for displaying instructions
 
 ///// HELPER FUNCTIONS /////
 
+// Function to render each of the tile Windows in the tile list
+function RenderTileWindow() {
+    return (
+        <div className="tile-window" onClick={() => {
+            // Handle tile click event
+            console.log('Tile clicked');
+        }}>
+            
+        </div>
+    );
+}
+
+// Renders the left side tile list 
 function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 
     const handleNewTileClick = () => {
-        // Logic to create a new tile
-        const newTile = new Tile(`tile_${noTiles}`, [], [], 'blue'); // Example tile creation
         setNoTiles(noTiles + 1);
-    }
+        tiles.push(new Tile(`tile_${noTiles}`, [], [], ''));
+    };
 
     return (
         <>
             <div className="left-side-tile-list">
                 <h1 style={{
                     position: 'absolute',
+                    left: '50%',
+                    width: '100%',
+                    transform: 'translate(-50%)',
+                    textAlign: 'center',
                     margin: '0',
                     fontSize: '5vw',
-                    textDecoration: 'underline',
                     color: 'var(--header-color)',
-                    left: '50%',
-                    transform: 'translate(-50%)'
-                }}>Tiles:</h1>
+                }}>Tiles: {noTiles}</h1>
                 {noTiles > 0 ? (
                     <div className="left-side-tile-list-scroll-pane">
-
+                        {/* Render each tile window in the list */}
+                        {tiles.map((tile, idx) => (
+                            <RenderTileWindow key={idx} tile={tile} />
+                        ))}
                     </div>
                 ) : (
                     <h1 style={{
@@ -45,16 +65,17 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                         top: '50%',
                         transform: 'translate(-50%)',
                         textAlign: 'center',
-                    }}>No tiles available</h1>
+                    }}>No Tiles Yet!</h1>
                 )
                 }
                 <button className="typical-button" style={{
                     position: 'absolute',
                     left: '45%',
                     transform: 'translate(-50%)',
-                    bottom: '0%',
+                    bottom: '1%',
                     width: '50%',
-                    height: '5vh',
+                    height: '8%',
+                    marginBottom: '2%',
                 }} onClick={handleNewTileClick}>New Tile</button>
             </div>
         </>
@@ -75,7 +96,7 @@ function RenderMainPage({ noTiles, setNoTiles }) {
 ///// MAIN FUNCTION /////
 
 export default function MainPage() {
-    const [displayedPopup, setDisplayedPopup] = useState('');
+    const [displayedPopup, setDisplayedPopup] = useState('startup');
     const [puzzleUsernameDisplayed, setPuzzleUsernameDisplayed] = useState('');
     const [noTiles, setNoTiles] = useState(0);
 

@@ -3,8 +3,8 @@
 :root {
     /* Variables */
     --text-color: rgb(43, 43, 43);
-
     --box-shadow-color: rgba(0, 0, 0, 0.3);
+    --dim-background-color: rgba(0, 0, 0, 0.8);
     --black-color: rgba(0, 0, 0, 0.8);
     --moderate-gray: rgb(146, 146, 146);
     --header-color: rgb(233, 233, 233);
