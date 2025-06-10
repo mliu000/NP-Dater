@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import Tile from '../model/Tile';
 import { useNavigate } from 'react-router-dom';
 import '../css/FrontPage.css'
+import { use } from 'react';
 
 /* 
 Mu Ye Liu - June 2025
@@ -255,6 +257,12 @@ function SetUpSlogan() {
 
 // Sets up the front page
 export default function FrontPage() {
+    useEffect(() => {
+        // Set the page title
+        document.title = 'NP-Dater - Front Page';
+    }
+    , []);
+
     return (
         <>
             <SetUpTitle/>

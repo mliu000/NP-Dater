@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import Tile from '../model/Tile.js';
 import '../css/MainPage.css';
 
@@ -12,8 +12,8 @@ Represents the instructions page for displaying instructions
 
 ///// RENDER FUNCTIONS /////
 
-// Renders the startup options menu
-function renderStartupOptions() {
+// Renders the startup options popup
+function renderStartupOptionsPopup() {
     const [show, setShow] = useState(true);
 
     return (
@@ -68,10 +68,14 @@ function renderStartupOptions() {
 ///// MAIN FUNCTION /////
 
 export default function MainPage() {
-    // Stub
+    useEffect(() => {
+        // Set the page title
+        document.title = 'NP-Dater - Main Page';
+    }, []);
+
     return (
         <>
-            {renderStartupOptions()}
+            {renderStartupOptionsPopup()}
         </>
     );
 }
