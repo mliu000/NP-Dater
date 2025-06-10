@@ -38,13 +38,8 @@ function RenderDropDownMenu({ options = [], message, setState }) {
 }
 
 
-function RenderCreateNewPuzzleMiddleComponent() {
-    const [puzzleType, setPuzzleType] = useState(''); // Default is nothing 
-    const [inputValue, setInputValue] = useState(''); // Default is empty string
-    const [gridWidth, setGridWidth] = useState(0); // Default is 0
-    const [gridHeight, setGridHeight] = useState(0); // Default is 0
-    const [hexRadius, setHexRadius] = useState(0); // Default is 0
-
+function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, setGridWidth,
+    puzzleType, setGridHeight, setHexRadius, setInvalidSelection, invalidSelection, setDateFormat }) {
     return (
         <div style={{
             width: '80%',
@@ -60,22 +55,48 @@ function RenderCreateNewPuzzleMiddleComponent() {
             </h2>
             <label style={{ display: 'block', fontSize: '1.5vw', marginBottom: '1vh' }}>
                 <input type="radio" name="puzzleType" value="grid"
-                    onChange={(e) => setPuzzleType(e.target.value)} style={{ marginRight: '1vw' }} />
+                    onChange={(e) => {
+                        setPuzzleType(e.target.value);
+                        setInvalidSelection(false); // Reset invalid selection when changing puzzle type
+                    }} style={{ marginRight: '1vw' }} />
                 Grid Puzzle
             </label>
             <label style={{ display: 'block', fontSize: '1.5vw', marginBottom: '1vh' }}>
                 <input type="radio" name="puzzleType" value="hex"
-                    onChange={(e) => setPuzzleType(e.target.value)} style={{ marginRight: '1vw' }} />
+                    onChange={(e) => {
+                        setPuzzleType(e.target.value);
+                        setInvalidSelection(false); // Reset invalid selection when changing puzzle type
+                    }} style={{ marginRight: '1vw' }} />
                 Hex Puzzle
             </label>
+            <h2 style={{ fontSize: '1.5vw' }}>
+                Select Date Format:
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', fontSize: '1.5vw' }}>
+                <label>
+                    <input type="checkbox" value="Option1"
+                        onChange={() => setDateFormat(prev => prev.map((val, idx) => idx === 0 ? !val : val))} />
+                    Day of the Week
+                </label>
+                <label>
+                    <input type="checkbox" value="Option2"
+                        onChange={() => setDateFormat(prev => prev.map((val, idx) => idx === 1 ? !val : val))} />
+                    Day of the Month
+                </label>
+                <label>
+                    <input type="checkbox" value="Option3"
+                        onChange={() => setDateFormat(prev => prev.map((val, idx) => idx === 2 ? !val : val))} />
+                    Month
+                </label>
+            </div>
             {puzzleType == 'grid' && (
                 <>
                     <h2 style={{ fontSize: '1.5vw' }}>
                         Select the width and height of the grid puzzle (8x8 max):
                     </h2>
-                    <RenderDropDownMenu options={['2', '3', '4', '5', '6', '7', '8']}
+                    <RenderDropDownMenu options={['5', '6', '7', '8']}
                         message="Select Width" setState={setGridWidth} />
-                    <RenderDropDownMenu options={['2', '3', '4', '5', '6', '7', '8']}
+                    <RenderDropDownMenu options={['5', '6', '7', '8']}
                         message="Select Height" setState={setGridHeight} />
                 </>
             )}
@@ -85,8 +106,13 @@ function RenderCreateNewPuzzleMiddleComponent() {
                         Select the radius of the hex puzzle (1-5):
                     </h2>
                     <RenderDropDownMenu options={['1', '2', '3', '4', '5']}
-                        message="Select Radius" setState={setHexRadius} />  
+                        message="Select Radius" setState={setHexRadius} />
                 </>
+            )}
+            {invalidSelection && (
+                <p style={{ color: 'red', fontSize: '1.5vw' }}>
+                    Please fill in all fields before proceeding.
+                </p>
             )}
 
         </div>
@@ -141,14 +167,42 @@ function RenderPopupTemplate({ title, arbitrary, buttons }) {
 
 // Renders the create new puzzle popup
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
+    const [inputValue, setInputValue] = useState(''); // Default is empty string
+    const [gridWidth, setGridWidth] = useState("Select Width"); // Default is "Select Width"
+    const [gridHeight, setGridHeight] = useState("Select Height"); // Default is "Select Height"
+    const [hexRadius, setHexRadius] = useState("Select Radius"); // Default is "Select Radius"
+    const [puzzleType, setPuzzleType] = useState(''); // Default is nothing
+    const [invalidSelection, setInvalidSelection] = useState(false); // Default is false
+    const [dateFormat, setDateFormat] = useState(new Array(3).fill(false)); // Default is [false, false, false]
+
     return (
         <RenderPopupTemplate
-            title="Create New Puzzle:"
-            arbitrary={<RenderCreateNewPuzzleMiddleComponent />}
+            title="New Puzzle:"
+            arbitrary={<RenderCreateNewPuzzleMiddleComponent
+                setInputValue={setInputValue}
+                puzzleType={puzzleType}
+                setPuzzleType={setPuzzleType}
+                setGridWidth={setGridWidth}
+                setGridHeight={setGridHeight}
+                setHexRadius={setHexRadius}
+                setInvalidSelection={setInvalidSelection}
+                invalidSelection={invalidSelection}
+                setDateFormat={setDateFormat}
+            />}
             buttons={[
                 {
                     label: "Start",
-                    onClick: () => setDisplayedPopup('')
+                    onClick: () => {
+                        if (inputValue === '' ||
+                            puzzleType === '' ||
+                            puzzleType === 'grid' && (gridWidth === 'Select Width' || gridHeight === 'Select Height') ||
+                            puzzleType === 'hex' && hexRadius === 'Select Radius' ||
+                            dateFormat.every(format => !format)) {
+                            setInvalidSelection(true);
+                        } else {
+                            setDisplayedPopup(''); // Hide the display
+                        }
+                    }
                 },
                 {
                     label: "Back",
@@ -175,7 +229,7 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
                     onClick: () => setDisplayedPopup('pickExistingPuzzle')
                 },
                 {
-                    label: "Create New Puzzle",
+                    label: "Create new Puzzle",
                     onClick: () => setDisplayedPopup('createNewPuzzle')
                 }
             ]}
