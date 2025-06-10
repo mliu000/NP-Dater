@@ -43,15 +43,14 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
     return (
         <div style={{
             width: '80%',
-            textAlign: 'center',
-            marginTop: '-2vh',
+            textAlign: 'center'
         }}>
             <h2>
-                Choose a name for your puzzle:
+                Puzzle Name:
             </h2>
             <RenderInputs setInputValue={setInputValue} />
             <h2>
-                Choose puzzle type:
+                Puzzle type:
             </h2>
             <label style={{ display: 'block', fontSize: '1.5vw', marginBottom: '1vh' }}>
                 <input type="radio" name="puzzleType" value="grid"
@@ -70,7 +69,7 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
                 Hex Puzzle
             </label>
             <h2 style={{ fontSize: '1.5vw' }}>
-                Select Date Format:
+                Date Format:
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', fontSize: '1.5vw' }}>
                 <label>
@@ -92,7 +91,7 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
             {puzzleType == 'grid' && (
                 <>
                     <h2 style={{ fontSize: '1.5vw' }}>
-                        Select the width and height of the grid puzzle (8x8 max):
+                        Width and Height:
                     </h2>
                     <RenderDropDownMenu options={['5', '6', '7', '8']}
                         message="Select Width" setState={setGridWidth} />
@@ -103,7 +102,7 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
             {puzzleType == 'hex' && (
                 <>
                     <h2 style={{ fontSize: '1.5vw' }}>
-                        Select the radius of the hex puzzle (1-5):
+                        Radius:
                     </h2>
                     <RenderDropDownMenu options={['1', '2', '3', '4', '5']}
                         message="Select Radius" setState={setHexRadius} />
@@ -123,41 +122,34 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
 function RenderPopupTemplate({ title, arbitrary, buttons }) {
     return (
         <div className="popup-background">
-            <div className="popup-content" style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '40%',
-                height: 'auto'
-            }}>
-                <h1 style={{
-                    textDecoration: 'underline',
-                    textAlign: 'center',
-                    color: 'var(--header-color)',
-                    fontSize: '4vw',
-                }}>
-                    {title}
-                </h1>
-                {arbitrary}
-                {buttons.map(({ label, onClick }, idx) => (
-                    <button
-                        key={idx}
-                        className="typical-button"
-                        style={{
-                            width: '80%',
-                            height: '7vw',
-                            marginBottom: '1vh',
-                            fontSize: '2vw'
-                        }}
-                        onClick={onClick}
-                    >
-                        {label}
-                    </button>
-                ))}
+            <div className="popup-wrapper">
+                <div className="popup-content">
+                    <h1 style={{
+                        textDecoration: 'underline',
+                        textAlign: 'center',
+                        color: 'var(--header-color)',
+                        fontSize: '4vw',
+                        marginBottom: '1vh',
+                    }}>
+                        {title}
+                    </h1>
+                    {arbitrary}
+                    {buttons.map(({ label, onClick }, idx) => (
+                        <button
+                            key={idx}
+                            className="typical-button"
+                            style={{
+                                width: '80%',
+                                height: '7vw',
+                                marginBottom: '1vh',
+                                fontSize: '2vw'
+                            }}
+                            onClick={onClick}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );

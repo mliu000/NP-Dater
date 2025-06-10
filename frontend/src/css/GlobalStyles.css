@@ -54,6 +54,7 @@ button {
     font-family: 'Fredoka', sans-serif;
     font-weight: 500;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 div {

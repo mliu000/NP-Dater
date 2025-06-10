@@ -11,18 +11,31 @@
     overflow: auto;
 }
 
-.popup-content {
-    position: relative; /* no longer absolutely centered */
+.popup-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background-color: var(--greyish-blue);
     border-radius: 5vw;
     border: 0.2vw solid var(--header-color);
-    padding: 2%;
     box-shadow: 0 0 3% var(--box-shadow-color);
-    z-index: 3;
-    max-height: 90vh;          /* prevents overflow */
-    overflow-y: auto;          /* makes content scroll if needed */
-    width: 90%;
-    max-width: 600px;
+    max-height: 90vh;
+    width: 35%;
+    padding: 2vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content {
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .popup-content h2 {
