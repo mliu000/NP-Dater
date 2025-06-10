@@ -1,3 +1,8 @@
+/* 
+Mu Ye Liu - June 2025
+
+Represents the HexGrid class for generating hexagonal grid coordinates
+*/
 export class HexGrid {
 
     /* Constuctor

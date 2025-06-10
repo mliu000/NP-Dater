@@ -1,5 +1,12 @@
 import { Tile } from '../model/Tile';
+import { useNavigate } from 'react-router-dom';
 import '../css/FrontPage.css'
+
+/* 
+Mu Ye Liu - June 2025
+
+Represents the jsx file for the initialization of the front page
+*/
 
 ///// HELPER FUNCTIONS /////
 
@@ -193,6 +200,8 @@ function SetUpTitle() {
 
 // Sets up the main buttons
 function SetUpMainButtons() {
+    const navigate = useNavigate();
+
     return (
         <div style={{
             position: 'absolute',
@@ -204,8 +213,12 @@ function SetUpMainButtons() {
             display: 'flex',
             flexDirection: 'column'
         }}>
-            <button className="front-cover-buttons">Start Program</button>
-            <button className="front-cover-buttons">Instructions</button>
+            <button className="front-cover-buttons" onClick={() => navigate('/main-page')}>
+                Start Program
+            </button>
+            <button className="front-cover-buttons" onClick={() => navigate('/instructions-page')}>
+                Instructions
+            </button>
         </div>
     );
 }

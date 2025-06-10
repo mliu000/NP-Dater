@@ -1,4 +1,8 @@
-// Represents a grid and hex tile objects, similar to c++
+/*
+Mu Ye Liu - June 2025
+
+Represents the Tile class for creating tiles in a grid or hexagonal layout
+*/
 
 export class Tile {
 

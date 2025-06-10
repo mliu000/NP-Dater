@@ -31,17 +31,6 @@
     );
 }
 
-.hexagon::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    clip-path: inherit;
-    background: inherit;
-    box-shadow: 0 0 2vw rgba(0, 0, 0, 0.3);
-    z-index: -1; /* behind the actual hexagon */
-    overflow: visible;
-}
-
 /* Front cover buttons with drop shadow, blue background, rounded corners, white border*/
 .front-cover-buttons {
     width: 100%;
