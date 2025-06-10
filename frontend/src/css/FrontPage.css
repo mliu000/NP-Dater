@@ -1,14 +1,5 @@
 /* Styles that are specific to the front page, but are still global */
 
-/* Curved line */
-.curved-line {
-    width: 20vw;
-    height: 100vh;
-    border: 0.7vw solid var(--black-color);
-    border-top: none;
-    border-radius: 0 0 50vw 50vw;
-}
-
 /* Generate an infinitely rotating div clockwise*/
 .rotating-tile-infinite-clockwise {
     animation: rotate-infinite-clockwise 10s linear infinite;
@@ -29,7 +20,7 @@
 
 /* Hexagon tile styling */
 .hexagon {
-    aspect-ratio: 1 / 0.866; /* ~1.1547 */
+    aspect-ratio: 0.86602540378;
     clip-path: polygon(
         50% 0%,
         100% 25%,
@@ -38,6 +29,17 @@
         0% 75%,
         0% 25%
     );
+}
+
+.hexagon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    clip-path: inherit;
+    background: inherit;
+    box-shadow: 0 0 2vw rgba(0, 0, 0, 0.3);
+    z-index: -1; /* behind the actual hexagon */
+    overflow: visible;
 }
 
 /* ///// KEYFRAMES ///// */
@@ -61,3 +63,5 @@
         transform: rotate(-360deg);
     }
 }
+
+

@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { GridTile, HexTile } from '../model/Tile';
+import { Tile } from '../model/Tile';
 import '../css/FrontPage.css'
 
-// Helper function to calculate tile bounds
-function calculateTileBounds(coords) {
+///// HELPER FUNCTIONS /////
+
+// Calculate bounds for grid tiles
+function calculateGridTileBounds(coords) {
     const bounds = coords.reduce((acc, [x, y]) => {
         acc.minX = Math.min(acc.minX, x);
         acc.minY = Math.min(acc.minY, y);
@@ -14,13 +15,40 @@ function calculateTileBounds(coords) {
     return bounds;
 }
 
+// Calculate bounds for hex tiles for each tile
+function calculateHexTileBounds(coords) {
+    const bounds = coords.reduce((acc, [x, y]) => {
+        const z = -x - y;
+        acc.minX = Math.min(acc.minX, x);
+        acc.maxX = Math.max(acc.maxX, x);
+        acc.minY = Math.min(acc.minY, y);
+        acc.maxY = Math.max(acc.maxY, y);
+        acc.minZ = Math.min(acc.minZ, z);
+        acc.maxZ = Math.max(acc.maxZ, z);
+        acc.minOffsetX = Math.min(acc.minOffsetX, x + z / 2);
+        acc.maxOffsetX = Math.max(acc.maxOffsetX, x + z / 2);
+        return acc;
+    }, {
+        minX: Infinity,
+        maxX: -Infinity,
+        minY: Infinity,
+        maxY: -Infinity,
+        minZ: Infinity,
+        maxZ: -Infinity,
+        minOffsetX: Infinity,
+        maxOffsetX: -Infinity,
+    });
+
+    return bounds;
+}
+
 // Helper function to create grid tiles
 function createGridTiles(gridTileCoords, gridTileColours) {
     return gridTileCoords.map((coordList, idx) => {
-        const bounds = calculateTileBounds(coordList);
+        const bounds = calculateGridTileBounds(coordList);
         return {
-            tile: new GridTile(`front_page_grid_${idx}`, coordList, [], gridTileColours[idx]),
-            bounds,
+            tile: new Tile(`front_page_grid_${idx}`, coordList, [], gridTileColours[idx]),
+            bounds
         };
     });
 }
@@ -28,16 +56,18 @@ function createGridTiles(gridTileCoords, gridTileColours) {
 // Helper function to create hex tiles
 function createHexTiles(hexTilesCoords, hexTileColours) {
     return hexTilesCoords.map((coordList, idx) => {
-        const bounds = calculateTileBounds(coordList);
+        const bounds = calculateHexTileBounds(coordList);
         return {
-            tile: new HexTile(`front_page_hex_${idx}`, coordList, [], hexTileColours[idx]),
-            bounds,
+            tile: new Tile(`front_page_hex_${idx}`, coordList, [], hexTileColours[idx], 1),
+            bounds
         };
     });
 }
 
-// Helper function to render tiles
-function renderGridTiles(tiles, placements, isHex = false) {
+///// RENDER FUNCTIONS /////
+
+// Renders the rotating grid tiles
+function renderGridTiles(tiles, placements) {
     return tiles.map(({ tile, bounds }, idx) => (
         <div key={tile.id} className='rotating-tile-infinite-clockwise' style={{
             position: 'absolute',
@@ -46,35 +76,23 @@ function renderGridTiles(tiles, placements, isHex = false) {
             width: `${(bounds.maxX - bounds.minX) * 8}%`,
             transform: 'translate(-50%, -50%)',
             aspectRatio: `${(bounds.maxX - bounds.minX + 1) / (bounds.maxY - bounds.minY + 1)}`,
+            display: 'grid',
+            gridTemplateColumns: `repeat(${bounds.maxX - bounds.minX + 1}, 1fr)`,
+            gridTemplateRows: `repeat(${bounds.maxY - bounds.minY + 1}, 1fr)`,
         }}>
             {tile.coords.map(([x, y]) => {
-                const key = `${tile.id}_${x}_${y}`;
-                const isTopOpen = !tile.coords.some(([cx, cy]) => cx === x && cy === y - 1);
-                const isBottomOpen = !tile.coords.some(([cx, cy]) => cx === x && cy === y + 1);
-                const isLeftOpen = !tile.coords.some(([cx, cy]) => cx === x - 1 && cy === y);
-                const isRightOpen = !tile.coords.some(([cx, cy]) => cx === x + 1 && cy === y);
-
-                const tileWidth = bounds.maxX - bounds.minX + 1;
-                const tileHeight = bounds.maxY - bounds.minY + 1;
-
-                const normX = x - bounds.minX;
-                const normY = y - bounds.minY;
+                const gridCol = x - bounds.minX + 1;
+                const gridRow = y - bounds.minY + 1;
 
                 return (
                     <div
-                        key={key}
+                        key={`${tile.id}_${x}_${y}`}
                         style={{
-                            position: 'absolute',
-                            left: `${(normX * 100) / tileWidth}%`,
-                            top: `${(normY * 100) / tileHeight}%`,
-                            width: `${100 / tileWidth}%`,
-                            aspectRatio: '1 / 1',
+                            gridColumn: gridCol,
+                            gridRow:    gridRow,
                             backgroundColor: tile.color,
                             boxSizing: 'border-box',
-                            borderTop: isTopOpen ? '0.3vw solid black' : 'none',
-                            borderBottom: isBottomOpen ? '0.3vw solid black' : 'none',
-                            borderLeft: isLeftOpen ? '0.3vw solid black' : 'none',
-                            borderRight: isRightOpen ? '0.3vw solid black' : 'none',
+                            boxShadow: '0 0 0.2vw rgba(0, 0, 0, 0.3)'
                         }}
                     />
                 );
@@ -85,53 +103,48 @@ function renderGridTiles(tiles, placements, isHex = false) {
 
 // Helper function to render hex tiles
 function renderHexTiles(tiles, placements) {
-  return tiles.map(({ tile, bounds }, idx) => {
-    // how many columns & rows our shape spans
-    const cols = bounds.maxX - bounds.minX + 1;
-    const rows = bounds.maxY - bounds.minY + 1;
+    return tiles.map(({ tile, bounds }, idx) => {
+        const width = (bounds.maxOffsetX - bounds.minOffsetX + 1) * 4;
+        const height = (bounds.maxZ - bounds.minZ + 1) * 4 * (2 * Math.sqrt(3) / 3) -
+                        (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
+        const aspectRatio = width / height;
+        return <div key={tile.id} className='rotating-tile-infinite-counter-clockwise' style={{
+            position: 'absolute',
+            left: `${placements[idx][0]}%`,
+            top: `${placements[idx][1]}%`,
+            width: `${width}%`,
+            aspectRatio: `${aspectRatio}`,
+            transform: 'translate(-50%, -50%)',
+            filter: 'drop-shadow(0 0 0.2vw rgba(0, 0, 0, 0.6))'
+        }}>
+            {tile.coords.map(([x, y], hexIdx) => {
+                const z = -x - y;
+                const offsetX = x + z / 2;
 
-    // size of the whole tile in % of parent
-    // you were using `8%` per square—feel free to adjust that
-    const tileWidthPct = cols * 8;
+                const relativeX = offsetX - bounds.minOffsetX;
+                const relativeY = z - bounds.minZ;
 
-    return (
-      <div
-        key={tile.id}
-        className="rotating-tile-infinite-clockwise"
-        style={{
-          position: 'absolute',
-          left:   `${placements[idx][0]}%`,
-          top:    `${placements[idx][1]}%`,
-          transform: 'translate(-50%, -50%)',
-          width:  `${tileWidthPct}%`,
-          /* height will be derived from aspect-ratio */
-          aspectRatio: `${cols} / ${rows}`,
-          display: 'grid',
-          gridTemplateColumns: `repeat(${cols}, 1fr)`,
-          gridTemplateRows:    `repeat(${rows}, 1fr)`,
-          gap: 0,
-        }}
-      >
-        {tile.coords.map(([x, y]) => {
-          const gridCol = x - bounds.minX + 1;
-          const gridRow = y - bounds.minY + 1;
+                const left = (relativeX / (bounds.maxOffsetX - bounds.minOffsetX + 1)) * 100;
+                const width = 100 / (bounds.maxOffsetX - bounds.minOffsetX + 1);
+                // Height relative to height: width * aspectRatio * (2 * Math.sqrt(3) / 3)
+                const top  = relativeY * (width * aspectRatio * (Math.sqrt(3) / 2));
 
-          return (
-            <div
-              key={`${tile.id}_${x}_${y}`}
-              className="hexagon"
-              style={{
-                gridColumn: gridCol,
-                gridRow:    gridRow,
-                backgroundColor: tile.color,
-                aspectRatio: '0.866 / 1'
-              }}
-            />
-          );
-        })}
-      </div>
-    );
-  });
+                return (
+                    <div
+                        key={`${tile.id}_${hexIdx}`}
+                        className="hexagon"
+                        style={{
+                            position: 'absolute',
+                            left: `${left}%`,
+                            top: `${top}%`,
+                            width: `${width}%`,
+                            backgroundColor: tile.color
+                        }}
+                    />
+                );
+            })}
+        </div>
+    });
 }
 
 // Refactored SetUpBackgroundTiles function
@@ -142,11 +155,11 @@ function SetUpBackgroundTiles() {
     const gridTileColours = ['green', 'red', 'yellow', 'orange'];
     const hexTilesCoords = [[[0, 0], [0, 1], [1, 0], [2, 0]],
                             [[0, 0], [0, -1], [-1, -1], [-1, -2]],
-                            [[0, 0], [0, -2], [-1, -1], [-2, 0]]];
+                            [[0, 0], [0, -1], [-1, -1], [-2, 0]]];
     const hexTileColours = ['blue', 'gray', 'turquoise', 'magenta'];
 
     const gridTilePlacement = [[12, 10], [12, 37], [12, 70]];
-    const hexTilePlacement = [[80, 10], [80, 35], [80, 60]];
+    const hexTilePlacement = [[80, 5], [83, 35], [80, 70]];
 
     const gridTiles = createGridTiles(gridTileCoords, gridTileColours);
     const hexTiles = createHexTiles(hexTilesCoords, hexTileColours);
