@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import PuzzleContext from '../context/PuzzleContext';
 import DisplayContext from '../context/DisplayContext';
 
@@ -42,9 +42,20 @@ function RenderDropDownMenu({ options = [], message, setState }) {
 
 function RenderCreateNewPuzzleMiddleComponent({ setInputValue, invalidSelection, setInvalidSelection }) {
     const {
-        setPuzzleType, setGridWidth, puzzleType, 
+        setPuzzleType, setGridWidth, puzzleType, setHexagonOrientation,
         setGridHeight, setHexRadius, setDateFormat
     } = useContext(PuzzleContext);
+
+    // Resets all the context useStates when the component mounts
+    useEffect(() => {
+        setPuzzleType('');
+        setGridWidth('Select Width');
+        setGridHeight('Select Height');
+        setHexRadius('Select Radius');
+        setHexagonOrientation('');
+        setDateFormat(new Array(3).fill(false));
+        setInvalidSelection(false); // Reset invalid selection when component mounts
+    }, []);
 
     return (
         <div style={{
@@ -112,6 +123,25 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, invalidSelection,
                     </h2>
                     <RenderDropDownMenu options={['1', '2', '3', '4', '5']}
                         message="Select Radius" setState={setHexRadius} />
+                    <h2>
+                        Hexagon Orientation
+                    </h2>
+                    <label style={{ display: 'block', fontSize: '1.5vw', marginBottom: '1vh' }}>
+                        <input type="radio" name="hex-orientation" value="flat-top"
+                            onChange={(e) => {
+                                setHexagonOrientation(e.target.value);
+                                setInvalidSelection(false); // Reset invalid selection when changing puzzle type
+                            }} style={{ marginRight: '1vw' }} />
+                        Flat Top
+                    </label>
+                    <label style={{ display: 'block', fontSize: '1.5vw', marginBottom: '1vh' }}>
+                        <input type="radio" name="hex-orientation" value="pointy-top"
+                            onChange={(e) => {
+                                setHexagonOrientation(e.target.value);
+                                setInvalidSelection(false); // Reset invalid selection when changing puzzle type
+                            }} style={{ marginRight: '1vw' }} />
+                        Pointy Top
+                    </label>
                 </>
             )}
             {invalidSelection && (
@@ -183,14 +213,15 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [inputValue, setInputValue] = useState('');
 
     const {
-        gridWidth, gridHeight, hexRadius,
-        puzzleType, dateFormat, setRenderBoard, setPuzzleName
+        gridWidth, gridHeight, hexRadius, hexagonOrientation,
+        puzzleType, dateFormat, setRenderBoard, setPuzzleName, setSaved
     } = useContext(PuzzleContext);
 
     const handleClick = () => {
         setRenderBoard(true);
         setDisplayedPopup('');
         setPuzzleName(inputValue);
+        setSaved(false);
     };
 
     return (
@@ -207,8 +238,10 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
                 {
                     label: "Start",
                     onClick: () => {
-                        const isGridInvalid = puzzleType === 'grid' && (gridWidth === 'Select Width' || gridHeight === 'Select Height');
-                        const isHexInvalid = puzzleType === 'hex' && hexRadius === 'Select Radius';
+                        const isGridInvalid = puzzleType === 'grid' &&
+                            (gridWidth === 'Select Width' || gridHeight === 'Select Height');
+                        const isHexInvalid = puzzleType === 'hex' &&
+                            (hexRadius === 'Select Radius' || hexagonOrientation === '');
                         const isDateInvalid = dateFormat.every(format => !format);
 
                         if (inputValue === '' || puzzleType === '' || isGridInvalid || isHexInvalid || isDateInvalid) {

@@ -19,6 +19,7 @@ Represents the instructions page for displaying instructions
 
 ///// HELPER FUNCTIONS /////
 
+// Renders the back button
 function RenderBackButton() {
     const navigate = useNavigate();
 
@@ -33,6 +34,28 @@ function RenderBackButton() {
         }}
             onClick={() => { navigate('/front-page'); }}>
             Back To Front Page
+        </button>
+    );
+}
+
+// Renders the save button
+function RenderSaveButton() {
+    const { setSaved } = useContext(PuzzleContext);
+
+    const handleClick = () => {
+        setSaved(true);
+    }
+
+    return (
+        <button className="typical-button" style={{
+            position: 'absolute',
+            right: '30%',
+            bottom: '2%',
+            width: '15%',
+            height: '8%',
+            margin: '0'
+        }} onClick={handleClick}>
+            Save Puzzle
         </button>
     );
 }
@@ -115,6 +138,7 @@ function RenderMainPage() {
         <>
             <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
             <RenderBackButton />
+            <RenderSaveButton />
         </>
     );
 }

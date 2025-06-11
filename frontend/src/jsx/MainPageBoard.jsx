@@ -14,10 +14,11 @@ const boardHeightPct = 70;
 //// HELPER FUNCTIONS ////
 
 function RenderGridCoords({ x, y }) {
-    
+
     return (
-        <div className="grid-coord" style={{ left: `${x}%`, top: `${y}%` }}>
-            {`(${x}, ${y})`}
+        <div className="grid-coord" style={{
+            left: `${x}%`, top: `${y}%`,
+        }}>
         </div>
     );
 }
@@ -27,17 +28,27 @@ function RenderHexCoords({ x, y }) {
 }
 
 function RenderGridBoard({ gridHeight, gridWidth }) {
-    const board = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
+    const { board } = useContext(PuzzleContext);
+    board.current = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
+
+    // Boolean to determine if the board is tall or wide
+    const isTallBoard = gridHeight > gridWidth;
+    const boundingDimension = isTallBoard ? "height" : "width";
+    const boundingSize = isTallBoard ? '65%' : '40%';
+
     return (
-        <div className="board" style={{ 
+        <div className="grid-board" style={{
             position: 'absolute',
+            [boundingDimension]: boundingSize,
             aspectRatio: `${gridWidth}/${gridHeight}`,
             display: 'grid',
             gridTemplateColumns: `repeat(${gridWidth}, 1fr)`,
             gridTemplateRows: `repeat(${gridHeight}, 1fr)`,
-            border: '1px solid black',
+            border: '0.3vw solid var(--text-color)'
         }}>
-
+            {board.current.gridCoords.map((coord, idx) => (
+                <RenderGridCoords key={idx} x={coord.Coord[0]} y={coord.Coord[1]} />
+            ))}
         </div>
     );
 }
@@ -45,9 +56,9 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
 function RenderHexBoard({ hexRadius }) {
     const board = new HexBoard(parseInt(hexRadius));
     return (
-        <>
-            <div>{board.render()}</div>
-        </>
+        <div className="board">
+
+        </div>
     );
 }
 
