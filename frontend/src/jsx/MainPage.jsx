@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tile from '../model/Tile.js';
 import MainPagePopups from './MainPagePopups.jsx';
+import { RenderMainBoard } from './MainPageBoard.jsx';
+import { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import '../css/MainPage.css';
 
 // To store the tiles the name of the puzzle
@@ -128,10 +130,12 @@ export default function MainPage() {
     }, []);
 
     return (
-        <>
+        <PuzzleProvider>
             <MainPagePopups displayedPopup={displayedPopup}
                 setDisplayedPopup={setDisplayedPopup} />
             <RenderMainPage noTiles={noTiles} setNoTiles={setNoTiles} />
-        </>
+            <RenderMainBoard />
+        </PuzzleProvider>
+
     );
 }

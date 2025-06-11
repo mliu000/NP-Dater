@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import GridBoard from '../model/GridBoard';
-import HexBoard from '../model/HexBoard';
-import PuzzleContext from '../context/PuzzleContext';
+import { useState, useContext } from 'react';
+import GridBoard from '../model/GridBoard.js';
+import HexBoard from '../model/HexBoard.js';
+import PuzzleContext from '../context/PuzzleContext.jsx';
 
 /*
 Mu Ye Liu - June 2025
@@ -9,10 +9,16 @@ Mu Ye Liu - June 2025
 Represents the main page board for displaying the grid and hexagonal tiles
 */
 
+const boardHeightPct = 70;
+
 //// HELPER FUNCTIONS ////
 
 function RenderGridCoords({ x, y }) {
-
+    return (
+        <div className="grid-coord" style={{ left: `${x}%`, top: `${y}%` }}>
+            {`(${x}, ${y})`}
+        </div>
+    );
 }
 
 function RenderHexCoords({ x, y }) {
@@ -22,9 +28,16 @@ function RenderHexCoords({ x, y }) {
 function RenderGridBoard({ gridHeight, gridWidth }) {
     const board = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
     return (
-        <>
-            <div>{board.render()}</div>
-        </>
+        <div className="board" style={{ 
+            position: 'absolute',
+            aspectRatio: `${gridWidth}/${gridHeight}`,
+            display: 'grid',
+            gridTemplateColumns: `repeat(${gridWidth}, 1fr)`,
+            gridTemplateRows: `repeat(${gridHeight}, 1fr)`,
+            border: '1px solid black',
+        }}>
+
+        </div>
     );
 }
 
@@ -44,7 +57,8 @@ export function RenderMainBoard() {
     const { puzzleType, setPuzzleType,
         gridWidth, setGridWidth,
         gridHeight, setGridHeight,
-        hexRadius, setHexRadius } = useContext(PuzzleContext);
+        hexRadius, setHexRadius,
+        renderBoard, setRenderBoard } = useContext(PuzzleContext);
 
 
     if (puzzleType === '') {
@@ -52,11 +66,13 @@ export function RenderMainBoard() {
     }
 
     return (<>
-        {puzzleType === 'grid' && (
-            <RenderGridBoard gridHeight={gridHeight} gridWidth={gridWidth} />
-        )}
-        {puzzleType === 'hex' && (
-            <RenderHexBoard hexRadius={hexRadius} />
-        )}
+        {renderBoard && <div>
+            {puzzleType === 'grid' && (
+                <RenderGridBoard gridHeight={gridHeight} gridWidth={gridWidth} />
+            )}
+            {puzzleType === 'hex' && (
+                <RenderHexBoard hexRadius={hexRadius} />
+            )}
+        </div>}
     </>);
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import PuzzleContext from '../context/PuzzleContext';
 
 /*
@@ -39,8 +39,12 @@ function RenderDropDownMenu({ options = [], message, setState }) {
 }
 
 
-function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, setGridWidth,
-    puzzleType, setGridHeight, setHexRadius, setInvalidSelection, invalidSelection, setDateFormat }) {
+function RenderCreateNewPuzzleMiddleComponent({ setInputValue, invalidSelection, setInvalidSelection }) {
+    const {
+        setPuzzleType, setGridWidth, puzzleType, 
+        setGridHeight, setHexRadius, setDateFormat
+    } = useContext(PuzzleContext);
+
     return (
         <div style={{
             width: '80%',
@@ -89,18 +93,18 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
                     Month
                 </label>
             </div>
-            {puzzleType == 'grid' && (
+            {puzzleType === 'grid' && (
                 <>
                     <h2 style={{ fontSize: '1.5vw' }}>
                         Width and Height:
                     </h2>
                     <RenderDropDownMenu options={['4', '5', '6', '7', '8']}
                         message="Select Width" setState={setGridWidth} />
-                    <RenderDropDownMenu options={['4','5', '6', '7', '8']}
+                    <RenderDropDownMenu options={['4', '5', '6', '7', '8']}
                         message="Select Height" setState={setGridHeight} />
                 </>
             )}
-            {puzzleType == 'hex' && (
+            {puzzleType === 'hex' && (
                 <>
                     <h2 style={{ fontSize: '1.5vw' }}>
                         Radius:
@@ -114,7 +118,6 @@ function RenderCreateNewPuzzleMiddleComponent({ setInputValue, setPuzzleType, se
                     Please fill in all fields before proceeding.
                 </p>
             )}
-
         </div>
     );
 }
@@ -175,59 +178,50 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
 
 // Renders the create new puzzle popup (uses context to manage state)
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
-    const [inputValue, setInputValue] = useState(''); // Default is empty string
-    const [gridWidth, setGridWidth] = useState("Select Width"); // Default is "Select Width"
-    const [gridHeight, setGridHeight] = useState("Select Height"); // Default is "Select Height"
-    const [hexRadius, setHexRadius] = useState("Select Radius"); // Default is "Select Radius"
-    const [puzzleType, setPuzzleType] = useState(''); // Default is nothing
-    const [invalidSelection, setInvalidSelection] = useState(false); // Default is false
-    const [dateFormat, setDateFormat] = useState(new Array(3).fill(false)); // Default is [false, false, false]
+    const [invalidSelection, setInvalidSelection] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+
+    const {
+        gridWidth, gridHeight, hexRadius,
+        puzzleType, dateFormat, setRenderBoard
+    } = useContext(PuzzleContext);
+
+    const handleClick = () => {
+        setRenderBoard(true);
+        setDisplayedPopup('');
+    };
 
     return (
-        <PuzzleContext.Provider value={{
-            inputValue, setInputValue,
-            gridWidth, setGridWidth,
-            gridHeight, setGridHeight,
-            hexRadius, setHexRadius,
-            puzzleType, setPuzzleType,
-            invalidSelection, setInvalidSelection,
-            dateFormat, setDateFormat
-        }}>
-            <RenderPopupTemplate
-                title="New Puzzle:"
-                arbitrary={<RenderCreateNewPuzzleMiddleComponent
+        <RenderPopupTemplate
+            title="New Puzzle:"
+            arbitrary={
+                <RenderCreateNewPuzzleMiddleComponent
                     setInputValue={setInputValue}
-                    puzzleType={puzzleType}
-                    setPuzzleType={setPuzzleType}
-                    setGridWidth={setGridWidth}
-                    setGridHeight={setGridHeight}
-                    setHexRadius={setHexRadius}
-                    setInvalidSelection={setInvalidSelection}
                     invalidSelection={invalidSelection}
-                    setDateFormat={setDateFormat}
-                />}
-                buttons={[
-                    {
-                        label: "Start",
-                        onClick: () => {
-                            if (inputValue === '' ||
-                                puzzleType === '' ||
-                                puzzleType === 'grid' && (gridWidth === 'Select Width' || gridHeight === 'Select Height') ||
-                                puzzleType === 'hex' && hexRadius === 'Select Radius' ||
-                                dateFormat.every(format => !format)) {
-                                setInvalidSelection(true);
-                            } else {
-                                setDisplayedPopup(''); // Hide the display
-                            }
+                    setInvalidSelection={setInvalidSelection}
+                />
+            }
+            buttons={[
+                {
+                    label: "Start",
+                    onClick: () => {
+                        const isGridInvalid = puzzleType === 'grid' && (gridWidth === 'Select Width' || gridHeight === 'Select Height');
+                        const isHexInvalid = puzzleType === 'hex' && hexRadius === 'Select Radius';
+                        const isDateInvalid = dateFormat.every(format => !format);
+
+                        if (inputValue === '' || puzzleType === '' || isGridInvalid || isHexInvalid || isDateInvalid) {
+                            setInvalidSelection(true);
+                        } else {
+                            handleClick();
                         }
-                    },
-                    {
-                        label: "Back",
-                        onClick: () => setDisplayedPopup('startup')
                     }
-                ]}
-            />
-        </PuzzleContext.Provider>
+                },
+                {
+                    label: "Back",
+                    onClick: () => setDisplayedPopup('startup')
+                }
+            ]}
+        />
     );
 }
 
