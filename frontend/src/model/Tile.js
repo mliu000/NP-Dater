@@ -15,8 +15,8 @@ export default class Tile {
     */
     constructor(id, coords, soln, color = 'blue', type = 0) {
         this.id = id;
-        this.coords = coords;
-        this.soln = soln;
+        this.coords = coords; // List of coordinates, in the form [[a, b], [c, d], ...]
+        this.soln = soln; // List of solution coordinates, in the form [[a, b], [c, d], ...]
         this.color = color;
         this.type = type;
     }

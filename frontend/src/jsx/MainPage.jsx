@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Tile from '../model/Tile.js';
 import MainPagePopups from './MainPagePopups.jsx';
 import '../css/MainPage.css';
@@ -15,6 +16,24 @@ Represents the instructions page for displaying instructions
 
 ///// HELPER FUNCTIONS /////
 
+function RenderBackButton() {
+    const navigate = useNavigate();
+
+    return (
+        <button className="typical-button" style={{
+            position: 'absolute',
+            right: '2%',
+            bottom: '2%',
+            width: '25%',
+            height: '8%',
+            margin: '0'
+        }}
+            onClick={() => { navigate('/front-page'); }}>
+            Back To Front Page
+        </button>
+    );
+}
+
 // Function to render each of the tile Windows in the tile list
 function RenderTileWindow() {
     return (
@@ -22,7 +41,7 @@ function RenderTileWindow() {
             // Handle tile click event
             console.log('Tile clicked');
         }}>
-            
+
         </div>
     );
 }
@@ -32,7 +51,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 
     const handleNewTileClick = () => {
         setNoTiles(noTiles + 1);
-        tiles.push(new Tile(`tile_${noTiles}`, [], [], ''));
+        tiles.push(new Tile(`tile_${noTiles}`, [[0, 0]], [], ''));
     };
 
     return (
@@ -68,7 +87,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     }}>No Tiles Yet!</h1>
                 )
                 }
-                <button className="typical-button" style={{
+                {noTiles < 12 && <button className="typical-button" style={{
                     position: 'absolute',
                     left: '45%',
                     transform: 'translate(-50%)',
@@ -76,7 +95,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     width: '50%',
                     height: '8%',
                     marginBottom: '2%',
-                }} onClick={handleNewTileClick}>New Tile</button>
+                }} onClick={handleNewTileClick}>New Tile</button>}
             </div>
         </>
     )
@@ -89,7 +108,10 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 // Render main page
 function RenderMainPage({ noTiles, setNoTiles }) {
     return (
-        <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
+        <>
+            <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
+            <RenderBackButton />
+        </>
     );
 }
 
