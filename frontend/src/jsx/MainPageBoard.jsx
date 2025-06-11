@@ -14,6 +14,7 @@ const boardHeightPct = 70;
 //// HELPER FUNCTIONS ////
 
 function RenderGridCoords({ x, y }) {
+    
     return (
         <div className="grid-coord" style={{ left: `${x}%`, top: `${y}%` }}>
             {`(${x}, ${y})`}
@@ -54,16 +55,10 @@ function RenderHexBoard({ hexRadius }) {
 
 // Renders the main board
 export function RenderMainBoard() {
-    const { puzzleType, setPuzzleType,
-        gridWidth, setGridWidth,
-        gridHeight, setGridHeight,
-        hexRadius, setHexRadius,
-        renderBoard, setRenderBoard } = useContext(PuzzleContext);
+    const { puzzleType, gridWidth, gridHeight, hexRadius, renderBoard } = useContext(PuzzleContext);
 
 
-    if (puzzleType === '') {
-        return null;
-    }
+    if (puzzleType === '') return null;
 
     return (<>
         {renderBoard && <div>

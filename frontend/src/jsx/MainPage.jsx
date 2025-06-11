@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tile from '../model/Tile.js';
 import MainPagePopups from './MainPagePopups.jsx';
 import { RenderMainBoard } from './MainPageBoard.jsx';
-import { PuzzleProvider } from '../context/PuzzleContext.jsx';
+import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
+import { DisplayProvider } from '../context/DisplayContext.jsx';
 import '../css/MainPage.css';
 
 // To store the tiles the name of the puzzle
@@ -108,7 +109,8 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 ///// RENDER FUNCTIONS /////
 
 // Render main page
-function RenderMainPage({ noTiles, setNoTiles }) {
+function RenderMainPage() {
+    const { noTiles, setNoTiles } = useContext(PuzzleContext);
     return (
         <>
             <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
@@ -120,9 +122,6 @@ function RenderMainPage({ noTiles, setNoTiles }) {
 ///// MAIN FUNCTION /////
 
 export default function MainPage() {
-    const [displayedPopup, setDisplayedPopup] = useState('startup');
-    const [puzzleUsernameDisplayed, setPuzzleUsernameDisplayed] = useState('');
-    const [noTiles, setNoTiles] = useState(0);
 
     useEffect(() => {
         // Set the page title
@@ -131,10 +130,11 @@ export default function MainPage() {
 
     return (
         <PuzzleProvider>
-            <MainPagePopups displayedPopup={displayedPopup}
-                setDisplayedPopup={setDisplayedPopup} />
-            <RenderMainPage noTiles={noTiles} setNoTiles={setNoTiles} />
-            <RenderMainBoard />
+            <DisplayProvider>
+                <MainPagePopups />
+                <RenderMainPage />
+                <RenderMainBoard />
+            </DisplayProvider>
         </PuzzleProvider>
 
     );

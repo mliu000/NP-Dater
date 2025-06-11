@@ -9,6 +9,7 @@ const PuzzleContext = createContext(null);
 export default PuzzleContext;
 
 export function PuzzleProvider({ children }) {
+    const [noTiles, setNoTiles] = useState(0);
     const [puzzleName, setPuzzleName] = useState('');
     const [gridWidth, setGridWidth] = useState("Select Width");
     const [gridHeight, setGridHeight] = useState("Select Height");
@@ -19,6 +20,7 @@ export function PuzzleProvider({ children }) {
 
     return (
         <PuzzleContext.Provider value={{
+            noTiles, setNoTiles,
             puzzleName, setPuzzleName,
             gridWidth, setGridWidth,
             gridHeight, setGridHeight,

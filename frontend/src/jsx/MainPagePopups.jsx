@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
 import PuzzleContext from '../context/PuzzleContext';
+import DisplayContext from '../context/DisplayContext';
 
 /*
 Mu Ye Liu - June 2025
@@ -30,7 +31,7 @@ REQUIRES: options - an array of objects with 'label' and 'value' properties, def
 function RenderDropDownMenu({ options = [], message, setState }) {
     return (
         <select onChange={(e) => setState(e.target.value)} style={{ fontSize: '1.5vw' }}>
-            <option value="">{message}</option>
+            <option value={`${message}`}>{message}</option>
             {options.map((option, idx) => (
                 <option key={idx} value={option}>{option}</option>
             ))}
@@ -183,12 +184,13 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 
     const {
         gridWidth, gridHeight, hexRadius,
-        puzzleType, dateFormat, setRenderBoard
+        puzzleType, dateFormat, setRenderBoard, setPuzzleName
     } = useContext(PuzzleContext);
 
     const handleClick = () => {
         setRenderBoard(true);
         setDisplayedPopup('');
+        setPuzzleName(inputValue);
     };
 
     return (
@@ -249,7 +251,9 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
     );
 }
 
-export default function MainPagePopups({ displayedPopup, setDisplayedPopup }) {
+export default function MainPagePopups() {
+    const { displayedPopup, setDisplayedPopup } = useContext(DisplayContext);
+
     // REQUIRES: one of the following: 'startup', 'createNewPuzzle', 'pickExistingPuzzle', ''
     return (
         <>
