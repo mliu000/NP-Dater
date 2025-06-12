@@ -5,6 +5,7 @@
     --text-color: rgb(43, 43, 43);
     --box-shadow-color: rgba(0, 0, 0, 0.3);
     --dim-background-color: rgba(0, 0, 0, 0.8);
+    --background-color: rgb(172, 219, 255);
     --black-color: rgba(0, 0, 0, 0.8);
     --moderate-gray: rgb(146, 146, 146);
     --header-color: rgb(233, 233, 233);
@@ -20,7 +21,7 @@ html, body {
     min-height: 600px;
     margin: 0;
     padding: 0;
-    background-color: rgb(172, 219, 255);
+    background-color: var(--background-color);
     overflow: auto;
 }
 

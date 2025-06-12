@@ -7,10 +7,6 @@ import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import { DisplayProvider } from '../context/DisplayContext.jsx';
 import '../css/MainPage.css';
 
-// To store the tiles the name of the puzzle
-const tiles = [];
-let name = '';
-
 /* 
 Mu Ye Liu - June 2025
 
@@ -74,10 +70,11 @@ function RenderTileWindow() {
 
 // Renders the left side tile list 
 function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
+    const { tiles } = useContext(PuzzleContext);
 
     const handleNewTileClick = () => {
         setNoTiles(noTiles + 1);
-        tiles.push(new Tile(`tile_${noTiles}`, [[0, 0]], [], ''));
+        tiles.current.push(new Tile(`Tile ${noTiles + 1}`, [[0, 0]], []));
     };
 
     return (
@@ -96,7 +93,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                 {noTiles > 0 ? (
                     <div className="left-side-tile-list-scroll-pane">
                         {/* Render each tile window in the list */}
-                        {tiles.map((tile, idx) => (
+                        {tiles.current.map((tile, idx) => (
                             <RenderTileWindow key={idx} tile={tile} />
                         ))}
                     </div>

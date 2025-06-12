@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import GridBoard from '../model/GridBoard.js';
 import HexBoard from '../model/HexBoard.js';
 import PuzzleContext from '../context/PuzzleContext.jsx';
+import { calculateHexBounds } from './MainPageHexagons.jsx';
 
 /*
 Mu Ye Liu - June 2025
@@ -9,22 +10,34 @@ Mu Ye Liu - June 2025
 Represents the main page board for displaying the grid and hexagonal tiles
 */
 
-const boardHeightPct = 70;
-
 //// HELPER FUNCTIONS ////
 
-function RenderGridCoords({ x, y }) {
-
+function RenderGridCoord({ x, y }) {
     return (
-        <div className="grid-coord" style={{
-            left: `${x}%`, top: `${y}%`,
+        <div className="grid-coord" data-x={x} data-y={y} style={{
+            left: `${x}%`, top: `${y}%`
         }}>
+            <h2>
+            </h2>
         </div>
     );
 }
 
-function RenderHexCoords({ x, y }) {
-
+function RenderHexCoord({ x, y, angle }) {
+    return (
+        <div className="hex-coord" data-x={x} data-y={y} style={{
+            left: `${x}%`, top: `${y}%`, width: '10%'
+        }}>
+            <div className="hex-coord-inner">
+                <h3 style={{
+                    position: 'absolute',
+                    transform: `rotate(${-angle}deg)`,
+                    textAlign: 'center',
+                    color: 'var(--text-color)'
+                }}>Tue</h3>
+            </div>
+        </div>
+    );
 }
 
 function RenderGridBoard({ gridHeight, gridWidth }) {
@@ -41,23 +54,43 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
             position: 'absolute',
             [boundingDimension]: boundingSize,
             aspectRatio: `${gridWidth}/${gridHeight}`,
-            display: 'grid',
             gridTemplateColumns: `repeat(${gridWidth}, 1fr)`,
             gridTemplateRows: `repeat(${gridHeight}, 1fr)`,
-            border: '0.3vw solid var(--text-color)'
         }}>
             {board.current.gridCoords.map((coord, idx) => (
-                <RenderGridCoords key={idx} x={coord.Coord[0]} y={coord.Coord[1]} />
+                <RenderGridCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]} />
             ))}
         </div>
     );
 }
 
 function RenderHexBoard({ hexRadius }) {
-    const board = new HexBoard(parseInt(hexRadius));
-    return (
-        <div className="board">
+    const { board, hexagonOrientation } = useContext(PuzzleContext);
+    board.current = new HexBoard(parseInt(hexRadius));
 
+    const angle = hexagonOrientation === 'flat-top' ? 30 : 0;
+    const coordArray = board.current.hexCoords.map(obj => obj.Coord);
+    const bounds = calculateHexBounds(coordArray);
+
+    const width = (bounds.maxOffsetX - bounds.minOffsetX + 1) * 4;
+    const height = (bounds.maxZ - bounds.minZ + 1) * 4 * (2 * Math.sqrt(3) / 3) -
+        (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
+    const aspectRatio = width / height;
+
+    return (
+        <div className="hex-board" style={{
+            aspectRatio: `${aspectRatio}`,
+        }}>
+            <div style={{
+                translate: `rotate(${angle}deg)`,
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+            }}>
+                {board.current.hexCoords.map((coord, idx) => (
+                    <RenderHexCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]} angle={angle} />
+                ))}
+            </div>
         </div>
     );
 }

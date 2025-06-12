@@ -89,13 +89,16 @@
     max-height: 65%;
     top: 50%;
     left: 65%;
+    display: grid;
     transform: translate(-50%, -50%);
+    border: 0.3vw solid var(--text-color);
 }
 
 .hex-board {
-    height: 65%;
-    aspect-ratio: 1 / 0.86602540378; 
-    top: 50%;
+    position: absolute;
+    width: 40%;
+    height: 60%;
+    top: 47%;
     left: 65%;
     transform: translate(-50%, -50%);
 }
@@ -103,10 +106,36 @@
 .grid-coord {
     width: 100%;
     height: 100%;
-    border: 0.1vw solid var(--text-color);
+    border: 0.2vw solid var(--text-color);
 }
 
 .grid-coord:hover {
     background-color: var(--box-shadow-color);
+    cursor: pointer;
+}
+
+.hex-coord {
+    position: absolute;
+    aspect-ratio: 0.86602540378;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background-color: var(--text-color);
+}
+
+.hex-coord-inner {
+    position: absolute;
+    width: 95%;
+    aspect-ratio: 0.86602540378;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hex-coord-inner:hover {
+    background-color: var(rgba(82, 136, 155, 0.5));
     cursor: pointer;
 }
