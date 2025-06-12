@@ -306,15 +306,15 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 function RenderStartupOptionsPopup({ setDisplayedPopup }) {
     return (
         <RenderPopupTemplate
-            title="Startup Options:"
+            title="Options:"
             arbitrary={<h2 style={{
                 width: '50%'
             }}>
-                Would you like to create a new puzzle, or continue from an existing one?
+                Would you like to create a new puzzle, or choose an existing one?
             </h2>}
             buttons={[
                 {
-                    label: "Continue from Existing Puzzle",
+                    label: "Choose existing Puzzle",
                     onClick: () => setDisplayedPopup('pickExistingPuzzle')
                 },
                 {
@@ -326,7 +326,7 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
     );
 }
 
-export default function MainPagePopups() {
+export default function MainPageSelectPuzzlePopups() {
     const { displayedPopup, setDisplayedPopup } = useContext(DisplayContext);
 
     // REQUIRES: one of the following: 'startup', 'createNewPuzzle', 'pickExistingPuzzle', ''

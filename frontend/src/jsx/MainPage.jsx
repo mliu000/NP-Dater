@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Tile from '../model/Tile.js';
-import MainPagePopups from './MainPagePopups.jsx';
+import MainPageSelectPuzzlePopups from './MainPageSelectPuzzlePopups.jsx';
 import { RenderMainBoard } from './MainPageBoard.jsx';
 import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import { DisplayProvider } from '../context/DisplayContext.jsx';
@@ -152,7 +152,7 @@ export default function MainPage() {
     return (
         <PuzzleProvider>
             <DisplayProvider>
-                <MainPagePopups />
+                <MainPageSelectPuzzlePopups />
                 <RenderMainPage />
                 <RenderMainBoard />
             </DisplayProvider>
