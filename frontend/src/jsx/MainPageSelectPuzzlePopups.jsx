@@ -221,9 +221,11 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
-    const {
-        setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth, setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat
+    const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
+        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat
     } = useContext(PuzzleContext);
+
+    const { setMode } = useContext(DisplayContext);
 
     const [localConfig, setLocalConfig] = useState({
         type: '',
@@ -263,6 +265,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setHexagonOrientation(localConfig.hexagonOrientation);
         setDateFormat(localConfig.dateFormat);
         setSaved(false);
+        setMode('edit'); 
     };
 
     return (
@@ -328,6 +331,7 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
 
 export default function MainPageSelectPuzzlePopups() {
     const { displayedPopup, setDisplayedPopup } = useContext(DisplayContext);
+
 
     // REQUIRES: one of the following: 'startup', 'createNewPuzzle', 'pickExistingPuzzle', ''
     return (

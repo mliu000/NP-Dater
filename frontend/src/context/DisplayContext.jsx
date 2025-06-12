@@ -10,10 +10,12 @@ export default DisplayContext;
 
 export function DisplayProvider({ children }) {
     const [displayedPopup, setDisplayedPopup] = useState('startup');
+    const [mode, setMode] = useState(''); // 'edit' or 'solve', or '' as default
 
     return (
         <DisplayContext.Provider value={{
-            displayedPopup, setDisplayedPopup
+            displayedPopup, setDisplayedPopup, 
+            mode, setMode
         }}>
             {children}
         </DisplayContext.Provider>

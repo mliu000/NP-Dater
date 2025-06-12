@@ -4,7 +4,7 @@ import Tile from '../model/Tile.js';
 import MainPageSelectPuzzlePopups from './MainPageSelectPuzzlePopups.jsx';
 import { RenderMainBoard } from './MainPageBoard.jsx';
 import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
-import { DisplayProvider } from '../context/DisplayContext.jsx';
+import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import '../css/MainPage.css';
 
 /* 
@@ -34,25 +34,44 @@ function RenderBackButton() {
     );
 }
 
-// Renders the save button
+// Renders the save solution 
 function RenderSaveButton() {
     const { setSaved } = useContext(PuzzleContext);
+    const { mode, setMode } = useContext(DisplayContext);
 
-    const handleClick = () => {
+    const handleSavePuzzleClick = () => {
         setSaved(true);
+        setMode('solve');
+    }
+
+    const handleSaveSolutionClick = () => {
+        // TODO: Implement save solution logic
     }
 
     return (
-        <button className="typical-button" style={{
-            position: 'absolute',
-            right: '30%',
-            bottom: '2%',
-            width: '15%',
-            height: '8%',
-            margin: '0'
-        }} onClick={handleClick}>
-            Save Puzzle
-        </button>
+        <>
+            {mode === 'solve' && <button className="typical-button" style={{
+                position: 'absolute',
+                right: '30%',
+                bottom: '2%',
+                width: '15%',
+                height: '8%',
+                margin: '0'
+            }} onClick={() => { handleSavePuzzleClick(); }}>
+                Save Puzzle
+            </button> }
+            {mode === 'edit' && <button className="typical-button" style={{
+                position: 'absolute',
+                right: '30%',
+                bottom: '2%',
+                width: '15%',
+                height: '8%',
+                margin: '0'
+            }} onClick={handleSavePuzzleClick}>
+                Save Solution
+            </button> } 
+        </>
+
     );
 }
 
@@ -71,6 +90,7 @@ function RenderTileWindow() {
 // Renders the left side tile list 
 function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
     const { tiles } = useContext(PuzzleContext);
+    const { mode } = useContext(DisplayContext);
 
     const handleNewTileClick = () => {
         setNoTiles(noTiles + 1);
@@ -110,7 +130,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     }}>No Tiles Yet!</h1>
                 )
                 }
-                {noTiles < 12 && <button className="typical-button" style={{
+                {noTiles < 12 && mode === "edit" &&<button className="typical-button" style={{
                     position: 'absolute',
                     left: '45%',
                     transform: 'translate(-50%)',
