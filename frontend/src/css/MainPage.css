@@ -114,6 +114,16 @@
     cursor: pointer;
 }
 
+.grid-coord-selected {
+    width: 100%;
+    height: 100%;
+    border: 0.2vw solid var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gold;
+}
+
 .hex-coord {
     position: absolute;
     aspect-ratio: 0.86602540378;
@@ -138,6 +148,20 @@
 .hex-coord-inner:hover {
     background-color: rgba(82, 136, 155, 0.5);
     cursor: pointer;
+}
+
+.hex-coord-inner-selected {
+    position: absolute;
+    width: 95%;
+    aspect-ratio: 0.86602540378;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: gold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .small-popup {

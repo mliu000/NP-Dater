@@ -15,14 +15,22 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
-    const { board } = useContext(PuzzleContext);
+    const { board, currX, currY, setCurrX, setCurrY } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
+
+    const handleClick = () => {
+        setDisplaySetCoordPopup(true);
+        setCurrX(x);
+        setCurrY(y);
+    }
+
+    const isCurrentCoord = currX === x && currY === y;
 
     return (
         <>
-            <div className="grid-coord" data-x={x} data-y={y} style={{
+            <div className={isCurrentCoord ? "grid-coord-selected" : "grid-coord"} data-x={x} data-y={y} style={{
                 left: `${x}%`, top: `${y}%`
-            }} onClick={() => {setDisplaySetCoordPopup(true);}}>
+            }} onClick={handleClick}>
                 <h3 style={{
                     position: 'absolute',
                     textAlign: 'center',
@@ -37,8 +45,17 @@ function RenderGridCoord({ x, y, fontSize }) {
 
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
-    const { board } = useContext(PuzzleContext);
+    const { board, currX, currY, setCurrX, setCurrY } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
+
+    // Add the hover feature like above in gridCoord
+    const handleClick = () => {
+        setDisplaySetCoordPopup(true);
+        setCurrX(x);
+        setCurrY(y);
+    }
+
+    const isCurrentCoord = currX === x && currY === y;
 
     // Calculate the positions 
     const z = -x - y;
@@ -54,8 +71,8 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
         <>
             <div className="hex-coord" data-x={x} data-y={y} style={{
                 left: `${left}%`, top: `${top}%`, width: `${tileWidth}%`
-            }} onClick={() => {setDisplaySetCoordPopup(true);}}>
-                <div className="hex-coord-inner">
+            }} onClick={handleClick}>
+                <div className={isCurrentCoord ? "hex-coord-inner-selected" : "hex-coord-inner"}>
                     <h3 style={{
                         position: 'absolute',
                         transform: `rotate(${-angle}deg)`,

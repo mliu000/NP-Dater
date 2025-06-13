@@ -59,6 +59,8 @@ export function PuzzleProvider({ children }) {
             month, setMonth,
             dayOfWeek, setDayOfWeek,
             coordSpecialAttributes, setCoordSpecialAttributes,
+            currX, setCurrX,
+            currY, setCurrY,
         }}> 
             {children}
         </PuzzleContext.Provider>

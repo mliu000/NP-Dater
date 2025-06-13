@@ -224,7 +224,6 @@ function RenderPuzzleName() {
             margin: '0',
             fontSize: '5vw',
             color: 'var(--header-color)',
-            zIndex: '1000'
         }}>{puzzleName}</h1>
     );
 }
