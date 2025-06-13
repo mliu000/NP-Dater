@@ -30,6 +30,12 @@ export function PuzzleProvider({ children }) {
     const [dateFormat, setDateFormat] = useState(new Array(3).fill(false));
     const [renderBoard, setRenderBoard] = useState(false);
 
+    const [currX, setCurrX] = useState(null);
+    const [currY, setCurrY] = useState(null);
+
+    // List based useStates
+    const [coordSpecialAttributes, setCoordSpecialAttributes] = useState([]);
+
 
     // On the main page 
     const [dayOfMonth, setDayOfMonth] = useState('');
@@ -51,7 +57,8 @@ export function PuzzleProvider({ children }) {
             renderBoard, setRenderBoard,
             dayOfMonth, setDayOfMonth,
             month, setMonth,
-            dayOfWeek, setDayOfWeek
+            dayOfWeek, setDayOfWeek,
+            coordSpecialAttributes, setCoordSpecialAttributes,
         }}> 
             {children}
         </PuzzleContext.Provider>

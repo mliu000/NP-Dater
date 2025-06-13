@@ -1,8 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import GridBoard from '../model/GridBoard.js';
 import HexBoard from '../model/HexBoard.js';
 import PuzzleContext from '../context/PuzzleContext.jsx';
 import { calculateHexBounds } from './MainPageHexagons.jsx';
+import DisplayContext from '../context/DisplayContext.jsx';
 
 /*
 Mu Ye Liu - June 2025
@@ -14,28 +15,30 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
-    const [specialAttribute, setSpecialAttribute] = useState('');
     const { board } = useContext(PuzzleContext);
+    const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     return (
-        <div className="grid-coord" data-x={x} data-y={y} style={{
-            left: `${x}%`, top: `${y}%`
-        }}>
-            <h3 style={{
-                position: 'absolute',
-                textAlign: 'center',
-                color: 'var(--text-color)',
-                fontSize: `${fontSize}vw`
-            }}>{board.current.getSpecialAttribute(x, y)}</h3>
-        </div>
+        <>
+            <div className="grid-coord" data-x={x} data-y={y} style={{
+                left: `${x}%`, top: `${y}%`
+            }} onClick={() => {setDisplaySetCoordPopup(true);}}>
+                <h3 style={{
+                    position: 'absolute',
+                    textAlign: 'center',
+                    color: 'var(--text-color)',
+                    fontSize: `${fontSize}vw`
+                }}>{board.current.getSpecialAttribute(x, y)}</h3>
+            </div>
+        </>
+
     );
 }
 
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
-
-    const [specialAttribute, setSpecialAttribute] = useState('');
     const { board } = useContext(PuzzleContext);
+    const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     // Calculate the positions 
     const z = -x - y;
@@ -48,26 +51,38 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
     const top = relativeY * (tileWidth * aspectRatio * (Math.sqrt(3) / 2));
 
     return (
-        <div className="hex-coord" data-x={x} data-y={y} style={{
-            left: `${left}%`, top: `${top}%`, width: `${tileWidth}%`
-        }}>
-            <div className="hex-coord-inner">
-                <h3 style={{
-                    position: 'absolute',
-                    transform: `rotate(${-angle}deg)`,
-                    textAlign: 'center',
-                    color: 'var(--text-color)',
-                    fontSize: `${fontSize}vw`
-                }}>{board.current.getSpecialAttribute(x, y)}</h3>
+        <>
+            <div className="hex-coord" data-x={x} data-y={y} style={{
+                left: `${left}%`, top: `${top}%`, width: `${tileWidth}%`
+            }} onClick={() => {setDisplaySetCoordPopup(true);}}>
+                <div className="hex-coord-inner">
+                    <h3 style={{
+                        position: 'absolute',
+                        transform: `rotate(${-angle}deg)`,
+                        textAlign: 'center',
+                        color: 'var(--text-color)',
+                        fontSize: `${fontSize}vw`
+                    }}>{board.current.getSpecialAttribute(x, y)}</h3>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
 // Renders the grid board
 function RenderGridBoard({ gridHeight, gridWidth }) {
-    const { board } = useContext(PuzzleContext);
+    const { board, setCoordSpecialAttributes } = useContext(PuzzleContext);
     board.current = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
+
+    // Set the coord special attributes
+    useEffect(() => {
+        // Set the special attributes from the board
+        const specialAttributes = board.current.gridCoords.map(coord => ({
+            Coord: coord.Coord,
+            specialAttribute: coord.specialAttribute
+        }));
+        setCoordSpecialAttributes(specialAttributes);
+    }, []);
 
     // Boolean to determine if the board is tall or wide
     const isTallBoard = gridHeight > gridWidth;
@@ -78,6 +93,7 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
     const fontSize = 6 - Math.max(gridWidth, gridHeight) * 0.6;
 
     return (
+
         <div className="grid-board" style={{
             position: 'absolute',
             [boundingDimension]: boundingSize,
@@ -89,13 +105,24 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
                 <RenderGridCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]} fontSize={fontSize} />
             ))}
         </div>
+
     );
 }
 
 // Renders the hex board
 function RenderHexBoard({ hexRadius }) {
-    const { board, hexagonOrientation } = useContext(PuzzleContext);
+    const { board, hexagonOrientation, setCoordSpecialAttributes } = useContext(PuzzleContext);
     board.current = new HexBoard(parseInt(hexRadius));
+
+    // Set the coord special attributes 
+    useEffect(() => {
+        // Set the special attributes from the board
+        const specialAttributes = board.current.hexCoords.map(coord => ({
+            Coord: coord.Coord,
+            specialAttribute: coord.specialAttribute
+        }));
+        setCoordSpecialAttributes(specialAttributes);
+    }, []);
 
     // Stuff to calculate the aspect ratio of the hex board
     const angle = hexagonOrientation === 'flat-top' ? 30 : 0;
@@ -122,6 +149,7 @@ function RenderHexBoard({ hexRadius }) {
                     angle={angle} tileWidth={tileWidth} bounds={bounds} aspectRatio={aspectRatio} fontSize={fontSize} />
             ))}
         </div>
+
     );
 }
 

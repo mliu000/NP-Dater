@@ -16,6 +16,39 @@ Represents the instructions page for displaying instructions
 
 ///// HELPER FUNCTIONS /////
 
+// Renders the popup for the grid and hex coordinates
+function RenderSetCoordPopup() {
+    const { mode } = useContext(DisplayContext);
+    const { displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
+
+    // Close all popups when the mode changes
+
+    if (!displaySetCoordPopup || mode === 'solve') return null;
+
+    return (
+        <div className='small-popup' style={{
+            position: 'absolute',
+            right: '3%',
+            width: '15%',
+            top: '30%',
+            textAlign: 'center',
+            marginTop: '0',
+            color: 'var(--text-color)'
+        }}>
+            <h3 style={{marginTop: '0'}}>
+                Set Special Attribute
+            </h3>
+            <button className='typical-button' style={{
+                fontSize: '1.5vw',
+                textAlign: 'center',
+                width: '50%'
+            }} onClick={() => {
+                setDisplaySetCoordPopup(false);
+            }}>Set</button>
+        </div>
+    );
+}
+
 // Renders the saved message
 function RenderSavedMessage() {
     const { saved } = useContext(PuzzleContext);
@@ -125,10 +158,11 @@ function RenderChoosePuzzleButton() {
 // Renders the save solution 
 function RenderSaveButton() {
     const { setSaved } = useContext(PuzzleContext);
-    const { mode, setMode } = useContext(DisplayContext);
+    const { mode, setMode, setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleSavePuzzleClick = () => {
         setSaved(true);
+        setDisplaySetCoordPopup(false);
         setMode('solve');
     }
 
@@ -321,6 +355,7 @@ function RenderMainPage() {
             <RenderSolvePuzzleButton />
             <RenderSavedMessage />
             <RenderPuzzleDate />
+            <RenderSetCoordPopup />
         </>
     );
 }

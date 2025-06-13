@@ -97,6 +97,7 @@
     height: 60%;
     top: 47%;
     left: 55%;
+    overflow: visible;
 }
 
 .grid-coord {
@@ -137,4 +138,16 @@
 .hex-coord-inner:hover {
     background-color: rgba(82, 136, 155, 0.5);
     cursor: pointer;
+}
+
+.small-popup {
+    background-color: var(--greyish-blue);
+    border: 0.2vw solid var(--header-color);
+    box-shadow: 0 0 3% var(--box-shadow-color);
+    padding: 1vw;
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
