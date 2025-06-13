@@ -15,6 +15,24 @@ Represents the instructions page for displaying instructions
 
 ///// HELPER FUNCTIONS /////
 
+// Renders the saved message
+function RenderSavedMessage() {
+    const { saved } = useContext(PuzzleContext);
+
+    return (
+        <h2 style={{
+            position: 'absolute',
+            right: '5%',
+            top: '10%',
+            textAlign: 'center',
+            fontSize: '2vw',
+            color: `${saved ? 'lightgreen' : 'red'}`
+        }}>
+            {saved ? 'Puzzle saved!' : 'Puzzle not saved'}
+        </h2>
+    );
+}
+
 // Renders the back button
 function RenderBackButton() {
     const navigate = useNavigate();
@@ -34,6 +52,24 @@ function RenderBackButton() {
     );
 }
 
+// Renders the choose puzzle button
+function RenderChoosePuzzleButton() {
+    const { setDisplayedPopup } = useContext(DisplayContext);
+
+    return (
+        <button className="typical-button" style={{
+            position: 'absolute',
+            right: '2%',
+            bottom: '12%',
+            width: '20%',
+            height: '8%',
+            margin: '0'
+        }} onClick={() => { setDisplayedPopup('startup'); }}>
+            Choose Puzzle
+        </button>
+    );
+}
+
 // Renders the save solution 
 function RenderSaveButton() {
     const { setSaved } = useContext(PuzzleContext);
@@ -44,32 +80,32 @@ function RenderSaveButton() {
         setMode('solve');
     }
 
-    const handleSaveSolutionClick = () => {
-        // TODO: Implement save solution logic
+    const handleEditPuzzleClick = () => {
+        setMode('edit');
     }
 
     return (
         <>
             {mode === 'solve' && <button className="typical-button" style={{
                 position: 'absolute',
-                right: '30%',
-                bottom: '2%',
-                width: '15%',
+                right: '2%',
+                bottom: '22%',
+                width: '20%',
                 height: '8%',
                 margin: '0'
-            }} onClick={() => { handleSavePuzzleClick(); }}>
-                Save Puzzle
-            </button> }
+            }} onClick={handleEditPuzzleClick}>
+                Edit Puzzle
+            </button>}
             {mode === 'edit' && <button className="typical-button" style={{
                 position: 'absolute',
-                right: '30%',
-                bottom: '2%',
-                width: '15%',
+                right: '2%',
+                bottom: '22%',
+                width: '20%',
                 height: '8%',
                 margin: '0'
             }} onClick={handleSavePuzzleClick}>
-                Save Solution
-            </button> } 
+                Save Puzzle
+            </button>}
         </>
 
     );
@@ -86,6 +122,72 @@ function RenderTileWindow() {
         </div>
     );
 }
+
+// Renders the puzzle name
+function RenderPuzzleName() {
+    const { puzzleName } = useContext(PuzzleContext);
+
+    return (
+        <h1 style={{
+            position: 'absolute',
+            left: '65%',
+            width: '70%',
+            top: '0%',
+            transform: 'translate(-50%)',
+            textAlign: 'center',
+            margin: '0',
+            fontSize: '5vw',
+            color: 'var(--header-color)',
+            zIndex: '1000'
+        }}>{puzzleName}</h1>
+    );
+}
+
+// Render solve puzzle button
+function RenderSolvePuzzleButton() {
+    const { mode } = useContext(DisplayContext);
+
+    return (
+        <>
+            {mode === 'solve' && <button className="typical-button" style={{
+                position: 'absolute',
+                right: '2%',
+                bottom: '32%',
+                width: '20%',
+                height: '8%',
+                margin: '0',
+                color: 'gold',
+                border: '0.2vw solid gold'
+            }} onClick={() => { setMode('solve'); }}>
+                Solve Puzzle
+            </button>}
+        </>
+    )
+}
+
+// Renders the no puzzle selected message
+function RenderNoPuzzleSelected() {
+    const { puzzleName } = useContext(PuzzleContext);
+
+    return (
+        <>
+            {puzzleName === '' && <h2 style={{
+                position: 'absolute',
+                left: '65%',
+                width: '30%',
+                top: '40%',
+                transform: 'translate(-50%)',
+                textAlign: 'center',
+                margin: '0',
+                fontSize: '3vw',
+                color: 'red'
+            }}>
+                No Puzzle Selected! Click the "Choose Puzzle" button to select a puzzle.
+            </h2>}
+        </>
+    );
+}
+
 
 // Renders the left side tile list 
 function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
@@ -130,7 +232,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     }}>No Tiles Yet!</h1>
                 )
                 }
-                {noTiles < 12 && mode === "edit" &&<button className="typical-button" style={{
+                {noTiles < 12 && mode === "edit" && <button className="typical-button" style={{
                     position: 'absolute',
                     left: '45%',
                     transform: 'translate(-50%)',
@@ -156,6 +258,11 @@ function RenderMainPage() {
             <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
             <RenderBackButton />
             <RenderSaveButton />
+            <RenderChoosePuzzleButton />
+            <RenderPuzzleName />
+            <RenderNoPuzzleSelected />
+            <RenderSolvePuzzleButton />
+            <RenderSavedMessage />
         </>
     );
 }

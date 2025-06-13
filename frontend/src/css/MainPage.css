@@ -86,7 +86,7 @@
 .grid-board {
     position: absolute;
     top: 50%;
-    left: 65%;
+    left: 55%;
     display: grid;
     transform: translate(-50%, -50%);
     border: 0.3vw solid var(--text-color);
@@ -96,7 +96,7 @@
     position: absolute;
     height: 60%;
     top: 47%;
-    left: 65%;
+    left: 55%;
 }
 
 .grid-coord {

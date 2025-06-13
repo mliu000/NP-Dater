@@ -111,13 +111,13 @@ function RenderCreateNewPuzzleMiddleComponent({ localConfig, setLocalConfig }) {
                         Width and Height:
                     </h2>
                     <RenderDropDownMenu
-                        options={['4', '5', '6', '7', '8']}
+                        options={['5', '6', '7', '8']}
                         message="Select Width"
                         setState={(value) => setLocalConfig(prev => ({ ...prev, gridWidth: value }))}
                         invalidInput={localConfig.invalidInput}
                     />
                     <RenderDropDownMenu
-                        options={['4', '5', '6', '7', '8']}
+                        options={['5', '6', '7', '8']}
                         message="Select Height"
                         setState={(value) => setLocalConfig(prev => ({ ...prev, gridHeight: value }))}
                         invalidInput={localConfig.invalidInput}
@@ -130,7 +130,7 @@ function RenderCreateNewPuzzleMiddleComponent({ localConfig, setLocalConfig }) {
                         Radius:
                     </h2>
                     <RenderDropDownMenu
-                        options={['1', '2', '3', '4', '5']}
+                        options={['2', '3', '4', '5']}
                         message="Select Radius"
                         setState={(value) => setLocalConfig(prev => ({ ...prev, hexRadius: value }))}
                         invalidInput={localConfig.invalidInput}
@@ -164,10 +164,10 @@ function RenderCreateNewPuzzleMiddleComponent({ localConfig, setLocalConfig }) {
 }
 
 // Popup render template function 
-function RenderPopupTemplate({ title, arbitrary, buttons }) {
+function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
     return (
-        <div className="popup-background">
-            <div className="popup-wrapper">
+        <div className="popup-background" onClick={() => setDisplayedPopup('')}>
+            <div className="popup-wrapper" onClick={(e) => e.stopPropagation()}>
                 <div className="popup-content">
                     <h1 style={{
                         textDecoration: 'underline',
@@ -213,6 +213,7 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
                     onClick: () => setDisplayedPopup('createNewPuzzle')
                 }
             ]}
+            setDisplayedPopup={setDisplayedPopup}
         />
     );
 }
@@ -301,6 +302,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
                     onClick: () => setDisplayedPopup('startup')
                 }
             ]}
+            setDisplayedPopup={setDisplayedPopup}
         />
     );
 }
@@ -325,6 +327,7 @@ function RenderStartupOptionsPopup({ setDisplayedPopup }) {
                     onClick: () => setDisplayedPopup('createNewPuzzle')
                 }
             ]}
+            setDisplayedPopup={setDisplayedPopup}
         />
     );
 }
