@@ -15,7 +15,7 @@ export function PuzzleProvider({ children }) {
 
     // useStates
     const [noTiles, setNoTiles] = useState(0);
-    const [saved, setSaved] = useState(true);
+    const [saved, setSaved] = useState(false);
     const [puzzleName, setPuzzleName] = useState('');
     const [gridWidth, setGridWidth] = useState("Select Width");
     const [gridHeight, setGridHeight] = useState("Select Height");
@@ -24,6 +24,11 @@ export function PuzzleProvider({ children }) {
     const [hexagonOrientation, setHexagonOrientation] = useState(''); // 'flat' or 'pointy'
     const [dateFormat, setDateFormat] = useState(new Array(3).fill(false));
     const [renderBoard, setRenderBoard] = useState(false);
+
+    // On the main page 
+    const [dayOfMonth, setDayOfMonth] = useState('');
+    const [month, setMonth] = useState('');
+    const [dayOfWeek, setDayOfWeek] = useState('');
 
     return (
         <PuzzleContext.Provider value={{
@@ -37,7 +42,10 @@ export function PuzzleProvider({ children }) {
             puzzleType, setPuzzleType,
             hexagonOrientation, setHexagonOrientation,
             dateFormat, setDateFormat,
-            renderBoard, setRenderBoard
+            renderBoard, setRenderBoard,
+            dayOfMonth, setDayOfMonth,
+            month, setMonth,
+            dayOfWeek, setDayOfWeek
         }}> 
             {children}
         </PuzzleContext.Provider>

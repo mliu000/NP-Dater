@@ -29,7 +29,7 @@ function RenderInputs({ setInputValue, invalidInput }) {
 /* Renders the dropdown menu for selecting puzzle size
 REQUIRES: options - an array of objects with 'label' and 'value' properties, default is empty array
 */
-function RenderDropDownMenu({ options = [], message, setState, invalidInput }) {
+export function RenderDropDownMenu({ options = [], message, setState, invalidInput }) {
     return (
         <select onChange={(e) => setState(e.target.value)} style={{ fontSize: '1.5vw' }} className={invalidInput ? 'invalid-input' : ''}>
             <option value={`${message}`}>{message}</option>

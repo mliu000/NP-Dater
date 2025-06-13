@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RenderDropDownMenu } from './MainPageSelectPuzzlePopups.jsx';
 import Tile from '../model/Tile.js';
 import MainPageSelectPuzzlePopups from './MainPageSelectPuzzlePopups.jsx';
 import { RenderMainBoard } from './MainPageBoard.jsx';
@@ -23,7 +24,7 @@ function RenderSavedMessage() {
         <h2 style={{
             position: 'absolute',
             right: '5%',
-            top: '10%',
+            top: '15%',
             textAlign: 'center',
             fontSize: '2vw',
             color: `${saved ? 'lightgreen' : 'red'}`
@@ -31,6 +32,57 @@ function RenderSavedMessage() {
             {saved ? 'Puzzle saved!' : 'Puzzle not saved'}
         </h2>
     );
+}
+
+// Renders puzzle date 
+function RenderPuzzleDate() {
+    const { setDayOfMonth, setMonth, setDayOfWeek } = useContext(PuzzleContext);
+    const { dateFormat } = useContext(PuzzleContext);
+    const { mode } = useContext(DisplayContext);
+
+    const dayOfWeekOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayOfMonthOptions = Array.from({ length: 31 }, (_, i) => i + 1);
+    const monthOptions = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    useEffect(() => {
+        // Reset the date selections when the mode changes
+        setDayOfMonth('');
+        setMonth('');
+        setDayOfWeek('');
+    }, [mode]);
+
+    return (
+        <>
+            {mode === 'solve' && <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                position: 'absolute',
+                right: '6%',
+                top: '25%',
+                gap: '1vh',
+            }}>
+                <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
+                    Solve For:
+                </h2>
+                {dateFormat[2] && <RenderDropDownMenu
+                    options={dayOfWeekOptions}
+                    message="Day of Week"
+                    setState={setDayOfWeek}
+                />}
+                {dateFormat[1] && <RenderDropDownMenu
+                    options={monthOptions}
+                    message="Month"
+                    setState={setMonth}
+                />}
+                {dateFormat[0] && <RenderDropDownMenu
+                    options={dayOfMonthOptions}
+                    message="Day of Month"
+                    setState={setDayOfMonth}
+                />}
+            </div>}
+        </>
+    )
 }
 
 // Renders the back button
@@ -147,6 +199,11 @@ function RenderPuzzleName() {
 function RenderSolvePuzzleButton() {
     const { mode } = useContext(DisplayContext);
 
+    const handleClick = () => {
+        // Logic to handle solving the puzzle
+        console.log('Solving puzzle...');
+    }
+
     return (
         <>
             {mode === 'solve' && <button className="typical-button" style={{
@@ -158,7 +215,7 @@ function RenderSolvePuzzleButton() {
                 margin: '0',
                 color: 'gold',
                 border: '0.2vw solid gold'
-            }} onClick={() => { setMode('solve'); }}>
+            }} onClick={handleClick}>
                 Solve Puzzle
             </button>}
         </>
@@ -263,6 +320,7 @@ function RenderMainPage() {
             <RenderNoPuzzleSelected />
             <RenderSolvePuzzleButton />
             <RenderSavedMessage />
+            <RenderPuzzleDate />
         </>
     );
 }
