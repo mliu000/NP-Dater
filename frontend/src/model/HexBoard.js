@@ -26,4 +26,18 @@ export default class HexBoard {
         return coords;
     }
 
+    getSpecialAttribute(x, y) {
+        // Find the coordinate and return its special attribute
+        const coord = this.hexCoords.find(c => c.Coord[0] === x && c.Coord[1] === y);
+        return coord ? coord.specialAttribute : '';
+    }
+
+    setSpecialAttribute(x, y, attribute) {
+        // Find the coordinate and set its special attribute
+        const coord = this.hexCoords.find(c => c.Coord[0] === x && c.Coord[1] === y);
+        if (coord) {
+            coord.specialAttribute = attribute;
+        }
+    }
+
 }

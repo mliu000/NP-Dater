@@ -23,4 +23,18 @@ export default class GridBoard {
         return gridCoords;
     }
 
+    getSpecialAttribute(x, y) {
+        // Find the coordinate and return its special attribute
+        const coord = this.gridCoords.find(c => c.Coord[0] === x && c.Coord[1] === y);
+        return coord ? coord.specialAttribute : '';
+    }
+
+    setSpecialAttribute(x, y) {
+        // Find the coordinate and set its special attribute
+        const coord = this.hexCoords.find(c => c.Coord[0] === x && c.Coord[1] === y);
+        if (coord) {
+            coord.specialAttribute = attribute;
+        }
+    }
+
 }

@@ -14,6 +14,9 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
+    const [specialAttribute, setSpecialAttribute] = useState('');
+    const { board } = useContext(PuzzleContext);
+
     return (
         <div className="grid-coord" data-x={x} data-y={y} style={{
             left: `${x}%`, top: `${y}%`
@@ -23,13 +26,16 @@ function RenderGridCoord({ x, y, fontSize }) {
                 textAlign: 'center',
                 color: 'var(--text-color)',
                 fontSize: `${fontSize}vw`
-            }}>Tue</h3>
+            }}>{board.current.getSpecialAttribute(x, y)}</h3>
         </div>
     );
 }
 
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
+
+    const [specialAttribute, setSpecialAttribute] = useState('');
+    const { board } = useContext(PuzzleContext);
 
     // Calculate the positions 
     const z = -x - y;
@@ -52,7 +58,7 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
                     textAlign: 'center',
                     color: 'var(--text-color)',
                     fontSize: `${fontSize}vw`
-                }}>Tue</h3>
+                }}>{board.current.getSpecialAttribute(x, y)}</h3>
             </div>
         </div>
     );
