@@ -389,6 +389,7 @@ function RenderMainPage() {
             <RenderSavedMessage />
             <RenderPuzzleDate />
             <RenderSetCoordPopup />
+            <button onClick={() => console.log(board.current.gridCoords)}>Check set attributes</button>
         </>
     );
 }

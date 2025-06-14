@@ -6,17 +6,17 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 export default class GridBoard {
 
-    constructor(rows = 5, cols = 5) {
-        this.rows = rows;
-        this.cols = cols;
+    constructor(width = 5, height = 5) {
+        this.width = width;
+        this.height = height;
         this.gridCoords = this.createGridBoard();
     }
 
     createGridBoard() {
         // Individual coordinates, not 2d array
         const gridCoords = [];
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.cols; j++) {
+        for (let i = 0; i < this.width; i++) {
+            for (let j = 0; j < this.height; j++) {
                 gridCoords.push({ Coord: [i, j], specialAttribute: '' });
             }
         }

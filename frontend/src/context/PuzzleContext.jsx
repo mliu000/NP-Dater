@@ -12,11 +12,9 @@ export function PuzzleProvider({ children }) {
     // UseRefs
     const board = useRef(null);
     const tiles = useRef([]);
-    const dayOfMonthOptionsRemaining = useRef(Array.from({ length: 31 }, (_, i) => i + 1));
-    const monthOptionsRemaining = useRef(['January', 'February', 'March', 'April', 'May', 'June', 
-        'July', 'August', 'September', 'October', 'November', 'December']);
-    const dayOfWeekOptionsRemaining = useRef(['Sunday', 'Monday', 'Tuesday', 'Wednesday',
-        'Thursday', 'Friday', 'Saturday']);
+    const dayOfMonthOptionsRemaining = useRef([]);
+    const monthOptionsRemaining = useRef([]);
+    const dayOfWeekOptionsRemaining = useRef([]);
 
     // useStates
     const [noTiles, setNoTiles] = useState(0);

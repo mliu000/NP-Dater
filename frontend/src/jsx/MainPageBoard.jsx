@@ -103,22 +103,11 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
 }
 
 // Renders the grid board
-function RenderGridBoard({ gridHeight, gridWidth }) {
-    const { board, setCoordSpecialAttributes } = useContext(PuzzleContext);
+function RenderGridBoard() {
+    const { board } = useContext(PuzzleContext);
 
-    // Set the coord special attributes
-    if (!board.current) {
-        board.current = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
-    }
-
-    useEffect(() => {
-        // Set the special attributes from the board
-        const specialAttributes = board.current.gridCoords.map(coord => ({
-            Coord: coord.Coord,
-            specialAttribute: coord.specialAttribute
-        }));
-        setCoordSpecialAttributes(specialAttributes);
-    }, []);
+    const gridHeight = board.current.height;
+    const gridWidth = board.current.width;
 
     // Boolean to determine if the board is tall or wide
     const isTallBoard = gridHeight > gridWidth;
@@ -146,24 +135,10 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
 }
 
 // Renders the hex board
-function RenderHexBoard({ hexRadius }) {
-    const { board, hexagonOrientation, setCoordSpecialAttributes } = useContext(PuzzleContext);
+function RenderHexBoard() {
+    const { board, hexagonOrientation } = useContext(PuzzleContext);
 
-    // Set the coord special attributes 
-
-    if (!board.current) {
-        // Set the special attributes from the board
-        board.current = new HexBoard(parseInt(hexRadius));
-    }
-
-    useEffect(() => {
-        const specialAttributes = board.current.hexCoords.map(coord => ({
-            Coord: coord.Coord,
-            specialAttribute: coord.specialAttribute
-        }));
-        setCoordSpecialAttributes(specialAttributes);
-    }, []);
-
+    const hexRadius = board.current.radius;
 
     // Stuff to calculate the aspect ratio of the hex board
     const angle = hexagonOrientation === 'flat-top' ? 30 : 0;
@@ -198,7 +173,7 @@ function RenderHexBoard({ hexRadius }) {
 
 // Renders the main board
 export function RenderMainBoard() {
-    const { puzzleType, gridWidth, gridHeight, hexRadius, renderBoard } = useContext(PuzzleContext);
+    const { puzzleType, renderBoard } = useContext(PuzzleContext);
 
 
     if (puzzleType === '') return null;
@@ -206,10 +181,10 @@ export function RenderMainBoard() {
     return (<>
         {renderBoard && <div>
             {puzzleType === 'grid' && (
-                <RenderGridBoard gridHeight={gridHeight} gridWidth={gridWidth} />
+                <RenderGridBoard />
             )}
             {puzzleType === 'hex' && (
-                <RenderHexBoard hexRadius={hexRadius} />
+                <RenderHexBoard />
             )}
         </div>}
     </>);

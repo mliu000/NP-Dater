@@ -1,6 +1,8 @@
 import { useState, useContext, useEffect } from 'react';
 import PuzzleContext from '../context/PuzzleContext';
 import DisplayContext from '../context/DisplayContext';
+import GridBoard from '../model/GridBoard';
+import HexBoard from '../model/HexBoard';
 
 /*
 Mu Ye Liu - June 2025
@@ -223,7 +225,8 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
-        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat
+        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board, 
+        setCoordSpecialAttributes, dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining, 
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -256,6 +259,26 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     }, [localConfig.type]);
 
     const handleClick = () => {
+        // Initialize the board
+        if (localConfig.type === 'grid') {
+            board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
+        } else if (localConfig.type === 'hex') {
+            board.current = new HexBoard(parseInt(localConfig.hexRadius));
+        }
+
+        // Initialize the special attributes
+        // Set the special attributes from the board
+        const specialAttributes = board.current.gridCoords.map(coord => ({
+            Coord: coord.Coord,
+            specialAttribute: coord.specialAttribute
+        }));
+        setCoordSpecialAttributes(specialAttributes);
+        // Initialize attribute options
+        dayOfMonthOptionsRemaining.current = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+        monthOptionsRemaining.current = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        dayOfWeekOptionsRemaining.current = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Initialize the useStates
         setRenderBoard(true);
         setDisplayedPopup('');
         setPuzzleName(localConfig.name);
