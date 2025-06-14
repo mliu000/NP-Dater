@@ -19,6 +19,7 @@ function RenderGridCoord({ x, y, fontSize }) {
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleClick = () => {
+        console.log(`Clicked on coordinate: (${x}, ${y})`);
         if (currX === x && currY === y) {
             setDisplaySetCoordPopup(false);
             setCurrX(null);
@@ -37,7 +38,7 @@ function RenderGridCoord({ x, y, fontSize }) {
     return (
         <>
             <div className={isCurrentCoord ? "grid-coord-selected" : "grid-coord"} data-x={x} data-y={y} style={{
-                left: `${x}%`, top: `${y}%`
+                gridColumn: x + 1, gridRow: y + 1,
             }} onClick={handleClick}>
                 <h3 style={{
                     position: 'absolute',

@@ -34,8 +34,6 @@ function RenderSetCoordPopup() {
     const handleClick = () => {
         board.current.setSpecialAttribute(currX, currY, selection);
         setDisplaySetCoordPopup(false);
-        setCurrX(null);
-        setCurrY(null);
         setCoordSpecialAttributes(prev =>
             prev.map(tile =>
                 tile.Coord[0] === currX && tile.Coord[1] === currY
@@ -43,6 +41,8 @@ function RenderSetCoordPopup() {
                     : tile
             )
         );
+        setCurrX(null);
+        setCurrY(null);
         // Now, remove the selected attribute from the available choices
         const updateDayOfMonthOptions = dayOfMonthOptionsRemaining.current.filter(choice => choice !== selection);
         const updateMonthOptions = monthOptionsRemaining.current.filter(choice => choice !== selection);
@@ -375,7 +375,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 
 // Render main page
 function RenderMainPage() {
-    const { noTiles, setNoTiles, board } = useContext(PuzzleContext);
+    const { noTiles, setNoTiles, board, coordSpecialAttributes } = useContext(PuzzleContext);
 
     return (
         <>
@@ -389,7 +389,8 @@ function RenderMainPage() {
             <RenderSavedMessage />
             <RenderPuzzleDate />
             <RenderSetCoordPopup />
-            <button onClick={() => console.log(board.current.gridCoords)}>Check set attributes</button>
+            <button onClick={() => console.log(board.current.gridCoords)}>Check set attributes class</button>
+            <button onClick={() => console.log(coordSpecialAttributes)}>Check board useState</button>
         </>
     );
 }

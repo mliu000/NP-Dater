@@ -225,8 +225,8 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
-        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board, 
-        setCoordSpecialAttributes, dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining, 
+        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
+        setCoordSpecialAttributes, dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining,
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -262,17 +262,20 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         // Initialize the board
         if (localConfig.type === 'grid') {
             board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
+            const specialAttributes = board.current.gridCoords.map(coord => ({
+                Coord: coord.Coord,
+                specialAttribute: coord.specialAttribute
+            }));
+            setCoordSpecialAttributes(specialAttributes);
         } else if (localConfig.type === 'hex') {
             board.current = new HexBoard(parseInt(localConfig.hexRadius));
+            const specialAttributes = board.current.hexCoords.map(coord => ({
+                Coord: coord.Coord,
+                specialAttribute: coord.specialAttribute
+            }));
+            setCoordSpecialAttributes(specialAttributes);
         }
 
-        // Initialize the special attributes
-        // Set the special attributes from the board
-        const specialAttributes = board.current.gridCoords.map(coord => ({
-            Coord: coord.Coord,
-            specialAttribute: coord.specialAttribute
-        }));
-        setCoordSpecialAttributes(specialAttributes);
         // Initialize attribute options
         dayOfMonthOptionsRemaining.current = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
         monthOptionsRemaining.current = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -289,7 +292,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setHexagonOrientation(localConfig.hexagonOrientation);
         setDateFormat(localConfig.dateFormat);
         setSaved(false);
-        setMode('edit'); 
+        setMode('edit');
     };
 
     return (
