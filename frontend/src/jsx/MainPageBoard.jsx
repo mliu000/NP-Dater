@@ -15,16 +15,24 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
-    const { board, currX, currY, setCurrX, setCurrY } = useContext(PuzzleContext);
+    const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleClick = () => {
-        setDisplaySetCoordPopup(true);
-        setCurrX(x);
-        setCurrY(y);
+        if (currX === x && currY === y) {
+            setDisplaySetCoordPopup(false);
+            setCurrX(null);
+            setCurrY(null);
+        } else {
+            setDisplaySetCoordPopup(true);
+            setCurrX(x);
+            setCurrY(y);
+        }
     }
 
     const isCurrentCoord = currX === x && currY === y;
+    const message = coordSpecialAttributes.find(attr => attr.Coord[0] === x && attr.Coord[1] === y)?.specialAttribute;
+    const messageSliced = message && message.length > 3 ? message.slice(0, 3) : message;
 
     return (
         <>
@@ -36,7 +44,7 @@ function RenderGridCoord({ x, y, fontSize }) {
                     textAlign: 'center',
                     color: 'var(--text-color)',
                     fontSize: `${fontSize}vw`
-                }}>{board.current.getSpecialAttribute(x, y)}</h3>
+                }}>{messageSliced}</h3>
             </div>
         </>
 
@@ -45,17 +53,25 @@ function RenderGridCoord({ x, y, fontSize }) {
 
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
-    const { board, currX, currY, setCurrX, setCurrY } = useContext(PuzzleContext);
+    const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     // Add the hover feature like above in gridCoord
     const handleClick = () => {
-        setDisplaySetCoordPopup(true);
-        setCurrX(x);
-        setCurrY(y);
+        if (currX === x && currY === y) {
+            setDisplaySetCoordPopup(false);
+            setCurrX(null);
+            setCurrY(null);
+        } else {
+            setDisplaySetCoordPopup(true);
+            setCurrX(x);
+            setCurrY(y);
+        }
     }
 
     const isCurrentCoord = currX === x && currY === y;
+    const message = coordSpecialAttributes.find(attr => attr.Coord[0] === x && attr.Coord[1] === y)?.specialAttribute;
+    const messageSliced = message && message.length > 3 ? message.slice(0, 3) : message;
 
     // Calculate the positions 
     const z = -x - y;
@@ -79,7 +95,7 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
                         textAlign: 'center',
                         color: 'var(--text-color)',
                         fontSize: `${fontSize}vw`
-                    }}>{board.current.getSpecialAttribute(x, y)}</h3>
+                    }}>{messageSliced}</h3>
                 </div>
             </div>
         </>
@@ -89,9 +105,12 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
 // Renders the grid board
 function RenderGridBoard({ gridHeight, gridWidth }) {
     const { board, setCoordSpecialAttributes } = useContext(PuzzleContext);
-    board.current = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
 
     // Set the coord special attributes
+    if (!board.current) {
+        board.current = new GridBoard(parseInt(gridHeight), parseInt(gridWidth));
+    }
+
     useEffect(() => {
         // Set the special attributes from the board
         const specialAttributes = board.current.gridCoords.map(coord => ({
@@ -129,17 +148,22 @@ function RenderGridBoard({ gridHeight, gridWidth }) {
 // Renders the hex board
 function RenderHexBoard({ hexRadius }) {
     const { board, hexagonOrientation, setCoordSpecialAttributes } = useContext(PuzzleContext);
-    board.current = new HexBoard(parseInt(hexRadius));
 
     // Set the coord special attributes 
-    useEffect(() => {
+
+    if (!board.current) {
         // Set the special attributes from the board
+        board.current = new HexBoard(parseInt(hexRadius));
+    }
+
+    useEffect(() => {
         const specialAttributes = board.current.hexCoords.map(coord => ({
             Coord: coord.Coord,
             specialAttribute: coord.specialAttribute
         }));
         setCoordSpecialAttributes(specialAttributes);
     }, []);
+
 
     // Stuff to calculate the aspect ratio of the hex board
     const angle = hexagonOrientation === 'flat-top' ? 30 : 0;

@@ -45,6 +45,7 @@ export function PuzzleProvider({ children }) {
     return (
         <PuzzleContext.Provider value={{
             board, tiles,
+            dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining,
             saved, setSaved,
             noTiles, setNoTiles,
             puzzleName, setPuzzleName,

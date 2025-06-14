@@ -26,7 +26,7 @@ export default class GridBoard {
     getSpecialAttribute(x, y) {
         // Find the coordinate and return its special attribute
         const coord = this.gridCoords.find(c => c.Coord[0] === x && c.Coord[1] === y);
-        return coord ? coord.specialAttribute : '';
+        return coord.specialAttribute;
     }
 
     setSpecialAttribute(x, y, attribute) {
@@ -36,5 +36,6 @@ export default class GridBoard {
             coord.specialAttribute = attribute;
         }
     }
-
 }
+
+// Initializes the grid board useRef

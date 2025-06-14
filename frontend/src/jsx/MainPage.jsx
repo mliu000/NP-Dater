@@ -18,10 +18,40 @@ Represents the instructions page for displaying instructions
 
 // Renders the popup for the grid and hex coordinates
 function RenderSetCoordPopup() {
-    const { mode } = useContext(DisplayContext);
-    const { displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
+    const { board, currX, currY, setCurrX, setCurrY,
+        dateFormat, coordSpecialAttributes, setCoordSpecialAttributes,
+        dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining
+    } = useContext(PuzzleContext);
+    const { mode, displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
+    const [selection, setSelection] = useState('');
 
-    // Close all popups when the mode changes
+    // Get the available choices
+    const availableChoices = [];
+    if (dateFormat[0]) availableChoices.push(...dayOfWeekOptionsRemaining.current);
+    if (dateFormat[1]) availableChoices.push(...monthOptionsRemaining.current);
+    if (dateFormat[2]) availableChoices.push(...dayOfMonthOptionsRemaining.current);
+
+    const handleClick = () => {
+        board.current.setSpecialAttribute(currX, currY, selection);
+        setDisplaySetCoordPopup(false);
+        setCurrX(null);
+        setCurrY(null);
+        setCoordSpecialAttributes(prev =>
+            prev.map(tile =>
+                tile.Coord[0] === currX && tile.Coord[1] === currY
+                    ? { ...tile, specialAttribute: selection }
+                    : tile
+            )
+        );
+        // Now, remove the selected attribute from the available choices
+        const updateDayOfMonthOptions = dayOfMonthOptionsRemaining.current.filter(choice => choice !== selection);
+        const updateMonthOptions = monthOptionsRemaining.current.filter(choice => choice !== selection);
+        const updateDayOfWeekOptions = dayOfWeekOptionsRemaining.current.filter(choice => choice !== selection);
+        dayOfMonthOptionsRemaining.current = updateDayOfMonthOptions;
+        monthOptionsRemaining.current = updateMonthOptions;
+        dayOfWeekOptionsRemaining.current = updateDayOfWeekOptions;
+    }
+
 
     if (!displaySetCoordPopup || mode === 'solve') return null;
 
@@ -35,16 +65,19 @@ function RenderSetCoordPopup() {
             marginTop: '0',
             color: 'var(--text-color)'
         }}>
-            <h3 style={{marginTop: '0'}}>
+            <h3 style={{ marginTop: '0' }}>
                 Set Special Attribute
             </h3>
+            <RenderDropDownMenu
+                options={availableChoices}
+                message="Select Attribute"
+                setState={setSelection}
+            />
             <button className='typical-button' style={{
                 fontSize: '1.5vw',
                 textAlign: 'center',
                 width: '50%'
-            }} onClick={() => {
-                setDisplaySetCoordPopup(false);
-            }}>Set</button>
+            }} onClick={handleClick}>Set</button>
         </div>
     );
 }
@@ -342,7 +375,8 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 
 // Render main page
 function RenderMainPage() {
-    const { noTiles, setNoTiles } = useContext(PuzzleContext);
+    const { noTiles, setNoTiles, board } = useContext(PuzzleContext);
+
     return (
         <>
             <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
