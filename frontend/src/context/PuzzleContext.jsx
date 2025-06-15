@@ -25,6 +25,8 @@ export function PuzzleProvider({ children }) {
     const [hexagonOrientation, setHexagonOrientation] = useState(''); // 'flat' or 'pointy'
     const [dateFormat, setDateFormat] = useState(new Array(3).fill(false));
     const [renderBoard, setRenderBoard] = useState(false);
+    const [totalCoordCount, setTotalCoordCount] = useState(0);
+    const [tileCoordsCoverageCount, setTileCoordsCoverageCount] = useState(0);
 
     const [currX, setCurrX] = useState(null);
     const [currY, setCurrY] = useState(null);
@@ -56,6 +58,8 @@ export function PuzzleProvider({ children }) {
             month, setMonth,
             dayOfWeek, setDayOfWeek,
             coordSpecialAttributes, setCoordSpecialAttributes,
+            totalCoordCount, setTotalCoordCount,
+            tileCoordsCoverageCount, setTileCoordsCoverageCount,
             currX, setCurrX,
             currY, setCurrY,
         }}> 

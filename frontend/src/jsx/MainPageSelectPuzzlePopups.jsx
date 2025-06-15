@@ -226,7 +226,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
         setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
-        setCoordSpecialAttributes, attributeOptionsRemaining
+        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -303,6 +303,8 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setDateFormat(localConfig.dateFormat);
         setSaved(false);
         setMode('edit');
+        setTotalCoordCount((board.current.gridCoords ? board.current.gridCoords.length : board.current.hexCoords.length)
+            - localConfig.dateFormat.filter(format => format).length);
     };
 
     return (

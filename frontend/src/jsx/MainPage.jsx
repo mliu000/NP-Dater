@@ -20,7 +20,7 @@ Represents the instructions page for displaying instructions
 // Renders the popup for the grid and hex coordinates
 function RenderSetCoordPopup() {
     const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes, setCoordSpecialAttributes,
-        attributeOptionsRemaining } = useContext(PuzzleContext);
+        attributeOptionsRemaining, setTotalCoordCount } = useContext(PuzzleContext);
     const { mode, displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
     const [selection, setSelection] = useState('');
 
@@ -62,6 +62,7 @@ function RenderSetCoordPopup() {
                     : tile
             )
         );
+        setTotalCoordCount(prev => prev - 1);
         setCurrX(null); setCurrY(null); setSelection('');
     }
 
@@ -75,6 +76,7 @@ function RenderSetCoordPopup() {
                     : tile
             )
         );
+        setTotalCoordCount(prev => prev + 1);
         setCurrX(null); setCurrY(null); setSelection('');
     }
 
@@ -410,13 +412,48 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
     )
 }
 
+// Renders the count of the number of coords that need to be covered, and the number of coords that are covered
+function RenderCoordsCount() {
+    const { totalCoordCount, tileCoordsCoverageCount } = useContext(PuzzleContext);
 
+    return (
+        <>
+            <h1 style={{
+                position: 'absolute',
+                left: '50%',
+                bottom: '5%',
+                width: '100%',
+                transform: 'translate(-50%)',
+                textAlign: 'center',
+                margin: '0',
+                fontSize: '2vw',
+                color: 'var(--header-color)',
+            }}>
+                {`Coords tiles cover: ${tileCoordsCoverageCount}`}
+            </h1>
+            <h1 style={{
+                position: 'absolute',
+                left: '50%',
+                bottom: '1%',
+                width: '100%',
+                transform: 'translate(-50%)',
+                textAlign: 'center',
+                margin: '0',
+                fontSize: '2vw',
+                color: 'var(--header-color)',
+            }}>
+                {`Total coords to cover: ${totalCoordCount}`}
+            </h1>
+        </>
+
+    )
+}
 
 ///// RENDER FUNCTIONS /////
 
 // Render main page
 function RenderMainPage() {
-    const { noTiles, setNoTiles, board } = useContext(PuzzleContext);
+    const { noTiles, setNoTiles } = useContext(PuzzleContext);
 
     return (
         <>
@@ -430,7 +467,7 @@ function RenderMainPage() {
             <RenderSavedMessage />
             <RenderPuzzleDate />
             <RenderSetCoordPopup />
-            <button onClick={() => console.log(board.current.gridCoords)}>Board status</button>
+            <RenderCoordsCount />
         </>
     );
 }
