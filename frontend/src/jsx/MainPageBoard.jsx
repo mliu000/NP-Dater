@@ -15,7 +15,7 @@ Represents the main page board for displaying the grid and hexagonal tiles
 
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
-    const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
+    const {currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleClick = () => {
@@ -36,7 +36,7 @@ function RenderGridCoord({ x, y, fontSize }) {
 
     return (
         <>
-            <div className={isCurrentCoord ? "grid-coord-selected" : "grid-coord"} data-x={x} data-y={y} style={{
+            <div className={isCurrentCoord ? "grid-coord-selected" : (message === "blocked" ? "grid-coord-blocked" : "grid-coord")} data-x={x} data-y={y} style={{
                 gridColumn: x + 1, gridRow: y + 1,
             }} onClick={handleClick}>
                 <h3 style={{
@@ -44,7 +44,7 @@ function RenderGridCoord({ x, y, fontSize }) {
                     textAlign: 'center',
                     color: 'var(--text-color)',
                     fontSize: `${fontSize}vw`
-                }}>{messageSliced}</h3>
+                }}>{message === "blocked" ? "" : messageSliced}</h3>
             </div>
         </>
 
@@ -53,7 +53,7 @@ function RenderGridCoord({ x, y, fontSize }) {
 
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
-    const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
+    const { currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     // Add the hover feature like above in gridCoord
@@ -88,14 +88,14 @@ function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize 
             <div className="hex-coord" data-x={x} data-y={y} style={{
                 left: `${left}%`, top: `${top}%`, width: `${tileWidth}%`
             }} onClick={handleClick}>
-                <div className={isCurrentCoord ? "hex-coord-inner-selected" : "hex-coord-inner"}>
+                <div className={isCurrentCoord ? "hex-coord-inner-selected" : (message === "blocked" ? "hex-coord-inner-blocked" : "hex-coord-inner")}>
                     <h3 style={{
                         position: 'absolute',
                         transform: `rotate(${-angle}deg)`,
                         textAlign: 'center',
                         color: 'var(--text-color)',
                         fontSize: `${fontSize}vw`
-                    }}>{messageSliced}</h3>
+                    }}>{message === "blocked" ? "" : messageSliced}</h3>
                 </div>
             </div>
         </>

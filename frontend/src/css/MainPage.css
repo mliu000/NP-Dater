@@ -124,6 +124,16 @@
     background-color: gold;
 }
 
+.grid-coord-blocked {
+    width: 100%;
+    height: 100%;
+    border: 0.2vw solid var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--text-color);
+}
+
 .hex-coord {
     position: absolute;
     aspect-ratio: 0.86602540378;
@@ -159,6 +169,20 @@
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: gold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hex-coord-inner-blocked {
+    position: absolute;
+    width: 95%;
+    aspect-ratio: 0.86602540378;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;

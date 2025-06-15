@@ -19,11 +19,12 @@ Represents the instructions page for displaying instructions
 
 // Renders the popup for the grid and hex coordinates
 function RenderSetCoordPopup() {
-    const { board, currX, currY, setCurrX, setCurrY,
-        dateFormat, coordSpecialAttributes, setCoordSpecialAttributes, attributeOptionsRemaining,
-    } = useContext(PuzzleContext);
+    const { board, currX, currY, setCurrX, setCurrY, coordSpecialAttributes, setCoordSpecialAttributes,
+        attributeOptionsRemaining } = useContext(PuzzleContext);
     const { mode, displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
     const [selection, setSelection] = useState('');
+
+    const currSpecialAttribute = coordSpecialAttributes.find(attr => attr.Coord[0] === currX && attr.Coord[1] === currY)?.specialAttribute;
 
 
     const handleClick = () => {
@@ -44,12 +45,37 @@ function RenderSetCoordPopup() {
             )
         );
 
-        setCurrX(null);
-        setCurrY(null);
         // Now, remove the selected attribute from the available choices
         const updatedOptions = attributeOptionsRemaining.current.filter(attr => attr !== selection);
         attributeOptionsRemaining.current = updatedOptions;
-        setSelection('');
+        setCurrX(null); setCurrY(null); setSelection('');
+    }
+
+    const handleBlockedClick = () => {
+        // Handle the case where the user clicks on a blocked coordinate
+        board.current.setSpecialAttribute(currX, currY, "blocked");
+        setDisplaySetCoordPopup(false);
+        setCoordSpecialAttributes(prev =>
+            prev.map(tile =>
+                tile.Coord[0] === currX && tile.Coord[1] === currY
+                    ? { ...tile, specialAttribute: "blocked" }
+                    : tile
+            )
+        );
+        setCurrX(null); setCurrY(null); setSelection('');
+    }
+
+    const handleUnblockClick = () => {
+        board.current.setSpecialAttribute(currX, currY, "");
+        setDisplaySetCoordPopup(false);
+        setCoordSpecialAttributes(prev =>
+            prev.map(tile =>
+                tile.Coord[0] === currX && tile.Coord[1] === currY
+                    ? { ...tile, specialAttribute: "" }
+                    : tile
+            )
+        );
+        setCurrX(null); setCurrY(null); setSelection('');
     }
 
 
@@ -65,19 +91,33 @@ function RenderSetCoordPopup() {
             marginTop: '0',
             color: 'var(--text-color)'
         }}>
-            <h3 style={{ marginTop: '0' }}>
+            <h2 style={{ marginTop: '0', color: 'var(--header-color)' }}>
                 Set Special Attribute
-            </h3>
-            <RenderDropDownMenu
-                options={attributeOptionsRemaining.current}
-                message="<No Attribute>"
-                setState={setSelection}
-            />
-            <button className='typical-button' style={{
-                fontSize: '1.5vw',
-                textAlign: 'center',
-                width: '50%'
-            }} onClick={handleClick}>Set</button>
+            </h2>
+            {currSpecialAttribute !== "blocked" ? (
+                <>
+                    {currSpecialAttribute === "" && <button className='typical-button' style={{
+                        fontSize: '1.5vw',
+                        textAlign: 'center',
+                        width: '50%'
+                    }} onClick={handleBlockedClick}>Block</button>}
+                    <RenderDropDownMenu
+                        options={attributeOptionsRemaining.current}
+                        message="<No Attribute>"
+                        setState={setSelection}
+                    />
+                    <button className='typical-button' style={{
+                        fontSize: '1.5vw',
+                        textAlign: 'center',
+                        width: '50%'
+                    }} onClick={handleClick}>Set</button>
+                </>) : (
+                <button className='typical-button' style={{
+                    fontSize: '1.5vw',
+                    textAlign: 'center',
+                    width: '50%'
+                }} onClick={handleUnblockClick}>Unblock</button>
+            )}
         </div>
     );
 }
