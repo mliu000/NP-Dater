@@ -7,6 +7,7 @@ import { RenderMainBoard } from './MainPageBoard.jsx';
 import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import { sortDaysOfWeek } from '../utility/SortOptions.js';
+import { RenderTileWindow } from './MainPageTiles.jsx';
 import '../css/MainPage.css';
 
 /* 
@@ -274,16 +275,6 @@ function RenderSaveButton() {
 }
 
 // Function to render each of the tile Windows in the tile list
-function RenderTileWindow() {
-    return (
-        <div className="tile-window" onClick={() => {
-            // Handle tile click event
-            console.log('Tile clicked');
-        }}>
-
-        </div>
-    );
-}
 
 // Renders the puzzle name
 function RenderPuzzleName() {
@@ -422,7 +413,7 @@ function RenderCoordsCount() {
                 position: 'absolute',
                 left: '50%',
                 bottom: '5%',
-                width: '100%',
+                width: '25%',
                 transform: 'translate(-50%)',
                 textAlign: 'center',
                 margin: '0',
@@ -435,7 +426,7 @@ function RenderCoordsCount() {
                 position: 'absolute',
                 left: '50%',
                 bottom: '1%',
-                width: '100%',
+                width: '25%',
                 transform: 'translate(-50%)',
                 textAlign: 'center',
                 margin: '0',
