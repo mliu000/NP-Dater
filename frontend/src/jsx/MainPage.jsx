@@ -356,6 +356,8 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
         tiles.current.push(new Tile(`Tile ${noTiles + 1}`, [[0, 0]], []));
     };
 
+    const buttonAppear = noTiles < 12 && mode === "edit";
+
     return (
         <>
             <div className="left-side-tile-list">
@@ -370,7 +372,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     color: 'var(--header-color)',
                 }}>Tiles: {noTiles}</h1>
                 {noTiles > 0 ? (
-                    <div className="left-side-tile-list-scroll-pane">
+                    <div className="left-side-tile-list-scroll-pane" style={{height: buttonAppear? '75%' : '85%'}}>
                         {/* Render each tile window in the list */}
                         {tiles.current.map((tile, idx) => (
                             <RenderTileWindow key={idx} tile={tile} />
@@ -389,7 +391,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     }}>No Tiles Yet!</h1>
                 )
                 }
-                {noTiles < 12 && mode === "edit" && <button className="typical-button" style={{
+                {buttonAppear && <button className="typical-button" style={{
                     position: 'absolute',
                     left: '45%',
                     transform: 'translate(-50%)',

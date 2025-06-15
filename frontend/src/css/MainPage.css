@@ -57,7 +57,6 @@
     top: 12%;
     left: 10%;
     width: 80%;
-    height: 75%;
     display: flex;
     flex-direction: column;
     justify-content: top;
@@ -68,7 +67,7 @@
 
 .tile-window {
     width: 98%;
-    height: 25%;
+    height: 20vh;
     border-radius: 2vw;
     background-color: var(--box-shadow-color);
     border: 0.2vw solid var(--header-color);
