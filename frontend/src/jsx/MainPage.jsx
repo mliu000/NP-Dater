@@ -6,6 +6,7 @@ import MainPageSelectPuzzlePopups from './MainPageSelectPuzzlePopups.jsx';
 import { RenderMainBoard } from './MainPageBoard.jsx';
 import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
+import { sortDaysOfWeek } from '../utility/SortOptions.js';
 import '../css/MainPage.css';
 
 /* 
@@ -23,29 +24,30 @@ function RenderSetCoordPopup() {
     } = useContext(PuzzleContext);
     const { mode, displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
     const [selection, setSelection] = useState('');
-    
+
 
     const handleClick = () => {
         const prevSelection = board.current.getSpecialAttribute(currX, currY);
 
-        if (prevSelection === "" && selection === "<No Attribute>") {
-
+        if (prevSelection !== "") {
+            attributeOptionsRemaining.current.push(prevSelection);
+            sortDaysOfWeek(attributeOptionsRemaining.current);
         }
 
-
-        board.current.setSpecialAttribute(currX, currY, selection);
+        board.current.setSpecialAttribute(currX, currY, selection === "<No Attribute>" ? "" : selection);
         setDisplaySetCoordPopup(false);
         setCoordSpecialAttributes(prev =>
             prev.map(tile =>
                 tile.Coord[0] === currX && tile.Coord[1] === currY
-                    ? { ...tile, specialAttribute: selection }
+                    ? { ...tile, specialAttribute: selection === "<No Attribute>" ? "" : selection }
                     : tile
             )
         );
+
         setCurrX(null);
         setCurrY(null);
         // Now, remove the selected attribute from the available choices
-        const updatedOptions = attributeOptionsRemaining.current.filter(attr => attr !== selection && attr !== "<No Attribute>");
+        const updatedOptions = attributeOptionsRemaining.current.filter(attr => attr !== selection);
         attributeOptionsRemaining.current = updatedOptions;
         setSelection('');
     }
@@ -373,7 +375,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
 
 // Render main page
 function RenderMainPage() {
-    const { noTiles, setNoTiles, board, coordSpecialAttributes } = useContext(PuzzleContext);
+    const { noTiles, setNoTiles, board } = useContext(PuzzleContext);
 
     return (
         <>
@@ -387,8 +389,7 @@ function RenderMainPage() {
             <RenderSavedMessage />
             <RenderPuzzleDate />
             <RenderSetCoordPopup />
-            <button onClick={() => console.log(board.current.gridCoords)}>Check set attributes class</button>
-            <button onClick={() => console.log(coordSpecialAttributes)}>Check board useState</button>
+            <button onClick={() => console.log(board.current.gridCoords)}>Board status</button>
         </>
     );
 }

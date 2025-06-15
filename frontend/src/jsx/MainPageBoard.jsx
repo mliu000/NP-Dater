@@ -19,7 +19,6 @@ function RenderGridCoord({ x, y, fontSize }) {
     const { setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleClick = () => {
-        console.log(`Clicked on coordinate: (${x}, ${y})`);
         if (currX === x && currY === y) {
             setDisplaySetCoordPopup(false);
             setCurrX(null);
