@@ -9,12 +9,10 @@ const PuzzleContext = createContext(null);
 export default PuzzleContext;
 
 export function PuzzleProvider({ children }) {
-    // UseRefs
+    // UseRefs  
     const board = useRef(null);
     const tiles = useRef([]);
-    const dayOfMonthOptionsRemaining = useRef([]);
-    const monthOptionsRemaining = useRef([]);
-    const dayOfWeekOptionsRemaining = useRef([]);
+    const attributeOptionsRemaining = useRef([]);
 
     // useStates
     const [noTiles, setNoTiles] = useState(0);
@@ -43,7 +41,7 @@ export function PuzzleProvider({ children }) {
     return (
         <PuzzleContext.Provider value={{
             board, tiles,
-            dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining,
+            attributeOptionsRemaining,
             saved, setSaved,
             noTiles, setNoTiles,
             puzzleName, setPuzzleName,

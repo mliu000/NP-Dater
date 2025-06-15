@@ -19,19 +19,20 @@ Represents the instructions page for displaying instructions
 // Renders the popup for the grid and hex coordinates
 function RenderSetCoordPopup() {
     const { board, currX, currY, setCurrX, setCurrY,
-        dateFormat, coordSpecialAttributes, setCoordSpecialAttributes,
-        dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining
+        dateFormat, coordSpecialAttributes, setCoordSpecialAttributes, attributeOptionsRemaining,
     } = useContext(PuzzleContext);
     const { mode, displaySetCoordPopup, setDisplaySetCoordPopup } = useContext(DisplayContext);
     const [selection, setSelection] = useState('');
-
-    // Get the available choices
-    const availableChoices = [];
-    if (dateFormat[0]) availableChoices.push(...dayOfWeekOptionsRemaining.current);
-    if (dateFormat[1]) availableChoices.push(...monthOptionsRemaining.current);
-    if (dateFormat[2]) availableChoices.push(...dayOfMonthOptionsRemaining.current);
+    
 
     const handleClick = () => {
+        const prevSelection = board.current.getSpecialAttribute(currX, currY);
+
+        if (prevSelection === "" && selection === "<No Attribute>") {
+
+        }
+
+
         board.current.setSpecialAttribute(currX, currY, selection);
         setDisplaySetCoordPopup(false);
         setCoordSpecialAttributes(prev =>
@@ -44,12 +45,9 @@ function RenderSetCoordPopup() {
         setCurrX(null);
         setCurrY(null);
         // Now, remove the selected attribute from the available choices
-        const updateDayOfMonthOptions = dayOfMonthOptionsRemaining.current.filter(choice => choice !== selection);
-        const updateMonthOptions = monthOptionsRemaining.current.filter(choice => choice !== selection);
-        const updateDayOfWeekOptions = dayOfWeekOptionsRemaining.current.filter(choice => choice !== selection);
-        dayOfMonthOptionsRemaining.current = updateDayOfMonthOptions;
-        monthOptionsRemaining.current = updateMonthOptions;
-        dayOfWeekOptionsRemaining.current = updateDayOfWeekOptions;
+        const updatedOptions = attributeOptionsRemaining.current.filter(attr => attr !== selection && attr !== "<No Attribute>");
+        attributeOptionsRemaining.current = updatedOptions;
+        setSelection('');
     }
 
 
@@ -69,8 +67,8 @@ function RenderSetCoordPopup() {
                 Set Special Attribute
             </h3>
             <RenderDropDownMenu
-                options={availableChoices}
-                message="Select Attribute"
+                options={attributeOptionsRemaining.current}
+                message="<No Attribute>"
                 setState={setSelection}
             />
             <button className='typical-button' style={{

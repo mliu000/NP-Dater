@@ -226,7 +226,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
         setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
-        setCoordSpecialAttributes, dayOfMonthOptionsRemaining, monthOptionsRemaining, dayOfWeekOptionsRemaining,
+        setCoordSpecialAttributes, attributeOptionsRemaining
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -277,9 +277,19 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         }
 
         // Initialize attribute options
-        dayOfMonthOptionsRemaining.current = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-        monthOptionsRemaining.current = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        dayOfWeekOptionsRemaining.current = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        if (localConfig.dateFormat[0]) {
+            const dayOfWeekOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            attributeOptionsRemaining.current.push(...dayOfWeekOptions);
+        }
+        if (localConfig.dateFormat[2]) {
+            const monthOptions = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            attributeOptionsRemaining.current.push(...monthOptions);
+        }
+        if (localConfig.dateFormat[1]) {
+            const dayOfMonthOptions = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+            attributeOptionsRemaining.current.push(...dayOfMonthOptions);
+        }
 
         // Initialize the useStates
         setRenderBoard(true);
