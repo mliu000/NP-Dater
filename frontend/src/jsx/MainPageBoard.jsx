@@ -16,9 +16,11 @@ Represents the main page board for displaying the grid and hexagonal tiles
 // Renders the grid coordinates
 function RenderGridCoord({ x, y, fontSize }) {
     const {currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
-    const { setDisplaySetCoordPopup } = useContext(DisplayContext);
+    const { mode, setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleClick = () => {
+        if (mode !== 'edit') return; // Only allow clicks in edit mode
+
         if (currX === x && currY === y) {
             setDisplaySetCoordPopup(false);
             setCurrX(null);
@@ -54,10 +56,12 @@ function RenderGridCoord({ x, y, fontSize }) {
 /// Renders the hex coordinates
 function RenderHexCoord({ x, y, angle, tileWidth, bounds, aspectRatio, fontSize }) {
     const { currX, currY, setCurrX, setCurrY, coordSpecialAttributes } = useContext(PuzzleContext);
-    const { setDisplaySetCoordPopup } = useContext(DisplayContext);
+    const { mode, setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     // Add the hover feature like above in gridCoord
     const handleClick = () => {
+        if (mode !== 'edit') return; // Only allow clicks in edit mode
+
         if (currX === x && currY === y) {
             setDisplaySetCoordPopup(false);
             setCurrX(null);

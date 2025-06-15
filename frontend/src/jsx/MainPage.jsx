@@ -79,7 +79,7 @@ function RenderSetCoordPopup() {
     }
 
 
-    if (!displaySetCoordPopup || mode === 'solve') return null;
+    if (!displaySetCoordPopup || mode !== 'edit') return null;
 
     return (
         <div className='small-popup' style={{
@@ -230,13 +230,14 @@ function RenderChoosePuzzleButton() {
 
 // Renders the save solution 
 function RenderSaveButton() {
-    const { setSaved } = useContext(PuzzleContext);
+    const { setSaved, setCurrX, setCurrY } = useContext(PuzzleContext);
     const { mode, setMode, setDisplaySetCoordPopup } = useContext(DisplayContext);
 
     const handleSavePuzzleClick = () => {
         setSaved(true);
         setDisplaySetCoordPopup(false);
         setMode('solve');
+        setCurrX(null); setCurrY(null);
     }
 
     const handleEditPuzzleClick = () => {
