@@ -12,12 +12,14 @@ export function DisplayProvider({ children }) {
     const [displayedPopup, setDisplayedPopup] = useState('startup');
     const [mode, setMode] = useState(''); // 'edit' or 'solve', or '' as default
     const [displaySetCoordPopup, setDisplaySetCoordPopup] = useState(false);
+    const [displayTilePopup, setDisplayTilePopup] = useState(false);
 
     return (
         <DisplayContext.Provider value={{
             displayedPopup, setDisplayedPopup,
             mode, setMode,
-            displaySetCoordPopup, setDisplaySetCoordPopup
+            displaySetCoordPopup, setDisplaySetCoordPopup,
+            displayTilePopup, setDisplayTilePopup
         }}>
             {children}
         </DisplayContext.Provider>

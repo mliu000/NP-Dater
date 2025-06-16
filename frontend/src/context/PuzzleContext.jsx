@@ -30,9 +30,11 @@ export function PuzzleProvider({ children }) {
 
     const [currX, setCurrX] = useState(null);
     const [currY, setCurrY] = useState(null);
+    const [currTileSelected, setCurrTileSelected] = useState(null);
 
     // List based useStates
     const [coordSpecialAttributes, setCoordSpecialAttributes] = useState([]);
+    const [tileCoordList, setTileCoordList] = useState([]);
 
 
     // On the main page 
@@ -58,11 +60,13 @@ export function PuzzleProvider({ children }) {
             month, setMonth,
             dayOfWeek, setDayOfWeek,
             coordSpecialAttributes, setCoordSpecialAttributes,
+            tileCoordList, setTileCoordList,
             totalCoordCount, setTotalCoordCount,
             tileCoordsCoverageCount, setTileCoordsCoverageCount,
             currX, setCurrX,
             currY, setCurrY,
-        }}> 
+            currTileSelected, setCurrTileSelected
+        }}>
             {children}
         </PuzzleContext.Provider>
     );

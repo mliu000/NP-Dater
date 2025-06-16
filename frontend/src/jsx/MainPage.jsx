@@ -7,7 +7,7 @@ import { RenderMainBoard } from './MainPageBoard.jsx';
 import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import { sortDaysOfWeek } from '../utility/SortOptions.js';
-import { RenderTileWindow } from './MainPageTiles.jsx';
+import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import '../css/MainPage.css';
 
 /* 
@@ -461,6 +461,7 @@ function RenderMainPage() {
             <RenderPuzzleDate />
             <RenderSetCoordPopup />
             <RenderCoordsCount />
+            <RenderTilePopup />
         </>
     );
 }
