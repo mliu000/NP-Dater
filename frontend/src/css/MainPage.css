@@ -177,6 +177,25 @@
     cursor: pointer;
 }
 
+.hex-coord-inner-tile {
+    position: absolute;
+    width: 95%;
+    aspect-ratio: 0.86602540378;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--greyish-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hex-coord-inner-tile:hover {
+    background-color: rgba(53, 85, 97, 0.5);
+    cursor: pointer;
+}
+
 .hex-coord-inner-selected {
     position: absolute;
     width: 95%;

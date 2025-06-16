@@ -30,7 +30,7 @@ export function PuzzleProvider({ children }) {
 
     const [currX, setCurrX] = useState(null);
     const [currY, setCurrY] = useState(null);
-    const [currTileSelected, setCurrTileSelected] = useState(null);
+    const [currTileSelected, setCurrTileSelected] = useState(''); // Name of the currently selected tile
 
     // List based useStates
     const [coordSpecialAttributes, setCoordSpecialAttributes] = useState([]);
