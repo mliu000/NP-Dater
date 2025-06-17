@@ -3,7 +3,7 @@ import DisplayContext from '../context/DisplayContext.jsx';
 import { useContext, useState, useEffect } from 'react';
 import { calculateGridBounds } from '../model/GridBoard.js';
 import { calculateHexBounds } from '../model/HexBoard.js';
-import { hexToRGB } from '../utility/Utility.js';
+import { hexToRGB, areCoordsConnected } from '../utility/Utility.js';
 
 /*
 Mu Ye Liu - June 2025
@@ -48,7 +48,7 @@ function RenderTileGridBoard() {
     return (
         <div className="grid-board" style={{
             position: 'absolute',
-            left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+            left: '50%', top: '47%', transform: 'translate(-50%, -50%)',
             [boundingDimension]: boundingSize,
             aspectRatio: `${board.current.width}/${board.current.height}`,
             display: 'grid',
@@ -57,7 +57,7 @@ function RenderTileGridBoard() {
         }}>
             {board.current.gridCoords.map((coord, idx) => (
                 <div key={idx} data-x={String(coord.Coord[0] - medianX)}
-                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless" 
+                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless"
                     style={{ gridRow: `${coord.Coord[1] + 1}`, gridColumn: `${coord.Coord[0] + 1}` }} onClick={handleClick}>
                     <div className="grid-coord-template" style={{
                         backgroundColor: coords.some(c => c[0] === coord.Coord[0] - medianX && c[1] === coord.Coord[1] - medianY) ? color : 'transparent',
@@ -109,7 +109,7 @@ function RenderTileHexBoard() {
     return (
         <div className="hex-board" style={{
             aspectRatio: `${aspectRatio}`,
-            left: '50%', top: '50%',
+            left: '50%', top: '47%',
             transform: `translate(-50%, -50%) rotate(${angle}deg)`
         }}>
             {board.current.hexCoords.map((coord, idx) => {
@@ -186,7 +186,7 @@ function RenderTileImageHex({ tile }) {
         (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
     const aspectRatio = width / height;
 
-    const rotate = aspectRatio < 1 ? 90 : 0; 
+    const rotate = aspectRatio < 1 ? 90 : 0;
     const boundingDimension = rotate === 90 ? 'height' : 'width';
 
     return (
@@ -255,21 +255,27 @@ export function RenderTilePopup() {
     const { puzzleType, currTileSelected, setCurrTileSelected,
         setTileCoordList, tiles, noTiles, setNoTiles } = useContext(PuzzleContext);
     const { displayTilePopup, setDisplayTilePopup } = useContext(DisplayContext);
+    const [invalidNotConnected, setInvalidNotConnected] = useState(false);
 
     const handleChooseColourClick = (e) => {
         setCurrTileSelected(prevTile => ({ ...prevTile, color: e.target.value }));
     }
 
     const handleSetTileClick = () => {
-        const target = tiles.current.find(tile => tile.id === currTileSelected.id);
-        target.color = currTileSelected.color;
-        target.coords = currTileSelected.coords;
-        setTileCoordList(prevTiles =>
-            prevTiles.map(tile =>
-                tile.id === currTileSelected.id ? { ...tile, color: currTileSelected.color, coords: currTileSelected.coords } : tile
-            )
-        );
-        setDisplayTilePopup(false);
+        if (areCoordsConnected(currTileSelected.coords, puzzleType)) {
+            const target = tiles.current.find(tile => tile.id === currTileSelected.id);
+            target.color = currTileSelected.color;
+            target.coords = currTileSelected.coords;
+            setTileCoordList(prevTiles =>
+                prevTiles.map(tile =>
+                    tile.id === currTileSelected.id ? { ...tile, color: currTileSelected.color, coords: currTileSelected.coords } : tile
+                )
+            );
+            setDisplayTilePopup(false);
+            setInvalidNotConnected(false);
+        } else {
+            setInvalidNotConnected(true);
+        }
     }
 
     const handleDeleteTileClick = () => {
@@ -309,6 +315,15 @@ export function RenderTilePopup() {
                     ) : (
                         <RenderTileHexBoard />
                     )}
+                    {invalidNotConnected && <h4 style={{
+                        position: 'absolute',
+                        left: '50%',
+                        bottom: '8%',
+                        transform: 'translateX(-50%)',
+                        color: 'red',
+                        fontSize: '2vw',
+                        textAlign: 'center'
+                    }}>Tile is not connected</h4>}
                     <button className="typical-button" style={{
                         position: 'absolute',
                         margin: '0',
@@ -352,10 +367,10 @@ export function RenderTileWindow({ tileId }) {
         <div className="tile-window" onClick={handleWindowClick}>
             <div style={{
                 position: 'absolute',
-                height: '90%',  
+                height: '90%',
                 left: '50%',
                 top: '50%',
-                transform: 'translate(-50%, -50%)', 
+                transform: 'translate(-50%, -50%)',
                 aspectRatio: '1/1',
                 overflow: 'visible',
             }}>

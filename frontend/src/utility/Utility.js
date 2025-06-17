@@ -29,3 +29,50 @@ export function hexToRGB(hex) {
 
     return `RGB(${r}, ${g}, ${b})`;
 }
+
+// Checks whether or not gridcoords are connected via a BFS search.
+export function areCoordsConnected(coords, mode = "hex") {
+    if (coords.length === 0) return false;
+    if (coords.length === 1) return true;
+
+    const coordSet = new Set(coords.map(([x, y]) => `${x},${y}`));
+    const visited = new Set();
+    const queue = [];
+
+    // Choose the correct direction set
+    const directions = mode === "hex" ? [
+        [1, 0],   // east
+        [-1, 0],  // west
+        [0, 1],   // southeast
+        [0, -1],  // northwest
+        [1, -1],  // northeast
+        [-1, 1],  // southwest
+    ] : [
+        [1, 0],   // right
+        [-1, 0],  // left
+        [0, 1],   // down
+        [0, -1],  // up
+    ];
+
+    // Start BFS
+    const start = coords[0];
+    queue.push(start);
+    visited.add(`${start[0]},${start[1]}`);
+
+    while (queue.length > 0) {
+        const [x, y] = queue.shift();
+
+        for (const [dx, dy] of directions) {
+            const nx = x + dx;
+            const ny = y + dy;
+            const key = `${nx},${ny}`;
+
+            if (coordSet.has(key) && !visited.has(key)) {
+                visited.add(key);
+                queue.push([nx, ny]);
+            }
+        }
+    }
+
+    return visited.size === coordSet.size;
+}
