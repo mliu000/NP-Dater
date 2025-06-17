@@ -227,7 +227,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
         setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
         setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount, 
-        tiles, setTileCoordList, totalNoTileCreatedHistory
+        tiles, setTileCoordList, totalNoTileCreatedHistory, setNoTiles
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -309,6 +309,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setTileCoordList([]); 
         tiles.current = []; 
         totalNoTileCreatedHistory.current = 0; 
+        setNoTiles(0);
     };
 
     return (

@@ -8,6 +8,7 @@ import PuzzleContext, { PuzzleProvider } from '../context/PuzzleContext.jsx';
 import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import { sortDaysOfWeek } from '../utility/Utility.js';
 import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
+import { solvePuzzle } from '../api/Solve.js';
 import '../css/MainPage.css';
 
 /* 
@@ -174,17 +175,17 @@ function RenderPuzzleDate() {
                 <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
                     Solve For:
                 </h2>
-                {dateFormat[2] && <RenderDropDownMenu
+                {dateFormat[0] && <RenderDropDownMenu
                     options={dayOfWeekOptions}
                     message="Day of Week"
                     setState={setDayOfWeek}
                 />}
-                {dateFormat[1] && <RenderDropDownMenu
+                {dateFormat[2] && <RenderDropDownMenu
                     options={monthOptions}
                     message="Month"
                     setState={setMonth}
                 />}
-                {dateFormat[0] && <RenderDropDownMenu
+                {dateFormat[1] && <RenderDropDownMenu
                     options={dayOfMonthOptions}
                     message="Day of Month"
                     setState={setDayOfMonth}
@@ -297,11 +298,25 @@ function RenderPuzzleName() {
 
 // Render solve puzzle button
 function RenderSolvePuzzleButton() {
-    const { mode } = useContext(DisplayContext);
+    const { mode, setDisplayLargeInstancePopup, setDisplayMismatchPopup } = useContext(DisplayContext);
+    const { board, tiles, dayOfMonth, month, dayOfWeek, totalCoordCount, dateFormat,
+        tileCoordsCoverageCount, puzzleType, noTiles, solveTime } = useContext(PuzzleContext);
 
-    const handleClick = () => {
-        // Logic to handle solving the puzzle
-        console.log('Solving puzzle...');
+    const handleClick = async () => {
+        if (tileCoordsCoverageCount !== totalCoordCount) {
+            setDisplayMismatchPopup(true);
+        } else if ((puzzleType === 'grid' && totalCoordCount > 55 && noTiles > 8) ||
+            (puzzleType === 'hex' && totalCoordCount > 45 && noTiles > 8)) {
+            setDisplayLargeInstancePopup(true);
+        } else {
+            const dateList = [];
+            if (dateFormat[0]) dateList.push(dayOfWeek);
+            if (dateFormat[2]) dateList.push(month);
+            if (dateFormat[1]) dateList.push(dayOfMonth);
+            const response = await solvePuzzle(tiles.current, board.current, puzzleType, dateList, solveTime);
+            console.log(response);
+        }
+
     }
 
     return (
@@ -318,6 +333,76 @@ function RenderSolvePuzzleButton() {
             }} onClick={handleClick}>
                 Solve Puzzle
             </button>}
+        </>
+    )
+}
+
+// Renders the unusually large instance popup
+function RenderLargeInstancePopup() {
+    const { displayLargeInstancePopup, setDisplayLargeInstancePopup } = useContext(DisplayContext);
+    const { board, tiles, dayOfMonth, month, dayOfWeek, dateFormat, solveTime } = useContext(PuzzleContext);
+
+    const handleSolveClick = async () => {
+        setDisplayLargeInstancePopup(false);
+        const dateList = [];
+        if (dateFormat[0]) dateList.push(dayOfWeek);
+        if (dateFormat[2]) dateList.push(month);
+        if (dateFormat[1]) dateList.push(dayOfMonth);
+        const response = await solvePuzzle(tiles.current, board.current, dateList, solveTime);
+        console.log(response);
+    }
+
+    return (
+        <>
+            {displayLargeInstancePopup &&
+                <div className='popup-background' onClick={() => setDisplayLargeInstancePopup(false)}>
+                    <div className='popup-wrapper' onClick={e => e.stopPropagation()}>
+                        <div className='popup-content'>
+                            <h1 style={{ color: 'var(--header-color)', fontSize: '3vw' }}>Warning:</h1>
+                            <h2 style={{ color: 'red' }}>
+                                This is an unusually large instance! This could take a long time to solve.</h2>
+                            <button className="typical-button" style={{
+                                marginBottom: '0',
+                                width: '50%',
+                                color: 'gold',
+                                border: '0.2vw solid gold'
+                            }} onClick={handleSolveClick}>
+                                Solve
+                            </button>
+                            <button className="typical-button" style={{
+                                width: '50%'
+                            }} onClick={() => setDisplayLargeInstancePopup(false)}>
+                                Go Back
+                            </button>
+                        </div>
+                    </div>
+                </div>}
+        </>
+    )
+}
+
+// Renders the mismatch popuop
+function RenderMismatchPopup() {
+    const { displayMismatchPopup, setDisplayMismatchPopup } = useContext(DisplayContext);
+
+    return (
+        <>
+            {displayMismatchPopup &&
+                <div className='popup-background' onClick={() => setDisplayMismatchPopup(false)}>
+                    <div className='popup-wrapper' onClick={e => e.stopPropagation()}>
+                        <div className='popup-content'>
+                            <h1 style={{ color: 'var(--header-color)', fontSize: '3vw' }}>Mismatch Error</h1>
+                            <h2 style={{ color: 'red' }}>
+                                The number of coordinates covered by the tiles does not match the total number of coordinates to cover.
+                            </h2>
+                            <button className="typical-button" style={{
+                                width: '50%'
+                            }} onClick={() => setDisplayMismatchPopup(false)}>
+                                Go Back
+                            </button>
+                        </div>
+                    </div>
+                </div>}
         </>
     )
 }
@@ -466,7 +551,7 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
-    const { tiles, tileCoordList } = useContext(PuzzleContext);
+    const { tiles, tileCoordList, solveTime } = useContext(PuzzleContext);
 
     return (
         <>
@@ -482,8 +567,10 @@ function RenderMainPage() {
             <RenderSetCoordPopup />
             <RenderCoordsCount />
             <RenderTilePopup />
-            <button onClick={() => {console.log(tiles.current)}}>Click Me</button>
-            <button onClick={() => {console.log(tileCoordList)}}>Click Me 2</button>
+            <RenderLargeInstancePopup />
+            <RenderMismatchPopup />
+            <button onClick={() => console.log('Solve Time:', solveTime.current)}>Log Solve Time</button>
+            <button onClick={() => console.log('Tiles:', tiles.current)}>Log Tiles</button>
         </>
     );
 }

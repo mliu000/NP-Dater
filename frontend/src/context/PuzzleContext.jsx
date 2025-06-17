@@ -14,6 +14,7 @@ export function PuzzleProvider({ children }) {
     const tiles = useRef([]);
     const totalNoTileCreatedHistory = useRef(0);
     const attributeOptionsRemaining = useRef([]);
+    const solveTime = useRef(0);
 
     // useStates
     const [noTiles, setNoTiles] = useState(0);
@@ -46,7 +47,7 @@ export function PuzzleProvider({ children }) {
     return (
         <PuzzleContext.Provider value={{
             board, tiles,
-            attributeOptionsRemaining, totalNoTileCreatedHistory,
+            attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
             saved, setSaved,
             noTiles, setNoTiles,
             puzzleName, setPuzzleName,
