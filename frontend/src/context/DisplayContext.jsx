@@ -13,7 +13,6 @@ export function DisplayProvider({ children }) {
     const [mode, setMode] = useState(''); // 'edit' or 'solve', or '' as default
     const [displaySetCoordPopup, setDisplaySetCoordPopup] = useState(false);
     const [displayTilePopup, setDisplayTilePopup] = useState(false);
-    const [displayMismatchPopup, setDisplayMismatchPopup] = useState(false);
     const [displayLargeInstancePopup, setDisplayLargeInstancePopup] = useState(false);
     const [displayUnableToSolvePopup, setDisplayUnableToSolvePopup] = useState(false);
     const [displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup] = useState(false);
@@ -24,7 +23,6 @@ export function DisplayProvider({ children }) {
             mode, setMode,
             displaySetCoordPopup, setDisplaySetCoordPopup,
             displayTilePopup, setDisplayTilePopup,
-            displayMismatchPopup, setDisplayMismatchPopup,
             displayLargeInstancePopup, setDisplayLargeInstancePopup,
             displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
             displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup

@@ -104,29 +104,3 @@ export function RenderLargeInstancePopup() {
         </>
     )
 }
-
-// Renders the mismatch popuop
-export function RenderMismatchPopup() {
-    const { displayMismatchPopup, setDisplayMismatchPopup } = useContext(DisplayContext);
-
-    return (
-        <>
-            {displayMismatchPopup &&
-                <div className='popup-background' onClick={() => setDisplayMismatchPopup(false)}>
-                    <div className='popup-wrapper' onClick={e => e.stopPropagation()}>
-                        <div className='popup-content'>
-                            <h1 style={{ color: 'var(--header-color)', fontSize: '3vw' }}>Mismatch Error</h1>
-                            <h2 style={{ color: 'red' }}>
-                                The number of coordinates covered by the tiles does not match the total number of coordinates to cover.
-                            </h2>
-                            <button className="typical-button" style={{
-                                width: '50%'
-                            }} onClick={() => setDisplayMismatchPopup(false)}>
-                                Go Back
-                            </button>
-                        </div>
-                    </div>
-                </div>}
-        </>
-    )
-}

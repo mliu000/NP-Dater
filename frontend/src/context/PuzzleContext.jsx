@@ -40,9 +40,9 @@ export function PuzzleProvider({ children }) {
 
 
     // On the main page 
-    const [dayOfMonth, setDayOfMonth] = useState('');
-    const [month, setMonth] = useState('');
-    const [dayOfWeek, setDayOfWeek] = useState('');
+    const [dayOfMonth, setDayOfMonth] = useState('Day of Month');
+    const [month, setMonth] = useState('Month');
+    const [dayOfWeek, setDayOfWeek] = useState('Day of Week');
 
     return (
         <PuzzleContext.Provider value={{

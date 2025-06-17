@@ -10,7 +10,7 @@ import { sortDaysOfWeek } from '../utility/Utility.js';
 import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import { solvePuzzle, isDateOnPuzzle } from '../api/Solve.js';
 import {
-    RenderLargeInstancePopup, RenderMismatchPopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup
+    RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup
 } from './MainPagePopups.jsx';
 import '../css/MainPage.css';
 
@@ -149,7 +149,8 @@ function RenderSavedMessage() {
 
 // Renders puzzle date 
 function RenderPuzzleDate() {
-    const { setDayOfMonth, setMonth, setDayOfWeek } = useContext(PuzzleContext);
+    const { setDayOfMonth, setMonth, setDayOfWeek, totalCoordCount, tileCoordsCoverageCount
+    } = useContext(PuzzleContext);
     const { dateFormat } = useContext(PuzzleContext);
     const { mode } = useContext(DisplayContext);
 
@@ -159,43 +160,61 @@ function RenderPuzzleDate() {
 
     useEffect(() => {
         // Reset the date selections when the mode changes
-        setDayOfMonth('');
-        setMonth('');
-        setDayOfWeek('');
+        setDayOfMonth('Day of Month');
+        setMonth('Month');
+        setDayOfWeek('Day of Week');
     }, [mode]);
 
     return (
         <>
-            {mode === 'solve' && <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                position: 'absolute',
-                right: '6%',
-                top: '25%',
-                gap: '1vh',
-            }}>
-                <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
-                    Solve For:
-                </h2>
-                {dateFormat[0] && <RenderDropDownMenu
-                    options={dayOfWeekOptions}
-                    message="Day of Week"
-                    setState={setDayOfWeek}
-                />}
-                {dateFormat[2] && <RenderDropDownMenu
-                    options={monthOptions}
-                    message="Month"
-                    setState={setMonth}
-                />}
-                {dateFormat[1] && <RenderDropDownMenu
-                    options={dayOfMonthOptions}
-                    message="Day of Month"
-                    setState={setDayOfMonth}
-                />}
-            </div>}
+            {mode === 'solve' &&
+                <>
+                    {totalCoordCount === tileCoordsCoverageCount ? (
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            position: 'absolute',
+                            right: '6%',
+                            top: '25%',
+                            gap: '1vh',
+                        }}>
+                            <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
+                                Solve For:
+                            </h2>
+                            {dateFormat[0] && <RenderDropDownMenu
+                                options={dayOfWeekOptions}
+                                message='Day of Week'
+                                setState={setDayOfWeek}
+                            />}
+                            {dateFormat[2] && <RenderDropDownMenu
+                                options={monthOptions}
+                                message='Month'
+                                setState={setMonth}
+                            />}
+                            {dateFormat[1] && <RenderDropDownMenu
+                                options={dayOfMonthOptions}
+                                message='Day of Month'
+                                setState={setDayOfMonth}
+                            />}
+                        </div>) : (
+                        <h2 style={{
+                            position: 'absolute',
+                            right: '4%',
+                            top: '25%',
+                            fontSize: '1.5vw',
+                            marginBottom: '1vh',
+                            width: '15%',
+                            color: 'red',
+                            textAlign: 'center'
+                        }}>
+                            Mismatch between tile coverage and total coords!
+                        </h2>
+                    )}
+                </>
+            }
         </>
-    )
+    );
 }
 
 // Renders the back button
@@ -301,20 +320,30 @@ function RenderPuzzleName() {
 
 // Render solve puzzle button
 function RenderSolvePuzzleButton() {
-    const { mode, setDisplayLargeInstancePopup, setDisplayMismatchPopup,
-        setDisplayUnableToSolvePopup, setDisplayDateNotInPuzzlePopup
+    const { mode, setDisplayLargeInstancePopup, setDisplayUnableToSolvePopup, setDisplayDateNotInPuzzlePopup
     } = useContext(DisplayContext);
     const { board, tiles, dayOfMonth, month, dayOfWeek, totalCoordCount, dateFormat,
         tileCoordsCoverageCount, puzzleType, noTiles, solveTime } = useContext(PuzzleContext);
+
+
+    // condition where if dateFormat is chosen, do not display the button if date is not chosen
+    // Change to useState
+    const [displayButtonDateCondition, setDisplayButtonDateCondition] = useState([false, false, false]);
+
+    useEffect(() => {
+        setDisplayButtonDateCondition([
+            dateFormat[0] ? dayOfWeek !== 'Day of Week' : true,
+            dateFormat[1] ? dayOfMonth !== 'Day of Month' : true,
+            dateFormat[2] ? month !== 'Month' : true
+        ]);
+    }, [dayOfWeek, dayOfMonth, month]);
 
     const handleClick = async () => {
         const dateList = [];
         if (dateFormat[0]) dateList.push(dayOfWeek);
         if (dateFormat[2]) dateList.push(month);
         if (dateFormat[1]) dateList.push(dayOfMonth);
-        if (tileCoordsCoverageCount !== totalCoordCount) {
-            setDisplayMismatchPopup(true);
-        } else if (!isDateOnPuzzle(dateList, board.current, puzzleType)) {
+        if (!isDateOnPuzzle(dateList, board.current, puzzleType)) {
             setDisplayDateNotInPuzzlePopup(true);
         } else if ((puzzleType === 'grid' && totalCoordCount > 55 && noTiles > 8) ||
             (puzzleType === 'hex' && totalCoordCount > 45 && noTiles > 8)) {
@@ -332,18 +361,19 @@ function RenderSolvePuzzleButton() {
 
     return (
         <>
-            {mode === 'solve' && <button className="typical-button" style={{
-                position: 'absolute',
-                right: '2%',
-                bottom: '32%',
-                width: '20%',
-                height: '8%',
-                margin: '0',
-                color: 'gold',
-                border: '0.2vw solid gold'
-            }} onClick={handleClick}>
-                Solve Puzzle
-            </button>}
+            {mode === 'solve' && displayButtonDateCondition.every(condition => condition) &&
+                tileCoordsCoverageCount === totalCoordCount && <button className="typical-button" style={{
+                    position: 'absolute',
+                    right: '2%',
+                    bottom: '32%',
+                    width: '20%',
+                    height: '8%',
+                    margin: '0',
+                    color: 'gold',
+                    border: '0.2vw solid gold'
+                }} onClick={handleClick}>
+                    Solve Puzzle
+                </button >}
         </>
     )
 }
@@ -508,7 +538,6 @@ function RenderMainPage() {
             <RenderCoordsCount />
             <RenderTilePopup />
             <RenderLargeInstancePopup />
-            <RenderMismatchPopup />
             <RenderUnableToSolvePopup />
             <RenderDateNotInPuzzlePopup />
             <button onClick={() => console.log('Solve Time:', solveTime.current)}>Log Solve Time</button>

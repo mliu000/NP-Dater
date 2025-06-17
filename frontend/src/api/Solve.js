@@ -90,7 +90,7 @@ export async function solvePuzzle(listOfTiles, board, type, date, solveTime) {
         if (data.error) throw new Error(data.error);
 
         // Populate the solve time and and solution tiles
-        solveTime.current = data.solveTime;
+        solveTime.current = data.timeToSolve;
         listOfTiles.forEach(tile => {
             const solutionTile = data.tiles.find(t => t.id === tile.id);
             if (solutionTile) {
