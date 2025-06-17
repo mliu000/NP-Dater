@@ -57,7 +57,8 @@ function RenderTileGridBoard() {
         }}>
             {board.current.gridCoords.map((coord, idx) => (
                 <div key={idx} data-x={String(coord.Coord[0] - medianX)}
-                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless" onClick={handleClick}>
+                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless" 
+                    style={{ gridRow: `${coord.Coord[1] + 1}`, gridColumn: `${coord.Coord[0] + 1}` }} onClick={handleClick}>
                     <div className="grid-coord-template" style={{
                         backgroundColor: coords.some(c => c[0] === coord.Coord[0] - medianX && c[1] === coord.Coord[1] - medianY) ? color : 'transparent',
                     }} />
@@ -158,7 +159,7 @@ function RenderTileImageGrid({ tile }) {
         }}>
             {tile.coords.map(([x, y]) => {
                 const gridCol = x - bounds.minX + 1;
-                const gridRow = bounds.maxY - y + 1;
+                const gridRow = y - bounds.minY + 1;
 
                 return (
                     <div

@@ -461,6 +461,7 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
+    const { tiles } = useContext(PuzzleContext);
 
     return (
         <>
@@ -476,6 +477,7 @@ function RenderMainPage() {
             <RenderSetCoordPopup />
             <RenderCoordsCount />
             <RenderTilePopup />
+            <button onClick={() => {console.log(tiles.current)}}>Click Me</button>
         </>
     );
 }
