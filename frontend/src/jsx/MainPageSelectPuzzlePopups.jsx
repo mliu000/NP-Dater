@@ -226,7 +226,8 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
         setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
-        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount
+        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount, 
+        tiles, setTileCoordList, totalNoTileCreatedHistory
     } = useContext(PuzzleContext);
 
     const { setMode } = useContext(DisplayContext);
@@ -305,6 +306,9 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setMode('edit');
         setTotalCoordCount((board.current.gridCoords ? board.current.gridCoords.length : board.current.hexCoords.length)
             - localConfig.dateFormat.filter(format => format).length);
+        setTileCoordList([]); 
+        tiles.current = []; 
+        totalNoTileCreatedHistory.current = 0; 
     };
 
     return (

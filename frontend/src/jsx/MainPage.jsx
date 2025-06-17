@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, use } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RenderDropDownMenu } from './MainPageSelectPuzzlePopups.jsx';
 import Tile from '../model/Tile.js';
@@ -347,12 +347,14 @@ function RenderNoPuzzleSelected() {
 
 // Renders the button to create a new tile
 function RenderCreateNewTileButton() {
-    const { tiles, setTileCoordList, noTiles, setNoTiles } = useContext(PuzzleContext);
+    const { tiles, setTileCoordList, noTiles, setNoTiles, totalNoTileCreatedHistory } = useContext(PuzzleContext);
 
     const handleClick = () => {
-        tiles.current.push(new Tile(`Tile_${noTiles + 1}`, [[0, 0]], [], '#ffffff'));
-        setTileCoordList(prev => [...prev, { id: `Tile_${noTiles + 1}`, coords: [[0, 0]], color: '#ffffff' }]);
+        const newTileId = `Tile_${totalNoTileCreatedHistory.current}`;
+        tiles.current.push(new Tile(newTileId, [[0, 0]], [], '#ffffff'));
+        setTileCoordList(prev => [...prev, { id: newTileId, coords: [[0, 0]], color: '#ffffff' }]);
         setNoTiles(noTiles + 1);
+        totalNoTileCreatedHistory.current += 1;
     };
 
     return (
@@ -395,8 +397,8 @@ function RenderMainPageLeftSideTileList() {
                 {noTiles > 0 ? (
                     <div className="left-side-tile-list-scroll-pane" style={{ height: buttonAppear ? '75%' : '85%' }}>
                         {/* Render each tile window in the list */}
-                        {tiles.current.map((tile, idx) => (
-                            <RenderTileWindow key={idx} tileId={tile.id} />
+                        {tiles.current.map((tile) => (
+                            <RenderTileWindow key={tile.id} tileId={tile.id} />
                         ))}
                     </div>
                 ) : (
@@ -422,7 +424,10 @@ function RenderMainPageLeftSideTileList() {
 function RenderCoordsCount() {
     const { totalCoordCount, tileCoordsCoverageCount, setTileCoordsCoverageCount,
         tileCoordList } = useContext(PuzzleContext);
-    setTileCoordsCoverageCount(tileCoordList.reduce((acc, tile) => acc + tile.coords.length, 0));
+
+    useEffect(() => {
+        setTileCoordsCoverageCount(tileCoordList.reduce((acc, tile) => acc + tile.coords.length, 0));
+    }, [tileCoordList]);
 
     return (
         <>
@@ -461,7 +466,7 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
-    const { tiles } = useContext(PuzzleContext);
+    const { tiles, tileCoordList } = useContext(PuzzleContext);
 
     return (
         <>
@@ -478,6 +483,7 @@ function RenderMainPage() {
             <RenderCoordsCount />
             <RenderTilePopup />
             <button onClick={() => {console.log(tiles.current)}}>Click Me</button>
+            <button onClick={() => {console.log(tileCoordList)}}>Click Me 2</button>
         </>
     );
 }
