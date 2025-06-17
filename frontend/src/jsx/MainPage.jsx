@@ -350,8 +350,8 @@ function RenderCreateNewTileButton() {
     const { tiles, setTileCoordList, noTiles, setNoTiles } = useContext(PuzzleContext);
 
     const handleClick = () => {
-        tiles.current.push(new Tile(`Tile_${noTiles + 1}`, [[0, 0]], [], 'white'));
-        setTileCoordList(prev => [...prev, { id: `Tile_${noTiles + 1}`, coords: [[0, 0]], color: 'white' }]);
+        tiles.current.push(new Tile(`Tile_${noTiles + 1}`, [[0, 0]], [], '#ffffff'));
+        setTileCoordList(prev => [...prev, { id: `Tile_${noTiles + 1}`, coords: [[0, 0]], color: '#ffffff' }]);
         setNoTiles(noTiles + 1);
     };
 
