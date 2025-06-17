@@ -3,6 +3,7 @@ import DisplayContext from '../context/DisplayContext.jsx';
 import { useContext, useState, useEffect } from 'react';
 import { calculateGridBounds } from '../model/GridBoard.js';
 import { calculateHexBounds } from '../model/HexBoard.js';
+import { hexToRGB } from '../utility/Utility.js';
 
 /*
 Mu Ye Liu - June 2025
@@ -157,7 +158,7 @@ function RenderTileImageGrid({ tile }) {
         }}>
             {tile.coords.map(([x, y]) => {
                 const gridCol = x - bounds.minX + 1;
-                const gridRow = y - bounds.minY + 1;
+                const gridRow = bounds.maxY - y + 1;
 
                 return (
                     <div
@@ -301,7 +302,7 @@ export function RenderTilePopup() {
                             borderRadius: '2vw'
                         }}
                     />
-                    <p style={{ position: 'absolute', left: '15%', top: '7%', transform: 'translateX(-50%)' }}>Selected Colour: {currTileSelected.color}</p>
+                    <p style={{ position: 'absolute', left: '15%', top: '7%', transform: 'translateX(-50%)' }}>{hexToRGB(currTileSelected.color)}</p>
                     {puzzleType === 'grid' ? (
                         <RenderTileGridBoard />
                     ) : (
@@ -355,7 +356,7 @@ export function RenderTileWindow({ tileId }) {
                 top: '50%',
                 transform: 'translate(-50%, -50%)', 
                 aspectRatio: '1/1',
-                overflow: 'hidden',
+                overflow: 'visible',
             }}>
                 <RenderTileImage tileId={tileId} />
             </div>
