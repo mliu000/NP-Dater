@@ -1,8 +1,6 @@
-import { useState, useContext, useEffect } from 'react';
-import GridBoard from '../model/GridBoard.js';
-import HexBoard from '../model/HexBoard.js';
+import { useContext } from 'react';
+import { calculateHexBounds } from '../model/HexBoard.js';
 import PuzzleContext from '../context/PuzzleContext.jsx';
-import { calculateHexBounds } from './MainPageHexagons.jsx';
 import DisplayContext from '../context/DisplayContext.jsx';
 
 /*

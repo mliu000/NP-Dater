@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import Tile from '../model/Tile';
 import { useNavigate } from 'react-router-dom';
+import { calculateGridBounds } from '../model/GridBoard';
+import { calculateHexBounds } from '../model/HexBoard';
 import '../css/FrontPage.css'
 
 /* 
@@ -11,49 +13,10 @@ Represents the jsx file for the initialization of the front page
 
 ///// HELPER FUNCTIONS /////
 
-// Calculate bounds for grid tiles
-function calculateGridTileBounds(coords) {
-    const bounds = coords.reduce((acc, [x, y]) => {
-        acc.minX = Math.min(acc.minX, x);
-        acc.minY = Math.min(acc.minY, y);
-        acc.maxX = Math.max(acc.maxX, x);
-        acc.maxY = Math.max(acc.maxY, y);
-        return acc;
-    }, { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity });
-    return bounds;
-}
-
-// Calculate bounds for hex tiles for each tile
-function calculateHexTileBounds(coords) {
-    const bounds = coords.reduce((acc, [x, y]) => {
-        const z = -x - y;
-        acc.minX = Math.min(acc.minX, x);
-        acc.maxX = Math.max(acc.maxX, x);
-        acc.minY = Math.min(acc.minY, y);
-        acc.maxY = Math.max(acc.maxY, y);
-        acc.minZ = Math.min(acc.minZ, z);
-        acc.maxZ = Math.max(acc.maxZ, z);
-        acc.minOffsetX = Math.min(acc.minOffsetX, x + z / 2);
-        acc.maxOffsetX = Math.max(acc.maxOffsetX, x + z / 2);
-        return acc;
-    }, {
-        minX: Infinity,
-        maxX: -Infinity,
-        minY: Infinity,
-        maxY: -Infinity,
-        minZ: Infinity,
-        maxZ: -Infinity,
-        minOffsetX: Infinity,
-        maxOffsetX: -Infinity,
-    });
-
-    return bounds;
-}
-
 // Helper function to create grid tiles
 function createGridTiles(gridTileCoords, gridTileColours) {
     return gridTileCoords.map((coordList, idx) => {
-        const bounds = calculateGridTileBounds(coordList);
+        const bounds = calculateGridBounds(coordList);
         return {
             tile: new Tile(`front_page_grid_${idx}`, coordList, [], gridTileColours[idx]),
             bounds
@@ -64,7 +27,7 @@ function createGridTiles(gridTileCoords, gridTileColours) {
 // Helper function to create hex tiles
 function createHexTiles(hexTilesCoords, hexTileColours) {
     return hexTilesCoords.map((coordList, idx) => {
-        const bounds = calculateHexTileBounds(coordList);
+        const bounds = calculateHexBounds(coordList);
         return {
             tile: new Tile(`front_page_hex_${idx}`, coordList, [], hexTileColours[idx], 1),
             bounds
@@ -81,7 +44,7 @@ function renderGridTiles(tiles, placements) {
             position: 'absolute',
             left: `${placements[idx][0]}%`,
             top: `${placements[idx][1]}%`,
-            width: `${(bounds.maxX - bounds.minX) * 8}%`,
+            width: `${(bounds.maxX - bounds.minX + 1) * 4}%`,
             transform: 'translate(-50%, -50%)',
             aspectRatio: `${(bounds.maxX - bounds.minX + 1) / (bounds.maxY - bounds.minY + 1)}`,
             display: 'grid',

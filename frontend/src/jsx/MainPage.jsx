@@ -345,16 +345,37 @@ function RenderNoPuzzleSelected() {
     );
 }
 
+// Renders the button to create a new tile
+function RenderCreateNewTileButton() {
+    const { tiles, setTileCoordList, noTiles, setNoTiles } = useContext(PuzzleContext);
+
+    const handleClick = () => {
+        tiles.current.push(new Tile(`Tile_${noTiles + 1}`, [[0, 0]], [], 'white'));
+        setTileCoordList(prev => [...prev, { id: `Tile_${noTiles + 1}`, coords: [[0, 0]], color: 'white' }]);
+        setNoTiles(noTiles + 1);
+    };
+
+    return (
+        <button className="typical-button" style={{
+            position: 'absolute',
+            left: '45%',
+            transform: 'translate(-50%)',
+            bottom: '1%',
+            width: '50%',
+            height: '8%',
+            marginBottom: '2%',
+        }} onClick={handleClick}>
+            New Tile
+        </button>
+    );
+}
+
+
 
 // Renders the left side tile list 
-function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
-    const { tiles } = useContext(PuzzleContext);
+function RenderMainPageLeftSideTileList() {
+    const { tiles, noTiles } = useContext(PuzzleContext);
     const { mode } = useContext(DisplayContext);
-
-    const handleNewTileClick = () => {
-        setNoTiles(noTiles + 1);
-        tiles.current.push(new Tile(`Tile ${noTiles + 1}`, [[0, 0]], []));
-    };
 
     const buttonAppear = noTiles < 12 && mode === "edit";
 
@@ -375,7 +396,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     <div className="left-side-tile-list-scroll-pane" style={{height: buttonAppear? '75%' : '85%'}}>
                         {/* Render each tile window in the list */}
                         {tiles.current.map((tile, idx) => (
-                            <RenderTileWindow key={idx} tile={tile} />
+                            <RenderTileWindow key={idx} tileId={tile.id} />
                         ))}
                     </div>
                 ) : (
@@ -391,15 +412,7 @@ function RenderMainPageLeftSideTileList({ noTiles, setNoTiles }) {
                     }}>No Tiles Yet!</h1>
                 )
                 }
-                {buttonAppear && <button className="typical-button" style={{
-                    position: 'absolute',
-                    left: '45%',
-                    transform: 'translate(-50%)',
-                    bottom: '1%',
-                    width: '50%',
-                    height: '8%',
-                    marginBottom: '2%',
-                }} onClick={handleNewTileClick}>New Tile</button>}
+                {buttonAppear && <RenderCreateNewTileButton />}
             </div>
         </>
     )
@@ -446,11 +459,10 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
-    const { noTiles, setNoTiles } = useContext(PuzzleContext);
 
     return (
         <>
-            <RenderMainPageLeftSideTileList noTiles={noTiles} setNoTiles={setNoTiles} />
+            <RenderMainPageLeftSideTileList />
             <RenderBackButton />
             <RenderSaveButton />
             <RenderChoosePuzzleButton />

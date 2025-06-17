@@ -1,7 +1,8 @@
 import PuzzleContext from '../context/PuzzleContext';
 import DisplayContext from '../context/DisplayContext.jsx';
 import { useContext, useState } from 'react';
-import { calculateHexBounds } from './MainPageHexagons.jsx';
+import { calculateGridBounds } from '../model/GridBoard.js';
+import { calculateHexBounds } from '../model/HexBoard.js';
 
 /*
 Mu Ye Liu - June 2025
@@ -89,12 +90,124 @@ function RenderTileHexBoard() {
     );
 }
 
+// Renders the tile image for grid tile
+function RenderTileImageGrid({ tile }) {
+    const bounds = calculateGridBounds(tile.coords);
+    const rotate = bounds.maxY - bounds.minY > bounds.maxX - bounds.minX ? 90 : 0;
+    const boundingSize = rotate === 90 ? '50%' : '80%';
+    const boundingDimension = rotate === 90 ? 'width' : 'height';
+
+    return (
+        <div key={tile.id} style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            [boundingDimension]: boundingSize,
+            transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+            aspectRatio: `${(bounds.maxX - bounds.minX + 1) / (bounds.maxY - bounds.minY + 1)}`,
+            display: 'grid',
+            gridTemplateColumns: `repeat(${bounds.maxX - bounds.minX + 1}, 1fr)`,
+            gridTemplateRows: `repeat(${bounds.maxY - bounds.minY + 1}, 1fr)`,
+        }}>
+            {tile.coords.map(([x, y]) => {
+                const gridCol = x - bounds.minX + 1;
+                const gridRow = y - bounds.minY + 1;
+
+                return (
+                    <div
+                        key={`${tile.id}_${x}_${y}`}
+                        style={{
+                            gridColumn: gridCol,
+                            gridRow: gridRow,
+                            backgroundColor: tile.color,
+                            boxSizing: 'border-box',
+                            boxShadow: '0 0 0.2vw var(--box-shadow-color)',
+                        }}
+                    />
+                );
+            })}
+        </div>
+    );
+}
+
+// Renders the tile image for hex tile
+function RenderTileImageHex({ tile }) {
+    const bounds = calculateHexBounds(tile.coords);
+    const width = (bounds.maxOffsetX - bounds.minOffsetX + 1) * 4;
+    const height = (bounds.maxZ - bounds.minZ + 1) * 4 * (2 * Math.sqrt(3) / 3) -
+        (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
+    const aspectRatio = width / height;
+
+    const rotate = aspectRatio < 1 ? 0 : 90; 
+    const boundingDimension = rotate === 90 ? 'width' : 'height';
+    const boundingSize = rotate === 90 ? '50%' : '80%'; 
+
+    return (
+
+        <div key={tile.id} style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            [boundingDimension]: `${boundingSize}`,
+            aspectRatio: `${aspectRatio}`,
+            transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
+            filter: 'drop-shadow(0 0 0.2vw var(--box-shadow-color))'
+        }}>
+            {tile.coords.map(([x, y], hexIdx) => {
+                const z = -x - y;
+                const offsetX = x + z / 2;
+
+                const relativeX = offsetX - bounds.minOffsetX;
+                const relativeY = z - bounds.minZ;
+
+                const left = (relativeX / (bounds.maxOffsetX - bounds.minOffsetX + 1)) * 100;
+                const width = 100 / (bounds.maxOffsetX - bounds.minOffsetX + 1);
+                // Height relative to height: width * aspectRatio * (2 * Math.sqrt(3) / 3)
+                const top = relativeY * (width * aspectRatio * (Math.sqrt(3) / 2));
+
+                return (
+                    <div
+                        key={`${tile.id}_${hexIdx}`}
+                        className="hexagon"
+                        style={{
+                            position: 'absolute',
+                            left: `${left}%`,
+                            top: `${top}%`,
+                            width: `${width}%`,
+                            backgroundColor: tile.color
+                        }}
+                    />
+                );
+            })}
+        </div>
+    );
+}
+
+// Renders the tile image on the window
+function RenderTileImage({ tileId }) {
+    const { puzzleType, tileCoordList } = useContext(PuzzleContext);
+    const tile = tileCoordList.find(t => t.id === tileId);
+
+    if (!tile) return null; // If tile not found, return nothing
+
+    return (
+        <>
+            {puzzleType === 'grid' ? (
+                <RenderTileImageGrid tile={tile} />
+            ) : (
+                <RenderTileImageHex tile={tile} />
+            )}
+        </>
+    );
+
+}
+
 // Renders the tile Popup, attached to main file
-export function RenderTilePopup() {
+export function RenderTilePopup({ tileId }) {
     // TODO: Implement this function.
     const { puzzleType } = useContext(PuzzleContext);
     const { displayTilePopup, setDisplayTilePopup } = useContext(DisplayContext);
-    const [colour, setColour] = useState('#000000'); // Default color
+    const [colour, setColour] = useState(tileId ? tileId.color : "#000000"); // Default color
 
     const handleChooseColourClick = (e) => {
         setColour(e.target.value);
@@ -164,7 +277,7 @@ export function RenderTilePopup() {
 }
 
 // Renders the tile window. 
-export function RenderTileWindow() {
+export function RenderTileWindow({ tileId }) {
     const { mode, setDisplayTilePopup } = useContext(DisplayContext);
 
     const handleWindowClick = () => {
@@ -176,7 +289,7 @@ export function RenderTileWindow() {
 
     return (
         <div className="tile-window" onClick={handleWindowClick}>
-
+            <RenderTileImage tileId={tileId} />
         </div>
     );
 }

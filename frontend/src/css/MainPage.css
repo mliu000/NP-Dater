@@ -84,6 +84,7 @@
 }
 
 .tile-window {
+    position: relative;
     width: 98%;
     height: 20vh;
     border-radius: 2vw;

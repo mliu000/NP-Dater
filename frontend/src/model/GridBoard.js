@@ -38,4 +38,13 @@ export default class GridBoard {
     }
 }
 
-// Initializes the grid board useRef
+export function calculateGridBounds(coords) {
+    const bounds = coords.reduce((acc, [x, y]) => {
+        acc.minX = Math.min(acc.minX, x);
+        acc.minY = Math.min(acc.minY, y);
+        acc.maxX = Math.max(acc.maxX, x);
+        acc.maxY = Math.max(acc.maxY, y);
+        return acc;
+    }, { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity });
+    return bounds;
+}
