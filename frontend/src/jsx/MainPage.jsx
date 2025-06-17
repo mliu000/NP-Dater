@@ -393,7 +393,7 @@ function RenderMainPageLeftSideTileList() {
                     color: 'var(--header-color)',
                 }}>Tiles: {noTiles}</h1>
                 {noTiles > 0 ? (
-                    <div className="left-side-tile-list-scroll-pane" style={{height: buttonAppear? '75%' : '85%'}}>
+                    <div className="left-side-tile-list-scroll-pane" style={{ height: buttonAppear ? '75%' : '85%' }}>
                         {/* Render each tile window in the list */}
                         {tiles.current.map((tile, idx) => (
                             <RenderTileWindow key={idx} tileId={tile.id} />
@@ -420,7 +420,9 @@ function RenderMainPageLeftSideTileList() {
 
 // Renders the count of the number of coords that need to be covered, and the number of coords that are covered
 function RenderCoordsCount() {
-    const { totalCoordCount, tileCoordsCoverageCount } = useContext(PuzzleContext);
+    const { totalCoordCount, tileCoordsCoverageCount, setTileCoordsCoverageCount,
+        tileCoordList } = useContext(PuzzleContext);
+    setTileCoordsCoverageCount(tileCoordList.reduce((acc, tile) => acc + tile.coords.length, 0));
 
     return (
         <>
@@ -435,7 +437,7 @@ function RenderCoordsCount() {
                 fontSize: '2vw',
                 color: 'var(--header-color)',
             }}>
-                {`Coords tiles cover: ${tileCoordsCoverageCount}`}
+                {`Coords tiles cover: ${tileCoordsCoverageCount} cells`}
             </h1>
             <h1 style={{
                 position: 'absolute',
@@ -448,7 +450,7 @@ function RenderCoordsCount() {
                 fontSize: '2vw',
                 color: 'var(--header-color)',
             }}>
-                {`Total coords to cover: ${totalCoordCount}`}
+                {`Total coords to cover: ${totalCoordCount} cells`}
             </h1>
         </>
 
