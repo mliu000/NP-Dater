@@ -11,8 +11,10 @@ Represents the Tiles for the main page of the application
 */
 
 // Renders the tile grid board
-function RenderTileGridBoard({ coords, color }) {
-    const { board } = useContext(PuzzleContext);
+function RenderTileGridBoard() {
+    const { board, currTileSelected, setCurrTileSelected } = useContext(PuzzleContext);
+    const coords = currTileSelected.coords;
+    const color = currTileSelected.color;
 
     const isTallBoard = board.current.height > board.current.width;
     const boundingDimension = isTallBoard ? "height" : "width";
@@ -20,6 +22,27 @@ function RenderTileGridBoard({ coords, color }) {
 
     const medianX = Math.floor(board.current.width / 2);
     const medianY = Math.floor(board.current.height / 2);
+
+    const handleClick = (e) => {
+        const dataSetCoords = e.currentTarget.dataset;
+        const dataX = parseInt(dataSetCoords.x, 10);
+        const dataY = parseInt(dataSetCoords.y, 10);
+        if (dataX !== 0 || dataY !== 0) {
+            // Select the coord if not already selected, deselect if already selected
+            if (coords.some(c => c[0] === dataX && c[1] === dataY)) {
+                setCurrTileSelected(prevTile => ({
+                    ...prevTile,
+                    coords: prevTile.coords.filter(c => !(c[0] === dataX && c[1] === dataY))
+                }));
+            } else {
+                // Add the coord to the selected coords
+                setCurrTileSelected(prevTile => ({
+                    ...prevTile,
+                    coords: [...prevTile.coords, [dataX, dataY]]
+                }));
+            }
+        }
+    }
 
     return (
         <div className="grid-board" style={{
@@ -33,7 +56,7 @@ function RenderTileGridBoard({ coords, color }) {
         }}>
             {board.current.gridCoords.map((coord, idx) => (
                 <div key={idx} data-x={String(coord.Coord[0] - medianX)}
-                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless">
+                    data-y={String(coord.Coord[1] - medianY)} className="grid-coord-borderless" onClick={handleClick}>
                     <div className="grid-coord-template" style={{
                         backgroundColor: coords.some(c => c[0] === coord.Coord[0] - medianX && c[1] === coord.Coord[1] - medianY) ? color : 'transparent',
                     }} />
@@ -44,8 +67,10 @@ function RenderTileGridBoard({ coords, color }) {
 }
 
 // Renders the tile hex board
-function RenderTileHexBoard({coords, color}) {
-    const { board, hexagonOrientation } = useContext(PuzzleContext);
+function RenderTileHexBoard() {
+    const { board, hexagonOrientation, setCurrTileSelected, currTileSelected } = useContext(PuzzleContext);
+    const coords = currTileSelected.coords;
+    const color = currTileSelected.color;
 
     const angle = hexagonOrientation === 'flat-top' ? 30 : 0;
     const coordArray = board.current.hexCoords.map(obj => obj.Coord);
@@ -59,9 +84,24 @@ function RenderTileHexBoard({coords, color}) {
     const tileWidth = 100 / (bounds.maxOffsetX - bounds.minOffsetX + 1);
 
     const handleClick = (e) => {
-        // Placeholder
-        const hexCoord = e.currentTarget.dataset;
-        console.log(`Hex clicked: x=${hexCoord.x}, y=${hexCoord.y}`);
+        const dataSetCoords = e.currentTarget.dataset;
+        const dataX = parseInt(dataSetCoords.x, 10);
+        const dataY = parseInt(dataSetCoords.y, 10);
+        if (dataX !== 0 || dataY !== 0) {
+            // Select the coord if not already selected, deselect if already selected
+            if (coords.some(c => c[0] === dataX && c[1] === dataY)) {
+                setCurrTileSelected(prevTile => ({
+                    ...prevTile,
+                    coords: prevTile.coords.filter(c => !(c[0] === dataX && c[1] === dataY))
+                }));
+            } else {
+                // Add the coord to the selected coords
+                setCurrTileSelected(prevTile => ({
+                    ...prevTile,
+                    coords: [...prevTile.coords, [dataX, dataY]]
+                }));
+            }
+        }
     }
 
     return (
@@ -88,7 +128,7 @@ function RenderTileHexBoard({coords, color}) {
                         <div className="hex-coord-inner-tile">
                             <div className="hex-coord-inner-template" style={{
                                 backgroundColor: coords.some(c => c[0] === x && c[1] === y) ? color : 'transparent',
-                            }}/>
+                            }} />
                         </div>
                     </div>
                 );
@@ -102,15 +142,13 @@ function RenderTileHexBoard({coords, color}) {
 function RenderTileImageGrid({ tile }) {
     const bounds = calculateGridBounds(tile.coords);
     const rotate = bounds.maxY - bounds.minY > bounds.maxX - bounds.minX ? 90 : 0;
-    const boundingSize = rotate === 90 ? '50%' : '80%';
-    const boundingDimension = rotate === 90 ? 'width' : 'height';
-
+    const boundingDimension = rotate === 90 ? 'height' : 'width';
     return (
         <div key={tile.id} style={{
             position: 'absolute',
             left: '50%',
             top: '50%',
-            [boundingDimension]: boundingSize,
+            [boundingDimension]: '100%',
             transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
             aspectRatio: `${(bounds.maxX - bounds.minX + 1) / (bounds.maxY - bounds.minY + 1)}`,
             display: 'grid',
@@ -134,8 +172,7 @@ function RenderTileImageGrid({ tile }) {
                     />
                 );
             })}
-        </div>
-    );
+        </div>);
 }
 
 // Renders the tile image for hex tile
@@ -147,9 +184,8 @@ function RenderTileImageHex({ tile }) {
         (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
     const aspectRatio = width / height;
 
-    const rotate = aspectRatio < 1 ? 0 : 90;
-    const boundingDimension = rotate === 90 ? 'width' : 'height';
-    const boundingSize = rotate === 90 ? '50%' : '80%';
+    const rotate = aspectRatio < 1 ? 90 : 0; 
+    const boundingDimension = rotate === 90 ? 'height' : 'width';
 
     return (
 
@@ -157,7 +193,7 @@ function RenderTileImageHex({ tile }) {
             position: 'absolute',
             left: '50%',
             top: '50%',
-            [boundingDimension]: `${boundingSize}`,
+            [boundingDimension]: '100%',
             aspectRatio: `${aspectRatio}`,
             transform: `translate(-50%, -50%) rotate(${rotate}deg)`,
             filter: 'drop-shadow(0 0 0.2vw var(--box-shadow-color))'
@@ -214,27 +250,31 @@ function RenderTileImage({ tileId }) {
 // Renders the tile Popup, attached to main file
 export function RenderTilePopup() {
     // TODO: Implement this function.
-    const { puzzleType, currTileSelected, setTileCoordList } = useContext(PuzzleContext);
+    const { puzzleType, currTileSelected, setCurrTileSelected,
+        setTileCoordList, tiles, noTiles, setNoTiles } = useContext(PuzzleContext);
     const { displayTilePopup, setDisplayTilePopup } = useContext(DisplayContext);
 
-    const [colour, setColour] = useState("#ffffff"); // Default color
-
-    useEffect(() => {
-        if (currTileSelected) {
-            setColour(currTileSelected.color);
-        }
-    }, [currTileSelected]);
-
     const handleChooseColourClick = (e) => {
-        setColour(e.target.value);
+        setCurrTileSelected(prevTile => ({ ...prevTile, color: e.target.value }));
     }
 
     const handleSetTileClick = () => {
-        // TODO: Implement the set tile functionality
+        const target = tiles.current.find(tile => tile.id === currTileSelected.id);
+        target.color = currTileSelected.color;
+        target.coords = currTileSelected.coords;
+        setTileCoordList(prevTiles =>
+            prevTiles.map(tile =>
+                tile.id === currTileSelected.id ? { ...tile, color: currTileSelected.color, coords: currTileSelected.coords } : tile
+            )
+        );
+        setDisplayTilePopup(false);
     }
 
     const handleDeleteTileClick = () => {
-        // TODO: Implement the delete tile functionality
+        tiles.current = tiles.current.filter(tile => tile.id !== currTileSelected.id);
+        setTileCoordList(prevTiles => prevTiles.filter(tile => tile.id !== currTileSelected.id));
+        setDisplayTilePopup(false);
+        setNoTiles(noTiles - 1);
     }
 
     return (
@@ -249,7 +289,7 @@ export function RenderTilePopup() {
                     }}>Edit Tile:</h1>
                     <input
                         type="color"
-                        value={colour}
+                        value={currTileSelected.color}
                         onChange={handleChooseColourClick}
                         style={{
                             cursor: 'pointer',
@@ -261,11 +301,11 @@ export function RenderTilePopup() {
                             borderRadius: '2vw'
                         }}
                     />
-                    <p style={{ position: 'absolute', left: '15%', top: '7%', transform: 'translateX(-50%)' }}>Selected Colour: {colour}</p>
+                    <p style={{ position: 'absolute', left: '15%', top: '7%', transform: 'translateX(-50%)' }}>Selected Colour: {currTileSelected.color}</p>
                     {puzzleType === 'grid' ? (
-                        <RenderTileGridBoard coords={currTileSelected.coords} color={colour} />
+                        <RenderTileGridBoard />
                     ) : (
-                        <RenderTileHexBoard coords={currTileSelected.coords} color={colour} />
+                        <RenderTileHexBoard />
                     )}
                     <button className="typical-button" style={{
                         position: 'absolute',
@@ -301,14 +341,25 @@ export function RenderTileWindow({ tileId }) {
     const handleWindowClick = () => {
         // Only display when in edit mode
         if (mode === "edit") {
-            setCurrTileSelected({id: currTile.id, coords: currTile.coords, color: currTile.color}); // Set the current tile selected
+            setCurrTileSelected({ id: currTile.id, coords: currTile.coords, color: currTile.color }); // Set the current tile selected
             setDisplayTilePopup(true);
         }
     }
 
     return (
         <div className="tile-window" onClick={handleWindowClick}>
-            <RenderTileImage tileId={tileId} />
+            <div style={{
+                position: 'absolute',
+                height: '90%',  
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)', 
+                aspectRatio: '1/1',
+                overflow: 'hidden',
+            }}>
+                <RenderTileImage tileId={tileId} />
+            </div>
+
         </div>
     );
 }

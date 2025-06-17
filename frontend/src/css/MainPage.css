@@ -86,7 +86,7 @@
 .tile-window {
     position: relative;
     width: 98%;
-    height: 20vh;
+    height: 30vh;
     border-radius: 2vw;
     background-color: var(--box-shadow-color);
     border: 0.2vw solid var(--header-color);
