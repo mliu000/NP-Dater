@@ -5,7 +5,7 @@ Represents the API for to call the c++ solver
 */
 
 // Helper: Checks to make sure chosen date in on the puzzle
-function isDateOnPuzzle(date, board, type) {
+export function isDateOnPuzzle(date, board, type) {
     // Check if the date is within the bounds of the puzzle
     const allAttributes = type === 'grid' ? board.gridCoords.map(coord => coord.specialAttribute) :
         board.hexCoords.map(coord => coord.specialAttribute);
@@ -73,7 +73,6 @@ REQUIRES: listOfTiles: [Tile, Tile, ...]
 RETURNS: 0 if solved, 1 if solver error/no solution found, 2 if date not on puzzle
 */
 export async function solvePuzzle(listOfTiles, board, type, date, solveTime) {
-    if (!isDateOnPuzzle(date, board, type)) return 2;
 
     const jsonInput = setupJsonString(listOfTiles, board, type, date);
 
