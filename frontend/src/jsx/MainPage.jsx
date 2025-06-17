@@ -336,7 +336,7 @@ function RenderSolvePuzzleButton() {
             dateFormat[1] ? dayOfMonth !== 'Day of Month' : true,
             dateFormat[2] ? month !== 'Month' : true
         ]);
-    }, [dayOfWeek, dayOfMonth, month]);
+    }, [dayOfWeek, dayOfMonth, month, dateFormat]);
 
     const handleClick = async () => {
         const dateList = [];
