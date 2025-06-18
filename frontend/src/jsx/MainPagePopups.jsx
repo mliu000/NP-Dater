@@ -63,17 +63,21 @@ export function RenderDateNotInPuzzlePopup() {
 
 // Renders the unusually large instance popup
 export function RenderLargeInstancePopup() {
-    const { displayLargeInstancePopup, setDisplayLargeInstancePopup } = useContext(DisplayContext);
+    const { setMode, displayLargeInstancePopup, setDisplayLargeInstancePopup } = useContext(DisplayContext);
     const { board, tiles, dayOfMonth, month, dayOfWeek, dateFormat, solveTime } = useContext(PuzzleContext);
 
     const handleSolveClick = async () => {
-        setDisplayLargeInstancePopup(false);
         const dateList = [];
         if (dateFormat[0]) dateList.push(dayOfWeek);
         if (dateFormat[2]) dateList.push(month);
         if (dateFormat[1]) dateList.push(dayOfMonth);
-        const response = await solvePuzzle(tiles.current, board.current, dateList, solveTime);
-        console.log(response);
+        const response = await solvePuzzle(tiles.current, board.current, puzzleType, dateList, solveTime);
+        if (response === 1) {
+            setDisplayUnableToSolvePopup(true);
+        } else {
+            setMode('soln');
+        }
+        setDisplayLargeInstancePopup(false);
     }
 
     return (

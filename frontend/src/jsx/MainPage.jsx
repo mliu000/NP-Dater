@@ -9,9 +9,8 @@ import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import { sortDaysOfWeek } from '../utility/Utility.js';
 import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import { solvePuzzle, isDateOnPuzzle } from '../api/Solve.js';
-import {
-    RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup
-} from './MainPagePopups.jsx';
+import { RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup } from './MainPagePopups.jsx';
+import { RenderSolution, RenderSolnBackButton, RenderMainPageSolveTime } from './MainPageSoln.jsx';
 import '../css/MainPage.css';
 
 /* 
@@ -149,9 +148,8 @@ function RenderSavedMessage() {
 
 // Renders puzzle date 
 function RenderPuzzleDate() {
-    const { setDayOfMonth, setMonth, setDayOfWeek, totalCoordCount, tileCoordsCoverageCount
-    } = useContext(PuzzleContext);
-    const { dateFormat } = useContext(PuzzleContext);
+    const { setDayOfMonth, setMonth, setDayOfWeek, totalCoordCount, tileCoordsCoverageCount } = useContext(PuzzleContext);
+    const { dateFormat, noTiles } = useContext(PuzzleContext);
     const { mode } = useContext(DisplayContext);
 
     const dayOfWeekOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -165,52 +163,72 @@ function RenderPuzzleDate() {
         setDayOfWeek('Day of Week');
     }, [mode]);
 
+    let toRender = 'date';
+
+    if (tileCoordsCoverageCount !== totalCoordCount) {
+        toRender = 'mismatch';
+    }
+
+    if (noTiles < 3) {
+        toRender = 'noTiles';
+    }
+
     return (
         <>
             {mode === 'solve' &&
                 <>
-                    {totalCoordCount === tileCoordsCoverageCount ? (
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            position: 'absolute',
-                            right: '6%',
-                            top: '25%',
-                            gap: '1vh',
-                        }}>
-                            <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
-                                Solve For:
-                            </h2>
-                            {dateFormat[0] && <RenderDropDownMenu
-                                options={dayOfWeekOptions}
-                                message='Day of Week'
-                                setState={setDayOfWeek}
-                            />}
-                            {dateFormat[2] && <RenderDropDownMenu
-                                options={monthOptions}
-                                message='Month'
-                                setState={setMonth}
-                            />}
-                            {dateFormat[1] && <RenderDropDownMenu
-                                options={dayOfMonthOptions}
-                                message='Day of Month'
-                                setState={setDayOfMonth}
-                            />}
-                        </div>) : (
-                        <h2 style={{
-                            position: 'absolute',
-                            right: '4%',
-                            top: '25%',
-                            fontSize: '1.5vw',
-                            marginBottom: '1vh',
-                            width: '15%',
-                            color: 'red',
-                            textAlign: 'center'
-                        }}>
-                            Mismatch between tile coverage and total coords!
+                    {toRender === 'date' && <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        position: 'absolute',
+                        right: '6%',
+                        top: '25%',
+                        gap: '1vh',
+                    }}>
+                        <h2 style={{ fontSize: '2vw', marginBottom: '1vh', color: 'var(--header-color)' }}>
+                            Solve For:
                         </h2>
-                    )}
+                        {dateFormat[0] && <RenderDropDownMenu
+                            options={dayOfWeekOptions}
+                            message='Day of Week'
+                            setState={setDayOfWeek}
+                        />}
+                        {dateFormat[2] && <RenderDropDownMenu
+                            options={monthOptions}
+                            message='Month'
+                            setState={setMonth}
+                        />}
+                        {dateFormat[1] && <RenderDropDownMenu
+                            options={dayOfMonthOptions}
+                            message='Day of Month'
+                            setState={setDayOfMonth}
+                        />}
+                    </div>}
+                    {toRender === 'mismatch' && <h2 style={{
+                        position: 'absolute',
+                        right: '4%',
+                        top: '25%',
+                        fontSize: '1.5vw',
+                        marginBottom: '1vh',
+                        width: '15%',
+                        color: 'red',
+                        textAlign: 'center'
+                    }}>
+                        Mismatch between tile coverage and total coords!
+                    </h2>}
+                    {toRender === 'noTiles' && <h2 style={{
+                        position: 'absolute',
+                        right: '4%',
+                        top: '25%',
+                        fontSize: '1.5vw',
+                        marginBottom: '1vh',
+                        width: '15%',
+                        color: 'red',
+                        textAlign: 'center'
+                    }}>
+                        At least 3 tiles are required.
+                    </h2>}
                 </>
             }
         </>
@@ -320,8 +338,8 @@ function RenderPuzzleName() {
 
 // Render solve puzzle button
 function RenderSolvePuzzleButton() {
-    const { mode, setDisplayLargeInstancePopup, setDisplayUnableToSolvePopup, setDisplayDateNotInPuzzlePopup
-    } = useContext(DisplayContext);
+    const { setMode, mode, setDisplayLargeInstancePopup, setDisplayUnableToSolvePopup,
+        setDisplayDateNotInPuzzlePopup } = useContext(DisplayContext);
     const { board, tiles, dayOfMonth, month, dayOfWeek, totalCoordCount, dateFormat,
         tileCoordsCoverageCount, puzzleType, noTiles, solveTime } = useContext(PuzzleContext);
 
@@ -353,7 +371,7 @@ function RenderSolvePuzzleButton() {
             if (response === 1) {
                 setDisplayUnableToSolvePopup(true);
             } else {
-
+                setMode('soln');
             }
         }
 
@@ -479,6 +497,7 @@ function RenderMainPageLeftSideTileList() {
 function RenderCoordsCount() {
     const { totalCoordCount, tileCoordsCoverageCount, setTileCoordsCoverageCount,
         tileCoordList } = useContext(PuzzleContext);
+    const { mode } = useContext(DisplayContext);
 
     useEffect(() => {
         setTileCoordsCoverageCount(tileCoordList.reduce((acc, tile) => acc + tile.coords.length, 0));
@@ -486,34 +505,37 @@ function RenderCoordsCount() {
 
     return (
         <>
-            <h1 style={{
-                position: 'absolute',
-                left: '50%',
-                bottom: '5%',
-                width: '35%',
-                transform: 'translate(-50%)',
-                textAlign: 'center',
-                margin: '0',
-                fontSize: '2vw',
-                color: 'var(--header-color)',
-            }}>
-                {`Coords tiles cover: ${tileCoordsCoverageCount} cells`}
-            </h1>
-            <h1 style={{
-                position: 'absolute',
-                left: '50%',
-                bottom: '1%',
-                width: '35%',
-                transform: 'translate(-50%)',
-                textAlign: 'center',
-                margin: '0',
-                fontSize: '2vw',
-                color: 'var(--header-color)',
-            }}>
-                {`Total coords to cover: ${totalCoordCount} cells`}
-            </h1>
+            {mode !== 'soln' &&
+                <>
+                    <h1 style={{
+                        position: 'absolute',
+                        left: '50%',
+                        bottom: '5%',
+                        width: '35%',
+                        transform: 'translate(-50%)',
+                        textAlign: 'center',
+                        margin: '0',
+                        fontSize: '2vw',
+                        color: 'var(--header-color)',
+                    }}>
+                        {`Coords tiles cover: ${tileCoordsCoverageCount} cells`}
+                    </h1>
+                    <h1 style={{
+                        position: 'absolute',
+                        left: '50%',
+                        bottom: '1%',
+                        width: '35%',
+                        transform: 'translate(-50%)',
+                        textAlign: 'center',
+                        margin: '0',
+                        fontSize: '2vw',
+                        color: 'var(--header-color)',
+                    }}>
+                        {`Total coords to cover: ${totalCoordCount} cells`}
+                    </h1>
+                </>
+            }
         </>
-
     )
 }
 
@@ -540,8 +562,8 @@ function RenderMainPage() {
             <RenderLargeInstancePopup />
             <RenderUnableToSolvePopup />
             <RenderDateNotInPuzzlePopup />
-            <button onClick={() => console.log('Solve Time:', solveTime.current)}>Log Solve Time</button>
-            <button onClick={() => console.log('Tiles:', tiles.current)}>Log Tiles</button>
+            <RenderMainPageSolveTime />
+            <RenderSolnBackButton />
         </>
     );
 }

@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { calculateHexBounds } from '../model/HexBoard.js';
 import PuzzleContext from '../context/PuzzleContext.jsx';
 import DisplayContext from '../context/DisplayContext.jsx';
+import { RenderSolution } from './MainPageSoln.jsx';
 
 /*
 Mu Ye Liu - June 2025
@@ -131,6 +132,7 @@ function RenderGridBoard() {
             {board.current.gridCoords.map((coord, idx) => (
                 <RenderGridCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]} fontSize={fontSize} />
             ))}
+            <RenderSolution />
         </div>
 
     );

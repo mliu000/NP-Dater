@@ -15,7 +15,7 @@ endif
 
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -g
+CXXFLAGS = -std=c++11 -Wall -Wextra
 
 # Executable and object directory
 TARGET = main$(EXE_EXT)
