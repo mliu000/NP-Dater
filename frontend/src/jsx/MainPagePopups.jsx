@@ -60,6 +60,32 @@ export function RenderDateNotInPuzzlePopup() {
     )
 }
 
+// Renders the not saved popup
+export function RenderNotSavedPopup() {
+    const { notSavedPopup, setNotSavedPopup } = useContext(DisplayContext);
+
+    return (
+        <>
+            {notSavedPopup &&
+                <div className='popup-background' onClick={() => setNotSavedPopup(false)}>
+                    <div className='popup-wrapper' onClick={e => e.stopPropagation()}>
+                        <div className='popup-content'>
+                            <h1 style={{ color: 'var(--header-color)', fontSize: '3vw' }}>Unable to Save</h1>
+                            <h2 style={{ color: 'red' }}>
+                                Unable to save puzzle. Please try again later.
+                            </h2>
+                            <button className="typical-button" style={{
+                                width: '50%'
+                            }} onClick={() => setNotSavedPopup(false)}>
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>}
+        </>
+    )
+}
+
 
 // Renders the unusually large instance popup
 export function RenderLargeInstancePopup() {

@@ -16,11 +16,11 @@ router.post("/save", async (req, res) => {
     }
 
     try {
-        await savePuzzle(pname, ptype, JSON.parse(pjson));
-        res.status(200).send("Puzzle saved successfully");
+        await savePuzzle(pname, ptype, pjson);
+        res.status(200).json({ message: "Puzzle saved successfully" });
     } catch (error) {
         console.error("Error saving puzzle:", error);
-        res.status(500).send("Error saving puzzle");
+        res.status(500).json({ error: "Failed to save puzzle" });
     }
 
 });

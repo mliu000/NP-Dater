@@ -9,8 +9,12 @@ import DisplayContext, { DisplayProvider } from '../context/DisplayContext.jsx';
 import { sortDaysOfWeek } from '../utility/Utility.js';
 import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import { solvePuzzle, isDateOnPuzzle } from '../api/Solve.js';
-import { RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup } from './MainPagePopups.jsx';
+import {
+    RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup,
+    RenderNotSavedPopup
+} from './MainPagePopups.jsx';
 import { RenderSolnBackButton, RenderMainPageSolveTime } from './MainPageSoln.jsx';
+import { savePuzzle } from '../api/Persistence.js';
 import '../css/MainPage.css';
 
 /* 
@@ -274,17 +278,25 @@ function RenderChoosePuzzleButton() {
 
 // Renders the save solution 
 function RenderSaveButton() {
-    const { setSaved, setCurrX, setCurrY } = useContext(PuzzleContext);
-    const { mode, setMode, setDisplaySetCoordPopup } = useContext(DisplayContext);
+    const { setSaved, setCurrX, setCurrY, tiles, board, puzzleType, puzzleName, dateFormat,
+        hexagonOrientation, totalNoTileCreatedHistory } = useContext(PuzzleContext);
+    const { mode, setMode, setDisplaySetCoordPopup, setNotSavedPopup } = useContext(DisplayContext);
 
-    const handleSavePuzzleClick = () => {
-        setSaved(true);
+    const handleSavePuzzleClick = async () => {
+        const savable = await savePuzzle(tiles, board, puzzleType, puzzleName, hexagonOrientation, 
+            totalNoTileCreatedHistory, dateFormat);
+        if (savable) {
+            setSaved(true);
+        } else {
+            setNotSavedPopup(true);
+        }
         setDisplaySetCoordPopup(false);
         setMode('solve');
         setCurrX(null); setCurrY(null);
     }
 
     const handleEditPuzzleClick = () => {
+        setSaved(false);
         setMode('edit');
     }
 
@@ -564,6 +576,7 @@ function RenderMainPage() {
             <RenderDateNotInPuzzlePopup />
             <RenderMainPageSolveTime />
             <RenderSolnBackButton />
+            <RenderNotSavedPopup />
         </>
     );
 }

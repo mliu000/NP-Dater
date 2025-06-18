@@ -1,3 +1,4 @@
+import { apiRequest } from './Requests';
 /*
 Mu Ye Liu - June 2025
 
@@ -5,7 +6,8 @@ Represents the Persistence API for handling puzzle persistence operations
 */
 
 // Saves the puzzle. Returns true if successful, false if not.
-export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName) {
+export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName, hexagonOrientation,
+    totalNoTileCreatedHistory, dateFormat) {
     // Start by converting the objects to a json string
 
     const tilesJson = listOfTiles.current.map(tile => ({
@@ -13,14 +15,16 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName) {
         coords: tile.coords.map(coord => ({
             x: coord[0],
             y: coord[1]
-        }))
+        })),
+        color: tile.color,
     }));
 
     const boardJson = puzzleType === 'grid' ? {
         type: 0,
         width: board.current.width,
         height: board.current.height,
-        radius: 0,
+        dateFormat: dateFormat,
+        totalNoTileCreatedHistory: totalNoTileCreatedHistory,
         gridCoords: board.current.gridCoords.map(c => ({
             coord: {
                 x: c.Coord[0],
@@ -30,9 +34,10 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName) {
         }))
     } : {
         type: 1,
-        width: 0,
-        height: 0,
         radius: board.current.radius,
+        hexagonOrientation: hexagonOrientation,
+        dateFormat: dateFormat,
+        totalNoTileCreatedHistory: totalNoTileCreatedHistory.current,
         hexCoords: board.current.hexCoords.map(c => ({
             coord: {
                 x: c.Coord[0],
@@ -47,7 +52,7 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName) {
         board: boardJson
     };
 
-    const jsonString = {
+    const jsonInput = {
         pname: puzzleName,
         ptype: puzzleType === 'grid' ? 0 : 1,
         pjson: puzzleJson
@@ -56,7 +61,7 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName) {
     // Make the API request
 
     try {
-        await apiRequest('/persistence/save', 'POST', jsonString);
+        await apiRequest('/mysql/save', 'POST', jsonInput);
         return true;
     } catch (err) {
         console.error("Error saving puzzle:", err);
