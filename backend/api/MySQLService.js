@@ -60,7 +60,7 @@ async function getSpecificPuzzle(puzzleName) {
 
     try {
         const query = `
-            SELECT puzzle_name, puzzle_data, date_created 
+            SELECT puzzle_name, puzzle_data
             FROM Puzzles 
             WHERE puzzle_name = ?`;
 
@@ -72,8 +72,7 @@ async function getSpecificPuzzle(puzzleName) {
 
         return {
             puzzleName: rows[0].puzzle_name,
-            puzzleData: JSON.parse(rows[0].puzzle_data),
-            dateCreated: rows[0].date_created
+            puzzleData: JSON.parse(rows[0].puzzle_data)
         };
     } catch (error) {
         console.error("Error fetching specific puzzle:", error);

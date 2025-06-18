@@ -80,3 +80,14 @@ export async function getAllPuzzleInfo() {
         return [];
     }
 }
+
+// Gets the specific puzzle by name
+export async function getSpecificPuzzle(puzzleName) {
+    try {
+        const data = await getRequest(`/mysql/getSpecificPuzzle/${puzzleName}`);
+        return data;
+    } catch (err) {
+        console.error("Error fetching specific puzzle:", err);
+        return null;
+    }
+}

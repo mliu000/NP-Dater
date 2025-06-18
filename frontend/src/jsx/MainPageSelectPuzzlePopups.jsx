@@ -4,6 +4,7 @@ import DisplayContext from '../context/DisplayContext';
 import GridBoard from '../model/GridBoard';
 import HexBoard from '../model/HexBoard';
 import { getAllPuzzleInfo } from '../api/Persistence';
+import { loadExistingPuzzle, resetContextToDefault } from '../load/LoadExistingPuzzle';
 
 /*
 Mu Ye Liu - June 2025
@@ -207,6 +208,8 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
+    const puzzleCxt = useContext(PuzzleContext);
+    const displayCxt = useContext(DisplayContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -216,10 +219,8 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
         fetchData();
     }, []);
 
-    const handlePuzzleClick = (puzzleName) => {
-        // Handle the puzzle selection
-        console.log("Selected puzzle:", puzzleName);
-        setDisplayedPopup('');
+    const handlePuzzleClick = async (puzzleName) => {
+        await loadExistingPuzzle(puzzleName, puzzleCxt, displayCxt);
     };
 
     return (
@@ -276,13 +277,8 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
-    const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
-        setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
-        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount,
-        tiles, setTileCoordList, totalNoTileCreatedHistory, setNoTiles
-    } = useContext(PuzzleContext);
-
-    const { setMode } = useContext(DisplayContext);
+    const puzzleCxt = useContext(PuzzleContext);
+    const displayCxt = useContext(DisplayContext);
 
     const [localConfig, setLocalConfig] = useState({
         type: '',
@@ -312,56 +308,55 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     }, [localConfig.type]);
 
     const handleClick = () => {
+        resetContextToDefault(displayCxt, puzzleCxt);
         // Initialize the board
         if (localConfig.type === 'grid') {
-            board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
-            const specialAttributes = board.current.gridCoords.map(coord => ({
+            puzzleCxt.board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
+            const specialAttributes = puzzleCxt.board.current.gridCoords.map(coord => ({
                 Coord: coord.Coord,
                 specialAttribute: coord.specialAttribute
             }));
-            setCoordSpecialAttributes(specialAttributes);
+            puzzleCxt.setCoordSpecialAttributes(specialAttributes);
         } else if (localConfig.type === 'hex') {
-            board.current = new HexBoard(parseInt(localConfig.hexRadius));
-            const specialAttributes = board.current.hexCoords.map(coord => ({
+            puzzleCxt.board.current = new HexBoard(parseInt(localConfig.hexRadius));
+            const specialAttributes = puzzleCxt.board.current.hexCoords.map(coord => ({
                 Coord: coord.Coord,
                 specialAttribute: coord.specialAttribute
             }));
-            setCoordSpecialAttributes(specialAttributes);
+            puzzleCxt.setCoordSpecialAttributes(specialAttributes);
         }
 
         // Initialize attribute options
         if (localConfig.dateFormat[0]) {
             const dayOfWeekOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            attributeOptionsRemaining.current.push(...dayOfWeekOptions);
+            puzzleCxt.attributeOptionsRemaining.current.push(...dayOfWeekOptions);
         }
         if (localConfig.dateFormat[2]) {
             const monthOptions = ['January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'];
-            attributeOptionsRemaining.current.push(...monthOptions);
+            puzzleCxt.attributeOptionsRemaining.current.push(...monthOptions);
         }
         if (localConfig.dateFormat[1]) {
             const dayOfMonthOptions = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-            attributeOptionsRemaining.current.push(...dayOfMonthOptions);
+            puzzleCxt.attributeOptionsRemaining.current.push(...dayOfMonthOptions);
         }
 
         // Initialize the useStates
-        setRenderBoard(true);
-        setDisplayedPopup('');
-        setPuzzleName(localConfig.name);
-        setPuzzleType(localConfig.type);
-        setGridWidth(localConfig.gridWidth);
-        setGridHeight(localConfig.gridHeight);
-        setHexRadius(localConfig.hexRadius);
-        setHexagonOrientation(localConfig.hexagonOrientation);
-        setDateFormat(localConfig.dateFormat);
-        setSaved(false);
-        setMode('edit');
-        setTotalCoordCount((board.current.gridCoords ? board.current.gridCoords.length : board.current.hexCoords.length)
+        // Update the syntax to use displayCxt and puzzleCxt
+        // Remove redundant ones
+        displayCxt.setMode('edit');
+        displayCxt.setDisplayedPopup('');
+
+        puzzleCxt.setRenderBoard(true);
+        puzzleCxt.setPuzzleName(localConfig.name);
+        puzzleCxt.setPuzzleType(localConfig.type);
+        puzzleCxt.setGridWidth(localConfig.gridWidth);
+        puzzleCxt.setGridHeight(localConfig.gridHeight);
+        puzzleCxt.setHexRadius(localConfig.hexRadius);
+        puzzleCxt.setHexagonOrientation(localConfig.hexagonOrientation);
+        puzzleCxt.setDateFormat(localConfig.dateFormat);
+        puzzleCxt.setTotalCoordCount((puzzleCxt.board.current.gridCoords ? puzzleCxt.board.current.gridCoords.length : puzzleCxt.board.current.hexCoords.length)
             - localConfig.dateFormat.filter(format => format).length);
-        setTileCoordList([]);
-        tiles.current = [];
-        totalNoTileCreatedHistory.current = 0;
-        setNoTiles(0);
     };
 
     return (

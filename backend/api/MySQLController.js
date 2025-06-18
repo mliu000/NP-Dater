@@ -35,4 +35,23 @@ router.get("/getAllPuzzleInfo", async (req, res) => {
     }
 });
 
+router.get("/getSpecificPuzzle/:puzzleName", async (req, res) => {
+    const puzzleName = req.params.puzzleName;
+
+    if (!puzzleName) {
+        return res.status(400).send("Missing required field: puzzleName");
+    }
+
+    try {
+        const puzzle = await getSpecificPuzzle(puzzleName);
+        if (!puzzle) {
+            return res.status(404).json({ error: "Puzzle not found" });
+        }
+        res.status(200).json(puzzle);
+    } catch (error) {
+        console.error("Error fetching specific puzzle:", error);
+        res.status(500).json({ error: "Failed to fetch specific puzzle" });
+    }
+});
+
 module.exports = router;
