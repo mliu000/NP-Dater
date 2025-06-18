@@ -14,7 +14,7 @@ function RenderSolutionGrid() {
     return (
         <>
             {tiles.current.map((tile) =>
-                tile.coords.map((coord) => (
+                tile.soln.map((coord) => (
                     <div
                         key={`Soln_${tile.id}_${coord[0]}_${coord[1]}`}
                         style={{
