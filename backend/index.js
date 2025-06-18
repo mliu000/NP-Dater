@@ -7,11 +7,13 @@ const mysql = require('mysql2/promise');
 const app = express();
 const PORT = 3001;
 
-const apiRoute = require("./api/ApiController");
+const solverRoute = require("./api/SolverController");
+const mysqlRoute = require("./api/MySQLController");
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", apiRoute);
+app.use("/solver", solverRoute);
+app.use("/mysql", mysqlRoute);
 
 async function initializeDatabase() {
 	try {
@@ -39,11 +41,11 @@ async function startServer() {
 		await initializeDatabase();
 
 		app.listen(PORT, () => {
-			console.log(`Server running on http://localhost:${PORT}`);
+			console.log(`Server running at http://localhost:${PORT}`);
 		});
 	} catch (err) {
 		console.error('Server startup failed.');
-		process.exit(1); // Gracefully exit if DB fails
+		process.exit(1);
 	}
 }
 

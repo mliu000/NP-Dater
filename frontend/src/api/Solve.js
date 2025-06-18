@@ -77,7 +77,7 @@ export async function solvePuzzle(listOfTiles, board, type, date, solveTime) {
     const jsonInput = setupJsonString(listOfTiles, board, type, date);
 
     try {
-        const response = await fetch('/api/solve', {
+        const response = await fetch('/solver/solve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(jsonInput)

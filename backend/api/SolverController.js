@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { callSolver } = require("./ApiService");
+const { callSolver } = require("./SolverService");
 
 router.post("/solve", async (req, res) => {
   try {
