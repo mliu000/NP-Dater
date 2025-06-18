@@ -1,8 +1,9 @@
-import { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PuzzleContext from '../context/PuzzleContext';
 import DisplayContext from '../context/DisplayContext';
 import GridBoard from '../model/GridBoard';
 import HexBoard from '../model/HexBoard';
+import { getAllPuzzleInfo } from '../api/Persistence';
 
 /*
 Mu Ye Liu - June 2025
@@ -205,10 +206,59 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 ///// RENDER FUNCTIONS /////
 
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
+    const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const allPuzzleInfo = await getAllPuzzleInfo();
+            setListOfPuzzleInfo(allPuzzleInfo);
+        };
+        fetchData();
+    }, []);
+
+    const handlePuzzleClick = (puzzleName) => {
+        // Handle the puzzle selection
+        console.log("Selected puzzle:", puzzleName);
+        setDisplayedPopup('');
+    };
+
     return (
         <RenderPopupTemplate
             title="Existing Puzzles:"
-            arbitrary={null}
+            arbitrary={
+                <div className='three-col-list' style={{ width: '100%' }}>
+                    <h2>Name</h2>
+                    <h2>Type</h2>
+                    <h2>Date</h2>
+                    {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
+                        <React.Fragment key={idx}>
+                            <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{
+                                marginTop: '0.2vh',
+                                marginBottom: '0.2vh',
+                                padding: '0',
+                                textAlign: 'center',
+                                color: 'blue',
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                            }}>{puzzle.puzzleName}</h3>
+                            <h3 style={{
+                                marginTop: '0.2vh',
+                                marginBottom: '0.2vh',
+                                textAlign: 'center',
+                                color: 'var(--text-color)',
+                            }}>{puzzle.puzzleType}</h3>
+                            <h3 style={{
+                                marginTop: '0.2vh',
+                                marginBottom: '0.2vh',
+                                textAlign: 'center',
+                                color: 'var(--text-color)',
+                            }}>{puzzle.dateCreated}</h3>
+                        </React.Fragment>
+                    )) : (
+                        <p>No puzzles found.</p>
+                    )}
+                </div>
+            }
             buttons={[
                 {
                     label: "Select",
@@ -226,7 +276,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
 
     const { setRenderBoard, setPuzzleName, setSaved, setPuzzleType, setGridWidth,
         setGridHeight, setHexRadius, setHexagonOrientation, setDateFormat, board,
-        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount, 
+        setCoordSpecialAttributes, attributeOptionsRemaining, setTotalCoordCount,
         tiles, setTileCoordList, totalNoTileCreatedHistory, setNoTiles
     } = useContext(PuzzleContext);
 
@@ -306,9 +356,9 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         setMode('edit');
         setTotalCoordCount((board.current.gridCoords ? board.current.gridCoords.length : board.current.hexCoords.length)
             - localConfig.dateFormat.filter(format => format).length);
-        setTileCoordList([]); 
-        tiles.current = []; 
-        totalNoTileCreatedHistory.current = 0; 
+        setTileCoordList([]);
+        tiles.current = [];
+        totalNoTileCreatedHistory.current = 0;
         setNoTiles(0);
     };
 

@@ -271,3 +271,14 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+.three-col-list {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr;
+}
+
+.three-col-list h2 {
+    font-size: 2vw;
+    text-decoration: underline;
+    gap: 0.5vh;
+}

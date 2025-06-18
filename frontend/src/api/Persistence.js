@@ -1,4 +1,4 @@
-import { apiRequest } from './Requests';
+import { postRequest, getRequest } from './Requests';
 /*
 Mu Ye Liu - June 2025
 
@@ -61,11 +61,22 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName, hex
     // Make the API request
 
     try {
-        await apiRequest('/mysql/save', 'POST', jsonInput);
+        await postRequest('/mysql/save', jsonInput);
         return true;
     } catch (err) {
         console.error("Error saving puzzle:", err);
         return false;
     }
 
+}
+
+// Gets all the puzzle info
+export async function getAllPuzzleInfo() {
+    try {
+        const data = await getRequest('/mysql/getAllPuzzleInfo');
+        return data;
+    } catch (err) {
+        console.error("Error fetching puzzle info:", err);
+        return [];
+    }
 }

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { savePuzzle } = require("./MySQLService");
+const { savePuzzle, getAllPuzzleInfo } = require("./MySQLService");
 
 /*
 Mu Ye Liu - June 2025
@@ -23,6 +23,16 @@ router.post("/save", async (req, res) => {
         res.status(500).json({ error: "Failed to save puzzle" });
     }
 
+});
+
+router.get("/getAllPuzzleInfo", async (req, res) => {
+    try {
+        const puzzles = await getAllPuzzleInfo();
+        res.status(200).json(puzzles);
+    } catch (error) {
+        console.error("Error fetching all puzzle info:", error);
+        res.status(500).json({ error: "Failed to fetch all puzzle info" });
+    }
 });
 
 module.exports = router;

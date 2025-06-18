@@ -1,4 +1,4 @@
-import { apiRequest } from "./Requests";
+import { postRequest } from "./Requests";
 /*
 Mu Ye Liu - June 2025
 
@@ -78,7 +78,7 @@ export async function solvePuzzle(listOfTiles, board, type, date, solveTime) {
     const jsonInput = setupJsonString(listOfTiles, board, type, date);
 
     try {
-        const data = await apiRequest('/solver/solve', 'POST', jsonInput);
+        const data = await postRequest('/solver/solve', jsonInput);
 
         // Populate the solve time and and solution tiles
         solveTime.current = data.timeToSolve;
