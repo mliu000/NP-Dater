@@ -10,7 +10,7 @@ import { sortDaysOfWeek } from '../utility/Utility.js';
 import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import { solvePuzzle, isDateOnPuzzle } from '../api/Solve.js';
 import { RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup } from './MainPagePopups.jsx';
-import { RenderSolution, RenderSolnBackButton, RenderMainPageSolveTime } from './MainPageSoln.jsx';
+import { RenderSolnBackButton, RenderMainPageSolveTime } from './MainPageSoln.jsx';
 import '../css/MainPage.css';
 
 /* 

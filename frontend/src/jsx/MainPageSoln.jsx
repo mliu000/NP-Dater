@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useContext } from 'react';
 import DisplayContext from '../context/DisplayContext';
 import PuzzleContext from '../context/PuzzleContext';
 /*
@@ -7,52 +7,77 @@ Mu Ye Liu - June 2025
 Represents the MainPageSoln component for displaying the solution to a puzzle
 */
 
-// Renders the solution for grid puzzles
-function RenderSolutionGrid() {
-    const { tiles } = useContext(PuzzleContext);
-
-    return (
-        <>
-            {tiles.current.map((tile) =>
-                tile.soln.map((coord) => (
-                    <div
-                        key={`Soln_${tile.id}_${coord[0]}_${coord[1]}`}
-                        style={{
-                            gridColumn: coord[0] + 1,
-                            gridRow: coord[1] + 1,
-                            backgroundColor: tile.color,
-                            boxSizing: 'border-box',
-                            boxShadow: '0 0 0.2vw var(--box-shadow-color)',
-                        }}
-                    />
-                ))
-            )}
-        </>
-    );
-}
-
 // Renders the solution for hex puzzles
-
-function RenderSolutionHex() {
-    const { board, tiles } = useContext(PuzzleContext);
-
-    return (
-        <></>
-    );
-}
-
-// Renders the solution on the board
-// REQUIRES: Must be called in the same component as the board
-export function RenderSolution() {
-    const { puzzleType } = useContext(PuzzleContext);
+export function RenderHexSolution({ tileWidth, bounds, aspectRatio }) {
+    const { tiles } = useContext(PuzzleContext);
     const { mode } = useContext(DisplayContext);
 
     return (
         <>
             {mode === 'soln' &&
                 <>
-                    {puzzleType === 'grid' ? (<RenderSolutionGrid />) : (<RenderSolutionHex />)}
+                    {tiles.current.map((tile) =>
+                        tile.soln.map((coord) => {
+                            const x = coord[0];
+                            const y = coord[1];
+
+                            const z = -x - y;
+                            const offsetX = x + z / 2;
+
+                            const relativeX = offsetX - bounds.minOffsetX;
+                            const relativeY = z - bounds.minZ;
+
+                            const left = (relativeX / (bounds.maxOffsetX - bounds.minOffsetX + 1)) * 100;
+                            const top = relativeY * (tileWidth * aspectRatio * (Math.sqrt(3) / 2));
+
+                            return (
+                                <div
+                                    key={`Soln_${tile.id}_${x}_${y}`}
+                                    className="hexagon"
+                                    style={{
+                                        position: 'absolute',
+                                        left: `${left}%`,
+                                        top: `${top}%`,
+                                        width: `${tileWidth}%`,
+                                        backgroundColor: tile.color,
+                                        filter: 'drop-shadow(0 0 0.2vw var(--box-shadow-color))',
+                                        zIndex: '100',
+                                    }}
+                                />
+                            );
+                        })
+
+                    )}
                 </>}
+        </>
+    );
+}
+
+// Renders the solution on the board
+// REQUIRES: Must be called in the same component as the board
+export function RenderGridSolution() {
+    const { tiles } = useContext(PuzzleContext);
+    const { mode } = useContext(DisplayContext);
+
+    return (
+        <>
+            {mode === 'soln' && (
+                tiles.current.map((tile) =>
+                    tile.soln.map((coord) => (
+                        <div
+                            key={`Soln_${tile.id}_${coord[0]}_${coord[1]}`}
+                            style={{
+                                gridColumn: coord[0] + 1,
+                                gridRow: coord[1] + 1,
+                                backgroundColor: tile.color,
+                                boxSizing: 'border-box',
+                                boxShadow: '0 0 0.2vw var(--box-shadow-color)',
+                                zIndex: '100',
+                            }}
+                        />
+                    ))
+                )
+            )}
         </>
     );
 }

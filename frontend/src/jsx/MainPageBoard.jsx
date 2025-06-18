@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { calculateHexBounds } from '../model/HexBoard.js';
 import PuzzleContext from '../context/PuzzleContext.jsx';
 import DisplayContext from '../context/DisplayContext.jsx';
-import { RenderSolution } from './MainPageSoln.jsx';
+import { RenderGridSolution, RenderHexSolution } from './MainPageSoln.jsx';
 
 /*
 Mu Ye Liu - June 2025
@@ -132,7 +132,7 @@ function RenderGridBoard() {
             {board.current.gridCoords.map((coord, idx) => (
                 <RenderGridCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]} fontSize={fontSize} />
             ))}
-            <RenderSolution />
+            <RenderGridSolution />
         </div>
 
     );
@@ -168,6 +168,7 @@ function RenderHexBoard() {
                 <RenderHexCoord key={idx} x={coord.Coord[0]} y={coord.Coord[1]}
                     angle={angle} tileWidth={tileWidth} bounds={bounds} aspectRatio={aspectRatio} fontSize={fontSize} />
             ))}
+            <RenderHexSolution tileWidth={tileWidth} bounds={bounds} aspectRatio={aspectRatio} />
         </div>
 
     );
