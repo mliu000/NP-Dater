@@ -38,7 +38,7 @@ function createHexTiles(hexTilesCoords, hexTileColours) {
 ///// RENDER FUNCTIONS /////
 
 // Renders the rotating grid tiles
-function renderGridTiles(tiles, placements) {
+function RenderGridTiles({ tiles, placements }) {
     return tiles.map(({ tile, bounds }, idx) => (
         <div key={tile.id} className='rotating-tile-infinite-clockwise' style={{
             position: 'absolute',
@@ -60,7 +60,7 @@ function renderGridTiles(tiles, placements) {
                         key={`${tile.id}_${x}_${y}`}
                         style={{
                             gridColumn: gridCol,
-                            gridRow:    gridRow,
+                            gridRow: gridRow,
                             backgroundColor: tile.color,
                             boxSizing: 'border-box',
                             boxShadow: '0 0 0.2vw var(--box-shadow-color)',
@@ -73,11 +73,11 @@ function renderGridTiles(tiles, placements) {
 }
 
 // Helper function to render hex tiles
-function renderHexTiles(tiles, placements) {
+function RenderHexTiles({ tiles, placements }) {
     return tiles.map(({ tile, bounds }, idx) => {
         const width = (bounds.maxOffsetX - bounds.minOffsetX + 1) * 4;
         const height = (bounds.maxZ - bounds.minZ + 1) * 4 * (2 * Math.sqrt(3) / 3) -
-                        (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
+            (bounds.maxZ - bounds.minZ) * 4 * (Math.sqrt(3) / 6);
         const aspectRatio = width / height;
         return <div key={tile.id} className='rotating-tile-infinite-counter-clockwise' style={{
             position: 'absolute',
@@ -98,7 +98,7 @@ function renderHexTiles(tiles, placements) {
                 const left = (relativeX / (bounds.maxOffsetX - bounds.minOffsetX + 1)) * 100;
                 const width = 100 / (bounds.maxOffsetX - bounds.minOffsetX + 1);
                 // Height relative to height: width * aspectRatio * (2 * Math.sqrt(3) / 3)
-                const top  = relativeY * (width * aspectRatio * (Math.sqrt(3) / 2));
+                const top = relativeY * (width * aspectRatio * (Math.sqrt(3) / 2));
 
                 return (
                     <div
@@ -121,12 +121,12 @@ function renderHexTiles(tiles, placements) {
 // Refactored SetUpBackgroundTiles function
 function SetUpBackgroundTiles() {
     const gridTileCoords = [[[0, 0], [1, 0], [0, 1], [1, 1]],
-                            [[0, 0], [1, 0], [1, 1], [1, 2]],
-                            [[0, 0], [1, 0], [1, 1], [1, 2], [0, 2]]]; 
+    [[0, 0], [1, 0], [1, 1], [1, 2]],
+    [[0, 0], [1, 0], [1, 1], [1, 2], [0, 2]]];
     const gridTileColours = ['green', 'red', 'yellow', 'orange'];
     const hexTilesCoords = [[[0, 0], [0, 1], [1, 0], [2, 0]],
-                            [[0, 0], [0, -1], [-1, -1], [-1, -2]],
-                            [[0, 0], [0, -1], [-1, -1], [-2, 0]]];
+    [[0, 0], [0, -1], [-1, -1], [-1, -2]],
+    [[0, 0], [0, -1], [-1, -1], [-2, 0]]];
     const hexTileColours = ['blue', 'gray', 'turquoise', 'magenta'];
 
     const gridTilePlacement = [[12, 10], [12, 37], [12, 70]];
@@ -137,8 +137,8 @@ function SetUpBackgroundTiles() {
 
     return (
         <div>
-            {renderGridTiles(gridTiles, gridTilePlacement)}
-            {renderHexTiles(hexTiles, hexTilePlacement)}
+            <RenderGridTiles tiles={gridTiles} placements={gridTilePlacement} />
+            <RenderHexTiles tiles={hexTiles} placements={hexTilePlacement} />
         </div>
     );
 }
@@ -155,8 +155,8 @@ function SetUpTitle() {
                 transform: 'translate(-50%)',
                 margin: '0',
                 textAlign: 'center',
-                textDecoration: 'dashed underline' 
-        }}>
+                textDecoration: 'dashed underline'
+            }}>
             NP-Dater
         </h1>
     );
@@ -207,7 +207,7 @@ function SetUpSlogan() {
                 margin: '0',
                 textAlign: 'center',
                 color: 'var(--header-color)',
-        }}>
+            }}>
             Tired of spending hours on a date puzzle? NP-Dater to the rescue!
         </h1>
     );
@@ -222,15 +222,14 @@ export default function FrontPage() {
     useEffect(() => {
         // Set the page title
         document.title = 'NP-Dater - Front Page';
-    }
-    , []);
+    }, []);
 
     return (
         <>
-            <SetUpTitle/>
-            <SetUpBackgroundTiles/>
-            <SetUpMainButtons/>
-            <SetUpSlogan/>
+            <SetUpTitle />
+            <SetUpBackgroundTiles />
+            <SetUpMainButtons />
+            <SetUpSlogan />
         </>
     );
 }

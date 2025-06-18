@@ -238,20 +238,22 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
                                 padding: '0',
                                 textAlign: 'center',
                                 color: 'blue',
-                                textDecoration: 'underline',
                                 cursor: 'pointer',
+                                fontSize: '1.5vw',
                             }}>{puzzle.puzzleName}</h3>
                             <h3 style={{
                                 marginTop: '0.2vh',
                                 marginBottom: '0.2vh',
                                 textAlign: 'center',
                                 color: 'var(--text-color)',
-                            }}>{puzzle.puzzleType}</h3>
+                                fontSize: '1.5vw',
+                            }}>{puzzle.puzzleType === 0 ? 'Grid' : 'Hex'}</h3>
                             <h3 style={{
                                 marginTop: '0.2vh',
                                 marginBottom: '0.2vh',
                                 textAlign: 'center',
                                 color: 'var(--text-color)',
+                                fontSize: '1.5vw',
                             }}>{puzzle.dateCreated}</h3>
                         </React.Fragment>
                     )) : (

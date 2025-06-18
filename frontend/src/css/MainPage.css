@@ -274,7 +274,7 @@
 
 .three-col-list {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr;
+    grid-template-columns: 2fr 1fr 1.3fr;
 }
 
 .three-col-list h2 {
