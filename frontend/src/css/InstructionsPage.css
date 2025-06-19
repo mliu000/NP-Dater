@@ -1,0 +1,39 @@
+/* Represents styles specifically used for my instructions page. */
+
+.instructions-page {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: top;
+    width: 65%;
+    height: 92%;
+    padding: 2vw;
+    overflow: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer and Edge */
+}
+
+.instructions-page h1 {
+    font-size: 4vw;
+    color: white;
+    text-shadow: 0 0 0.3vw var(--black-color);
+    text-decoration: underline;
+}
+
+.instructions-page p {
+    font-size: 1.2vw;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.instructions-page h2 {
+    font-size: 3vw;
+    color: lightgray;
+    text-shadow: 0 0 0.2vw var(--black-color);
+}
+
+.instructions-page h3 {
+    font-size: 2vw;
+    color: rgb(71, 71, 71);
+    text-shadow: 0 0 0.2vw var(--black-color);
+}
