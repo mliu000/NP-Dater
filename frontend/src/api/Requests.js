@@ -39,3 +39,20 @@ export async function getRequest(url) {
         throw err;
     }
 }
+
+export async function deleteRequest(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('Response was not ok');
+
+        const data = await response.json();
+
+        return data;
+    } catch (err) {
+        throw err;
+    }
+}

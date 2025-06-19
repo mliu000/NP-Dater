@@ -1,4 +1,4 @@
-import { postRequest, getRequest } from './Requests';
+import { postRequest, getRequest, deleteRequest } from './Requests';
 /*
 Mu Ye Liu - June 2025
 
@@ -89,5 +89,15 @@ export async function getSpecificPuzzle(puzzleName) {
     } catch (err) {
         console.error("Error fetching specific puzzle:", err);
         return null;
+    }
+}
+
+export async function deletePuzzle(puzzleName) {
+    try {
+        await deleteRequest(`/mysql/deletePuzzle/${puzzleName}`);
+        return true;
+    } catch (err) {
+        console.error("Error deleting puzzle:", err);
+        return false;
     }
 }

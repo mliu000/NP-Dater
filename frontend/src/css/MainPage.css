@@ -311,22 +311,23 @@
 .slider::before {
     position: absolute;
     content: "";
-    height: 22px;
-    width: 22px;
-    left: 3px;
-    bottom: 3px;
+    width: 40%;              /* relative to slider width */
+    height: 75%;             /* relative to slider height */
+    left: 6%;
+    bottom: 12.5%;
     background-color: white;
     transition: transform 0.4s;
     border-radius: 50%;
-    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
+
 
 .rocker-switch input:checked + .slider {
     background-color: #ec6666;
 }
 
 .rocker-switch input:checked + .slider::before {
-    transform: translateX(22px);
+    transform: translateX(118%);
 }
 
 .horizontal-flex {

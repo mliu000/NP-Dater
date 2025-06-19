@@ -81,4 +81,22 @@ async function getSpecificPuzzle(puzzleName) {
     }
 }
 
-module.exports = { savePuzzle, getAllPuzzleInfo, getSpecificPuzzle };
+// Deletes the puzzle 
+async function deletePuzzle(puzzleName) {
+    const connection = await mysql.getConnection();
+
+    try {
+        const query = `
+            DELETE FROM Puzzles 
+            WHERE puzzle_name = ?`;
+
+        return await connection.execute(query, [puzzleName]);
+    } catch (error) {
+        console.error("Error deleting puzzle:", error);
+        throw error;
+    } finally {
+        connection.release();
+    }
+}
+
+module.exports = { savePuzzle, getAllPuzzleInfo, getSpecificPuzzle, deletePuzzle };

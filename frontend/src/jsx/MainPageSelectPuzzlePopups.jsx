@@ -3,9 +3,8 @@ import PuzzleContext from '../context/PuzzleContext';
 import DisplayContext from '../context/DisplayContext';
 import GridBoard from '../model/GridBoard';
 import HexBoard from '../model/HexBoard';
-import { getAllPuzzleInfo } from '../api/Persistence';
 import { loadExistingPuzzle, resetContextToDefault } from '../load/LoadExistingPuzzle';
-import { getSpecificPuzzle } from '../api/Persistence';
+import { getSpecificPuzzle, getAllPuzzleInfo, deletePuzzle } from '../api/Persistence';
 
 /*
 Mu Ye Liu - June 2025
@@ -212,9 +211,65 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 
 ///// RENDER FUNCTIONS /////
 
+function RenderDeletePuzzlePopup({ puzzleToDelete, setListOfPuzzleInfo, setRenderDeletePopup }) {
+    const handleClick = async () => {
+        await deletePuzzle(puzzleToDelete);
+        const updatedPuzzleInfo = await getAllPuzzleInfo();
+        setListOfPuzzleInfo(updatedPuzzleInfo);
+        setRenderDeletePopup(false);
+    };
+
+    return (
+        <div className="popup-background">
+            <div className="popup-wrapper">
+                <div className="popup-content">
+                    <h1 style={{
+                        textDecoration: 'underline',
+                        textAlign: 'center',
+                        color: 'var(--header-color)',
+                        fontSize: '4vw',
+                        marginBottom: '1vh',
+                    }}>
+                        Delete Puzzle?
+                    </h1>
+                    <h2 style={{ color: 'red', fontSize: '2vw' }}>
+                        Are you sure you want to delete the puzzle "{puzzleToDelete}"? This action cannot be undone.
+                    </h2>
+                    <button
+                        className="typical-button"
+                        style={{
+                            width: '80%',
+                            height: '7vw',
+                            marginBottom: '1vh',
+                            fontSize: '2vw'
+                        }}
+                        onClick={handleClick}
+                    >
+                        Delete
+                    </button>
+                    <button
+                        className="typical-button"
+                        style={{
+                            width: '80%',
+                            height: '7vw',
+                            marginBottom: '1vh',
+                            fontSize: '2vw'
+                        }}
+                        onClick={() => setRenderDeletePopup(false)}
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
     const [deleteModeSelected, setDeleteModeSelected] = useState(false);
+    const [renderDeletePopup, setRenderDeletePopup] = useState(false);
+    const [puzzleToDelete, setPuzzleToDelete] = useState("");
     const puzzleCxt = useContext(PuzzleContext);
     const displayCxt = useContext(DisplayContext);
 
@@ -227,69 +282,83 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     }, []);
 
     const handlePuzzleClick = async (puzzleName) => {
+        if (deleteModeSelected) {
+            setPuzzleToDelete(puzzleName);
+            setRenderDeletePopup(true);
+            return;
+        }
         await loadExistingPuzzle(puzzleName, displayCxt, puzzleCxt);
     };
 
     return (
-        <RenderPopupTemplate
-            title="Existing Puzzles:"
-            arbitrary={
-                <>
-                    <div className='horizontal-flex'>
-                        <p>Select Mode</p>
-                        <label className="rocker-switch">
-                            <input type="checkbox" checked={deleteModeSelected} onChange={() => setDeleteModeSelected(!deleteModeSelected)} />
-                            <span className="slider" />
-                        </label>
-                        <p>Delete Mode</p>
-                    </div>
-                    <div className='three-col-list' style={{ width: '100%' }}>
-                        <h2>Name</h2>
-                        <h2>Type</h2>
-                        <h2>Date Created</h2>
-                        {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
-                            <React.Fragment key={idx}>
-                                <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{
-                                    marginTop: '0.2vh',
-                                    marginBottom: '0.2vh',
-                                    padding: '0',
-                                    textAlign: 'center',
-                                    color: `${deleteModeSelected ? 'red' : 'blue'}`,
-                                    cursor: 'pointer',
-                                    fontSize: '1.5vw',
-                                }}>{puzzle.puzzleName}</h3>
-                                <h3 style={{
-                                    marginTop: '0.2vh',
-                                    marginBottom: '0.2vh',
+        <>
+            <RenderPopupTemplate
+                title="Existing Puzzles:"
+                arbitrary={
+                    <>
+                        <div className='horizontal-flex'>
+                            <p>Select Mode</p>
+                            <label className="rocker-switch">
+                                <input type="checkbox" checked={deleteModeSelected} onChange={() => setDeleteModeSelected(!deleteModeSelected)} />
+                                <span className="slider" />
+                            </label>
+                            <p>Delete Mode</p>
+                        </div>
+                        <div className='three-col-list' style={{ width: '100%' }}>
+                            <h2>Name</h2>
+                            <h2>Type</h2>
+                            <h2>Date Created</h2>
+                            {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
+                                <React.Fragment key={idx}>
+                                    <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{
+                                        marginTop: '0.2vh',
+                                        marginBottom: '0.2vh',
+                                        padding: '0',
+                                        textAlign: 'center',
+                                        color: `${deleteModeSelected ? 'red' : 'blue'}`,
+                                        cursor: 'pointer',
+                                        fontSize: '1.5vw',
+                                    }}>{puzzle.puzzleName}</h3>
+                                    <h3 style={{
+                                        marginTop: '0.2vh',
+                                        marginBottom: '0.2vh',
+                                        textAlign: 'center',
+                                        color: 'var(--text-color)',
+                                        fontSize: '1.5vw',
+                                    }}>{puzzle.puzzleType === 0 ? 'Grid' : 'Hex'}</h3>
+                                    <h3 style={{
+                                        marginTop: '0.2vh',
+                                        marginBottom: '0.2vh',
+                                        textAlign: 'center',
+                                        color: 'var(--text-color)',
+                                        fontSize: '1.5vw',
+                                    }}>{puzzle.dateCreated}</h3>
+                                </React.Fragment>
+                            )) : (
+                                <p style={{
                                     textAlign: 'center',
                                     color: 'var(--text-color)',
-                                    fontSize: '1.5vw',
-                                }}>{puzzle.puzzleType === 0 ? 'Grid' : 'Hex'}</h3>
-                                <h3 style={{
-                                    marginTop: '0.2vh',
-                                    marginBottom: '0.2vh',
-                                    textAlign: 'center',
-                                    color: 'var(--text-color)',
-                                    fontSize: '1.5vw',
-                                }}>{puzzle.dateCreated}</h3>
-                            </React.Fragment>
-                        )) : (
-                            <p style={{
-                                textAlign: 'center',
-                                color: 'var(--text-color)',
-                            }}>No puzzles found.</p>
-                        )}
-                    </div>
-                </>
-            }
-            buttons={[
-                {
-                    label: "Back",
-                    onClick: () => setDisplayedPopup('startup')
+                                }}>No puzzles found.</p>
+                            )}
+                        </div>
+                    </>
                 }
-            ]}
-            setDisplayedPopup={setDisplayedPopup}
-        />
+                buttons={[
+                    {
+                        label: "Back",
+                        onClick: () => setDisplayedPopup('startup')
+                    }
+                ]}
+                setDisplayedPopup={setDisplayedPopup}
+            />
+            {renderDeletePopup && (
+                <RenderDeletePuzzlePopup
+                    puzzleToDelete={puzzleToDelete}
+                    setListOfPuzzleInfo={setListOfPuzzleInfo}
+                    setRenderDeletePopup={setRenderDeletePopup}
+                />
+            )}
+        </>
     );
 }
 
@@ -333,7 +402,6 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         try {
             const existing = await getSpecificPuzzle(localConfig.name);
             if (existing) {
-                // 🚫 Name is taken — show error
                 setLocalConfig(prev => ({
                     ...prev,
                     userNameTaken: true,

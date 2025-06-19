@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { savePuzzle, getAllPuzzleInfo, getSpecificPuzzle } = require("./MySQLService");
+const { savePuzzle, getAllPuzzleInfo, getSpecificPuzzle, deletePuzzle } = require("./MySQLService");
 
 /*
 Mu Ye Liu - June 2025
@@ -54,5 +54,23 @@ router.get("/getSpecificPuzzle/:puzzleName", async (req, res) => {
         res.status(500).json({ error: "Failed to fetch specific puzzle" });
     }
 });
+
+router.delete("/deletePuzzle/:puzzleName", async (req, res) => {
+    const puzzleName = req.params.puzzleName;
+
+    if (!puzzleName) {
+        return res.status(400).send("Missing required field: puzzleName");
+    }
+
+    try {
+        await deletePuzzle(puzzleName);
+        res.status(200).json({ message: "Puzzle deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting puzzle:", error);
+        res.status(500).json({ error: "Failed to delete puzzle" });
+    }
+
+});
+
 
 module.exports = router;
