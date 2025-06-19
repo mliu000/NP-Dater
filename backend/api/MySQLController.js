@@ -11,12 +11,13 @@ Represents the MySQLController for handling MySQL database operations
 router.post("/save", async (req, res) => {
     const { pname, ptype, pjson } = req.body;
 
-    if (!pname || !ptype || !pjson) {
+    if (!pname || ptype === undefined || !pjson) {
         return res.status(400).send("Missing required fields: pname, ptype, or pjson");
     }
 
     try {
         await savePuzzle(pname, ptype, pjson);
+
         res.status(200).json({ message: "Puzzle saved successfully" });
     } catch (error) {
         console.error("Error saving puzzle:", error);

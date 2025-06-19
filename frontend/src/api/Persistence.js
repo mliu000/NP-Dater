@@ -24,7 +24,7 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName, hex
         width: board.current.width,
         height: board.current.height,
         dateFormat: dateFormat,
-        totalNoTileCreatedHistory: totalNoTileCreatedHistory,
+        totalNoTileCreatedHistory: totalNoTileCreatedHistory.current,
         gridCoords: board.current.gridCoords.map(c => ({
             coord: {
                 x: c.Coord[0],

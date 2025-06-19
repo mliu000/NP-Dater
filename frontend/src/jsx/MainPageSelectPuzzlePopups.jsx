@@ -236,7 +236,7 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
                 <div className='three-col-list' style={{ width: '100%' }}>
                     <h2>Name</h2>
                     <h2>Type</h2>
-                    <h2>Date</h2>
+                    <h2>Date Created</h2>
                     {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
                         <React.Fragment key={idx}>
                             <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{

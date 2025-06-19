@@ -38,7 +38,7 @@ async function getAllPuzzleInfo() {
             SELECT puzzle_name, puzzle_type, DATE_FORMAT(date_created, '%Y-%m-%d') AS date_created
             FROM Puzzles 
             ORDER BY date_created DESC`;
-            
+
         const [rows] = await connection.execute(query);
         return rows.map(row => ({
             puzzleName: row.puzzle_name,
