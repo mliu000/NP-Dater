@@ -36,7 +36,6 @@ async function getAllPuzzleInfo() {
     try {
         const query = `
             SELECT puzzle_name, puzzle_type, DATE_FORMAT(date_created, '%Y-%m-%d') AS date_created
-
             FROM Puzzles 
             ORDER BY date_created DESC`;
             
@@ -72,7 +71,7 @@ async function getSpecificPuzzle(puzzleName) {
 
         return {
             puzzleName: rows[0].puzzle_name,
-            puzzleData: JSON.parse(rows[0].puzzle_data)
+            puzzleData: rows[0].puzzle_data
         };
     } catch (error) {
         console.error("Error fetching specific puzzle:", error);

@@ -6,33 +6,100 @@ This function loads an existing puzzle by its name.
 */
 
 // Loads the existing puzzle with the given name
-export async function loadExistingPuzzle(puzzleName, displayCxt, puzzleCxt) {
-    resetContextToDefault(displayCxt, puzzleCxt);
+export async function loadExistingPuzzle(puzzleName, {
+    setMode,
+    setDisplaySetCoordPopup,
+    setDisplayTilePopup,
+    setDisplayLargeInstancePopup,
+    setDisplayUnableToSolvePopup,
+    setDisplayDateNotInPuzzlePopup,
+    setNotSavedPopup,
+    setDisplayedPopup
+}, {
+    board, tiles,
+    attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+    setSaved,
+    setNoTiles,
+    setPuzzleName,
+    setGridWidth,
+    setGridHeight,
+    setHexRadius,
+    setPuzzleType,
+    setHexagonOrientation,
+    setDateFormat,
+    setRenderBoard,
+    setDayOfMonth,
+    setMonth,
+    setDayOfWeek,
+    setCoordSpecialAttributes,
+    setTileCoordList,
+    setTotalCoordCount,
+    setTileCoordsCoverageCount,
+    setCurrX,
+    setCurrY,
+    setCurrTileSelected
+}
+) {
+    resetContextToDefault({ 
+    setMode,
+        setDisplaySetCoordPopup,
+        setDisplayTilePopup,
+        setDisplayLargeInstancePopup,
+        setDisplayUnableToSolvePopup,
+        setDisplayDateNotInPuzzlePopup,
+        setNotSavedPopup
+    }, {
+        board, tiles,
+        attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+        setSaved,
+        setNoTiles,
+        setPuzzleName,
+        setGridWidth,
+        setGridHeight,
+        setHexRadius,
+        setPuzzleType,
+        setHexagonOrientation,
+        setDateFormat,
+        setRenderBoard,
+        setDayOfMonth,
+        setMonth,
+        setDayOfWeek,
+        setCoordSpecialAttributes,
+        setTileCoordList,
+        setTotalCoordCount,
+        setTileCoordsCoverageCount,
+        setCurrX,
+        setCurrY,
+        setCurrTileSelected
+    });
 
     try {
         // Close the popup first
-        displayCxt.setDisplayedPopup('');
+        // Remove the displayCxt and puzzleCxt parameters
+        setDisplayedPopup('');
 
         const puzzleData = await getSpecificPuzzle(puzzleName);
         if (!puzzleData) {
             throw new Error("Puzzle not found");
         }
-        
+
+        console.log("ran");
+
         // Initialize the display contexts
-        displayCxt.setMode('edit'); 
-        displayCxt.setNotSavedPopup(false);
-        displayCxt.setDisplaySetCoordPopup(false);
-        displayCxt.setDisplayTilePopup(false);
-        displayCxt.setDisplayLargeInstancePopup(false);
-        displayCxt.setDisplayUnableToSolvePopup(false);
-        displayCxt.setDisplayDateNotInPuzzlePopup(false);
+        setMode('edit');
+        setNotSavedPopup(false);
+        setDisplaySetCoordPopup(false);
+        setDisplayTilePopup(false);
+        setDisplayLargeInstancePopup(false);
+        setDisplayUnableToSolvePopup(false);
+        setDisplayDateNotInPuzzlePopup(false);
 
         // Set the puzzle data useStates
-        puzzleCxt.setSaved(false);
+        setSaved(false);
 
-        puzzleCxt.setDayOfMonth('Day of Month');
-        puzzleCxt.setMonth('Month');
-        puzzleCxt.setDayOfWeek('Day of Week');
+        setDayOfMonth('Day of Month');
+        setMonth('Month');
+        setDayOfWeek('Day of Week');
 
     } catch (err) {
         console.error("Error loading existing puzzle:", err);
@@ -40,42 +107,74 @@ export async function loadExistingPuzzle(puzzleName, displayCxt, puzzleCxt) {
     }
 }
 
-export function resetContextToDefault(displayCxt, puzzleCxt) {
+// Remove unused context parameters
+export function resetContextToDefault({
+    setMode,
+    setDisplaySetCoordPopup,
+    setDisplayTilePopup,
+    setDisplayLargeInstancePopup,
+    setDisplayUnableToSolvePopup,
+    setDisplayDateNotInPuzzlePopup,
+    setNotSavedPopup
+}, {
+    board, tiles,
+    attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+    setSaved,
+    setNoTiles,
+    setPuzzleName,
+    setGridWidth,
+    setGridHeight,
+    setHexRadius,
+    setPuzzleType,
+    setHexagonOrientation,
+    setDateFormat,
+    setRenderBoard,
+    setDayOfMonth,
+    setMonth,
+    setDayOfWeek,
+    setCoordSpecialAttributes,
+    setTileCoordList,
+    setTotalCoordCount,
+    setTileCoordsCoverageCount,
+    setCurrX,
+    setCurrY,
+    setCurrTileSelected
+}) {
     // Reset the display context to default
-    displayCxt.setDisplayedPopup('startup');
-    displayCxt.setMode('');
-    displayCxt.setDisplaySetCoordPopup(false);
-    displayCxt.setDisplayTilePopup(false);
-    displayCxt.setDisplayLargeInstancePopup(false);
-    displayCxt.setDisplayUnableToSolvePopup(false);
-    displayCxt.setDisplayDateNotInPuzzlePopup(false);
-    displayCxt.setNotSavedPopup(false);
+    // Update to use paramters instead of context
+    setMode('');
+    setDisplaySetCoordPopup(false);
+    setDisplayTilePopup(false);
+    setDisplayLargeInstancePopup(false);
+    setDisplayUnableToSolvePopup(false);
+    setDisplayDateNotInPuzzlePopup(false);
+    setNotSavedPopup(false);
 
     // Reset the puzzle context to default
-    puzzleCxt.board.current = null;
-    puzzleCxt.tiles.current = [];
-    puzzleCxt.attributeOptionsRemaining.current = [];
-    puzzleCxt.totalNoTileCreatedHistory.current = 0;
-    puzzleCxt.solveTime.current = 0;
+    board.current = null;
+    tiles.current = [];
+    attributeOptionsRemaining.current = [];
+    totalNoTileCreatedHistory.current = 0;
+    solveTime.current = 0;
 
-    puzzleCxt.setNoTiles(0);
-    puzzleCxt.setSaved(false);
-    puzzleCxt.setPuzzleName('');
-    puzzleCxt.setGridWidth('Select Width');
-    puzzleCxt.setGridHeight('Select Height');
-    puzzleCxt.setHexRadius('Select Radius');
-    puzzleCxt.setPuzzleType('');
-    puzzleCxt.setHexagonOrientation('');
-    puzzleCxt.setDateFormat(new Array(3).fill(false));
-    puzzleCxt.setRenderBoard(false);
-    puzzleCxt.setTotalCoordCount(0);
-    puzzleCxt.setTileCoordsCoverageCount(0);
-    puzzleCxt.setCurrX(null);
-    puzzleCxt.setCurrY(null);
-    puzzleCxt.setCurrTileSelected(null); // id, coords, and colour
-    puzzleCxt.setCoordSpecialAttributes([]);
-    puzzleCxt.setTileCoordList([]);
-    puzzleCxt.setDayOfMonth('Day of Month');
-    puzzleCxt.setMonth('Month');
-    puzzleCxt.setDayOfWeek('Day of Week');
+    setNoTiles(0);
+    setSaved(false);
+    setPuzzleName('');
+    setGridWidth('Select Width');
+    setGridHeight('Select Height');
+    setHexRadius('Select Radius');
+    setPuzzleType('');
+    setHexagonOrientation('');
+    setDateFormat(new Array(3).fill(false));
+    setRenderBoard(false);
+    setTotalCoordCount(0);
+    setTileCoordsCoverageCount(0);
+    setCurrX(null);
+    setCurrY(null);
+    setCurrTileSelected(null); // id, coords, and colour
+    setCoordSpecialAttributes([]);
+    setTileCoordList([]);
+    setDayOfMonth('Day of Month');
+    setMonth('Month');
+    setDayOfWeek('Day of Week');
 }

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { savePuzzle, getAllPuzzleInfo } = require("./MySQLService");
+const { savePuzzle, getAllPuzzleInfo, getSpecificPuzzle } = require("./MySQLService");
 
 /*
 Mu Ye Liu - June 2025

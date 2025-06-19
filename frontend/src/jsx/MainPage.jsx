@@ -283,7 +283,7 @@ function RenderSaveButton() {
     const { mode, setMode, setDisplaySetCoordPopup, setNotSavedPopup } = useContext(DisplayContext);
 
     const handleSavePuzzleClick = async () => {
-        const savable = await savePuzzle(tiles, board, puzzleType, puzzleName, hexagonOrientation, 
+        const savable = await savePuzzle(tiles, board, puzzleType, puzzleName, hexagonOrientation,
             totalNoTileCreatedHistory, dateFormat);
         if (savable) {
             setSaved(true);
@@ -555,7 +555,6 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
-    const { tiles, tileCoordList, solveTime } = useContext(PuzzleContext);
 
     return (
         <>

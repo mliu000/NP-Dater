@@ -208,8 +208,39 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
-    const puzzleCxt = useContext(PuzzleContext);
-    const displayCxt = useContext(DisplayContext);
+    const {
+        board, tiles,
+        attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+        saved, setSaved,
+        noTiles, setNoTiles,
+        puzzleName, setPuzzleName,
+        gridWidth, setGridWidth,
+        gridHeight, setGridHeight,
+        hexRadius, setHexRadius,
+        puzzleType, setPuzzleType,
+        hexagonOrientation, setHexagonOrientation,
+        dateFormat, setDateFormat,
+        renderBoard, setRenderBoard,
+        dayOfMonth, setDayOfMonth,
+        month, setMonth,
+        dayOfWeek, setDayOfWeek,
+        coordSpecialAttributes, setCoordSpecialAttributes,
+        tileCoordList, setTileCoordList,
+        totalCoordCount, setTotalCoordCount,
+        tileCoordsCoverageCount, setTileCoordsCoverageCount,
+        currX, setCurrX,
+        currY, setCurrY,
+        currTileSelected, setCurrTileSelected
+    } = useContext(PuzzleContext);
+    const {
+        mode, setMode,
+        displaySetCoordPopup, setDisplaySetCoordPopup,
+        displayTilePopup, setDisplayTilePopup,
+        displayLargeInstancePopup, setDisplayLargeInstancePopup,
+        displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
+        displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup,
+        notSavedPopup, setNotSavedPopup
+    } = useContext(DisplayContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -220,7 +251,42 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     }, []);
 
     const handlePuzzleClick = async (puzzleName) => {
-        await loadExistingPuzzle(puzzleName, puzzleCxt, displayCxt);
+        await loadExistingPuzzle(puzzleName, 
+            {
+                setMode,
+                setDisplaySetCoordPopup,
+                setDisplayTilePopup,
+                setDisplayLargeInstancePopup,
+                setDisplayUnableToSolvePopup,
+                setDisplayDateNotInPuzzlePopup,
+                setNotSavedPopup,
+                setDisplayedPopup
+            }, 
+            {
+                board, tiles,
+                attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+                setSaved,
+                setNoTiles,
+                setPuzzleName,
+                setGridWidth,
+                setGridHeight,
+                setHexRadius,
+                setPuzzleType,
+                setHexagonOrientation,
+                setDateFormat,
+                setRenderBoard,
+                setDayOfMonth,
+                setMonth,
+                setDayOfWeek,
+                setCoordSpecialAttributes,
+                setTileCoordList,
+                setTotalCoordCount,
+                setTileCoordsCoverageCount,
+                setCurrX,
+                setCurrY,
+                setCurrTileSelected
+            }
+        );
     };
 
     return (
@@ -277,8 +343,39 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
-    const puzzleCxt = useContext(PuzzleContext);
-    const displayCxt = useContext(DisplayContext);
+    const {
+        board, tiles,
+        attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+        saved, setSaved,
+        noTiles, setNoTiles,
+        puzzleName, setPuzzleName,
+        gridWidth, setGridWidth,
+        gridHeight, setGridHeight,
+        hexRadius, setHexRadius,
+        puzzleType, setPuzzleType,
+        hexagonOrientation, setHexagonOrientation,
+        dateFormat, setDateFormat,
+        renderBoard, setRenderBoard,
+        dayOfMonth, setDayOfMonth,
+        month, setMonth,
+        dayOfWeek, setDayOfWeek,
+        coordSpecialAttributes, setCoordSpecialAttributes,
+        tileCoordList, setTileCoordList,
+        totalCoordCount, setTotalCoordCount,
+        tileCoordsCoverageCount, setTileCoordsCoverageCount,
+        currX, setCurrX,
+        currY, setCurrY,
+        currTileSelected, setCurrTileSelected
+    } = useContext(PuzzleContext);
+    const {
+        mode, setMode,
+        displaySetCoordPopup, setDisplaySetCoordPopup,
+        displayTilePopup, setDisplayTilePopup,
+        displayLargeInstancePopup, setDisplayLargeInstancePopup,
+        displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
+        displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup,
+        notSavedPopup, setNotSavedPopup
+    } = useContext(DisplayContext);
 
     const [localConfig, setLocalConfig] = useState({
         type: '',
@@ -308,54 +405,84 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     }, [localConfig.type]);
 
     const handleClick = () => {
-        resetContextToDefault(displayCxt, puzzleCxt);
+        resetContextToDefault({
+            setMode,
+            setDisplaySetCoordPopup,
+            setDisplayTilePopup,
+            setDisplayLargeInstancePopup,
+            setDisplayUnableToSolvePopup,
+            setDisplayDateNotInPuzzlePopup,
+            setNotSavedPopup
+        }, {
+            board, tiles,
+            attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+            setSaved,
+            setNoTiles,
+            setPuzzleName,
+            setGridWidth,
+            setGridHeight,
+            setHexRadius,
+            setPuzzleType,
+            setHexagonOrientation,
+            setDateFormat,
+            setRenderBoard,
+            setDayOfMonth,
+            setMonth,
+            setDayOfWeek,
+            setCoordSpecialAttributes,
+            setTileCoordList,
+            setTotalCoordCount,
+            setTileCoordsCoverageCount,
+            setCurrX,
+            setCurrY,
+            setCurrTileSelected
+        });
         // Initialize the board
         if (localConfig.type === 'grid') {
-            puzzleCxt.board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
-            const specialAttributes = puzzleCxt.board.current.gridCoords.map(coord => ({
+            board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
+            const specialAttributes = board.current.gridCoords.map(coord => ({
                 Coord: coord.Coord,
                 specialAttribute: coord.specialAttribute
             }));
-            puzzleCxt.setCoordSpecialAttributes(specialAttributes);
+            setCoordSpecialAttributes(specialAttributes);
         } else if (localConfig.type === 'hex') {
-            puzzleCxt.board.current = new HexBoard(parseInt(localConfig.hexRadius));
-            const specialAttributes = puzzleCxt.board.current.hexCoords.map(coord => ({
+            board.current = new HexBoard(parseInt(localConfig.hexRadius));
+            const specialAttributes = board.current.hexCoords.map(coord => ({
                 Coord: coord.Coord,
                 specialAttribute: coord.specialAttribute
             }));
-            puzzleCxt.setCoordSpecialAttributes(specialAttributes);
+            setCoordSpecialAttributes(specialAttributes);
         }
 
         // Initialize attribute options
         if (localConfig.dateFormat[0]) {
             const dayOfWeekOptions = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            puzzleCxt.attributeOptionsRemaining.current.push(...dayOfWeekOptions);
+            attributeOptionsRemaining.current.push(...dayOfWeekOptions);
         }
         if (localConfig.dateFormat[2]) {
             const monthOptions = ['January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'];
-            puzzleCxt.attributeOptionsRemaining.current.push(...monthOptions);
+            attributeOptionsRemaining.current.push(...monthOptions);
         }
         if (localConfig.dateFormat[1]) {
             const dayOfMonthOptions = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-            puzzleCxt.attributeOptionsRemaining.current.push(...dayOfMonthOptions);
+            attributeOptionsRemaining.current.push(...dayOfMonthOptions);
         }
 
         // Initialize the useStates
         // Update the syntax to use displayCxt and puzzleCxt
         // Remove redundant ones
-        displayCxt.setMode('edit');
-        displayCxt.setDisplayedPopup('');
-
-        puzzleCxt.setRenderBoard(true);
-        puzzleCxt.setPuzzleName(localConfig.name);
-        puzzleCxt.setPuzzleType(localConfig.type);
-        puzzleCxt.setGridWidth(localConfig.gridWidth);
-        puzzleCxt.setGridHeight(localConfig.gridHeight);
-        puzzleCxt.setHexRadius(localConfig.hexRadius);
-        puzzleCxt.setHexagonOrientation(localConfig.hexagonOrientation);
-        puzzleCxt.setDateFormat(localConfig.dateFormat);
-        puzzleCxt.setTotalCoordCount((puzzleCxt.board.current.gridCoords ? puzzleCxt.board.current.gridCoords.length : puzzleCxt.board.current.hexCoords.length)
+        setMode('edit');
+        setDisplayedPopup('');
+        setRenderBoard(true);
+        setPuzzleName(localConfig.name);
+        setPuzzleType(localConfig.type);
+        setGridWidth(localConfig.gridWidth);
+        setGridHeight(localConfig.gridHeight);
+        setHexRadius(localConfig.hexRadius);
+        setHexagonOrientation(localConfig.hexagonOrientation);
+        setDateFormat(localConfig.dateFormat);
+        setTotalCoordCount((board.current.gridCoords ? board.current.gridCoords.length : board.current.hexCoords.length)
             - localConfig.dateFormat.filter(format => format).length);
     };
 
