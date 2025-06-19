@@ -32,7 +32,7 @@ Hex Puzzle:
 #### Customize board configuration
 
 - Block Cells to edit shape of board, <br>
-- set date attributes in any cell you want.
+- Set date attributes in any cell you want.
 
 <img src="frontend/images/readmeImages/ReadmeEditCoords.png" alt="Gameplay Screenshot" width="400"/>
 
@@ -53,7 +53,7 @@ Hex Puzzle:
 #### Your puzzles are saved.
 
 - Automatically saves your puzzles
-- You can load them in, or delete them.
+- Load them in (continue off of where you left), or delete them
 
 <img src="frontend/images/instructionImages/InstructionsSelectMode.png" alt="Gameplay Screenshot" width="400"/>
 
@@ -84,6 +84,8 @@ branching factor of the search tree.
 down on the searching required.
 - Forward Checking: At each step, if any tile does not have valid placements, backtrack to avoid going further. 
 - Bitmasking: Convert the Exact Cover instance to have each bit represent a coordinate as bits are very fast. 
+
+Performance: Solves typical grid and hex puzzles (the ones shown in images) in around 1 and 4 seconds respectively on average.
 
 ## Setup Instructions: 
 
