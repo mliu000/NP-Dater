@@ -282,3 +282,56 @@
     text-decoration: underline;
     gap: 0.5vh;
 }
+
+.rocker-switch {
+    position: relative;
+    display: inline-block;
+    width: 3vw;
+    height: 3vh;
+}
+
+.rocker-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(117, 217, 117);
+    transition: background-color 0.4s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: transform 0.4s;
+    border-radius: 50%;
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+}
+
+.rocker-switch input:checked + .slider {
+    background-color: #ec6666;
+}
+
+.rocker-switch input:checked + .slider::before {
+    transform: translateX(22px);
+}
+
+.horizontal-flex {
+    display: flex;
+    flex-direction: row; /* default, but explicit */
+    align-items: center; /* vertical alignment */
+    gap: 1vw; /* optional spacing between items */
+}

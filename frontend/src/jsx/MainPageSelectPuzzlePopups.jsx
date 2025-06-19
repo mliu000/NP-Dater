@@ -214,6 +214,7 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
+    const [deleteModeSelected, setDeleteModeSelected] = useState(false);
     const puzzleCxt = useContext(PuzzleContext);
     const displayCxt = useContext(DisplayContext);
 
@@ -233,40 +234,53 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
         <RenderPopupTemplate
             title="Existing Puzzles:"
             arbitrary={
-                <div className='three-col-list' style={{ width: '100%' }}>
-                    <h2>Name</h2>
-                    <h2>Type</h2>
-                    <h2>Date Created</h2>
-                    {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
-                        <React.Fragment key={idx}>
-                            <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{
-                                marginTop: '0.2vh',
-                                marginBottom: '0.2vh',
-                                padding: '0',
-                                textAlign: 'center',
-                                color: 'blue',
-                                cursor: 'pointer',
-                                fontSize: '1.5vw',
-                            }}>{puzzle.puzzleName}</h3>
-                            <h3 style={{
-                                marginTop: '0.2vh',
-                                marginBottom: '0.2vh',
+                <>
+                    <div className='horizontal-flex'>
+                        <p>Select Mode</p>
+                        <label className="rocker-switch">
+                            <input type="checkbox" checked={deleteModeSelected} onChange={() => setDeleteModeSelected(!deleteModeSelected)} />
+                            <span className="slider" />
+                        </label>
+                        <p>Delete Mode</p>
+                    </div>
+                    <div className='three-col-list' style={{ width: '100%' }}>
+                        <h2>Name</h2>
+                        <h2>Type</h2>
+                        <h2>Date Created</h2>
+                        {listOfPuzzleInfo ? listOfPuzzleInfo.map((puzzle, idx) => (
+                            <React.Fragment key={idx}>
+                                <h3 onClick={() => handlePuzzleClick(puzzle.puzzleName)} style={{
+                                    marginTop: '0.2vh',
+                                    marginBottom: '0.2vh',
+                                    padding: '0',
+                                    textAlign: 'center',
+                                    color: `${deleteModeSelected ? 'red' : 'blue'}`,
+                                    cursor: 'pointer',
+                                    fontSize: '1.5vw',
+                                }}>{puzzle.puzzleName}</h3>
+                                <h3 style={{
+                                    marginTop: '0.2vh',
+                                    marginBottom: '0.2vh',
+                                    textAlign: 'center',
+                                    color: 'var(--text-color)',
+                                    fontSize: '1.5vw',
+                                }}>{puzzle.puzzleType === 0 ? 'Grid' : 'Hex'}</h3>
+                                <h3 style={{
+                                    marginTop: '0.2vh',
+                                    marginBottom: '0.2vh',
+                                    textAlign: 'center',
+                                    color: 'var(--text-color)',
+                                    fontSize: '1.5vw',
+                                }}>{puzzle.dateCreated}</h3>
+                            </React.Fragment>
+                        )) : (
+                            <p style={{
                                 textAlign: 'center',
                                 color: 'var(--text-color)',
-                                fontSize: '1.5vw',
-                            }}>{puzzle.puzzleType === 0 ? 'Grid' : 'Hex'}</h3>
-                            <h3 style={{
-                                marginTop: '0.2vh',
-                                marginBottom: '0.2vh',
-                                textAlign: 'center',
-                                color: 'var(--text-color)',
-                                fontSize: '1.5vw',
-                            }}>{puzzle.dateCreated}</h3>
-                        </React.Fragment>
-                    )) : (
-                        <p>No puzzles found.</p>
-                    )}
-                </div>
+                            }}>No puzzles found.</p>
+                        )}
+                    </div>
+                </>
             }
             buttons={[
                 {
