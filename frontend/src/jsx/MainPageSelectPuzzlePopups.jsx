@@ -208,39 +208,8 @@ function RenderPopupTemplate({ title, arbitrary, buttons, setDisplayedPopup }) {
 
 function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     const [listOfPuzzleInfo, setListOfPuzzleInfo] = useState(null);
-    const {
-        board, tiles,
-        attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
-        saved, setSaved,
-        noTiles, setNoTiles,
-        puzzleName, setPuzzleName,
-        gridWidth, setGridWidth,
-        gridHeight, setGridHeight,
-        hexRadius, setHexRadius,
-        puzzleType, setPuzzleType,
-        hexagonOrientation, setHexagonOrientation,
-        dateFormat, setDateFormat,
-        renderBoard, setRenderBoard,
-        dayOfMonth, setDayOfMonth,
-        month, setMonth,
-        dayOfWeek, setDayOfWeek,
-        coordSpecialAttributes, setCoordSpecialAttributes,
-        tileCoordList, setTileCoordList,
-        totalCoordCount, setTotalCoordCount,
-        tileCoordsCoverageCount, setTileCoordsCoverageCount,
-        currX, setCurrX,
-        currY, setCurrY,
-        currTileSelected, setCurrTileSelected
-    } = useContext(PuzzleContext);
-    const {
-        mode, setMode,
-        displaySetCoordPopup, setDisplaySetCoordPopup,
-        displayTilePopup, setDisplayTilePopup,
-        displayLargeInstancePopup, setDisplayLargeInstancePopup,
-        displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
-        displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup,
-        notSavedPopup, setNotSavedPopup
-    } = useContext(DisplayContext);
+    const puzzleCxt = useContext(PuzzleContext);
+    const displayCxt = useContext(DisplayContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -251,42 +220,7 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     }, []);
 
     const handlePuzzleClick = async (puzzleName) => {
-        await loadExistingPuzzle(puzzleName,
-            {
-                setMode,
-                setDisplaySetCoordPopup,
-                setDisplayTilePopup,
-                setDisplayLargeInstancePopup,
-                setDisplayUnableToSolvePopup,
-                setDisplayDateNotInPuzzlePopup,
-                setNotSavedPopup,
-                setDisplayedPopup
-            },
-            {
-                board, tiles,
-                attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
-                setSaved,
-                setNoTiles,
-                setPuzzleName,
-                setGridWidth,
-                setGridHeight,
-                setHexRadius,
-                setPuzzleType,
-                setHexagonOrientation,
-                dateFormat, setDateFormat,
-                setRenderBoard,
-                setDayOfMonth,
-                setMonth,
-                setDayOfWeek,
-                coordSpecialAttributes, setCoordSpecialAttributes,
-                tileCoordList, setTileCoordList,
-                setTotalCoordCount,
-                setTileCoordsCoverageCount,
-                setCurrX,
-                setCurrY,
-                setCurrTileSelected
-            }
-        );
+        await loadExistingPuzzle(puzzleName, displayCxt, puzzleCxt);
     };
 
     return (
@@ -343,39 +277,8 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
 function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     const [invalidSelection, setInvalidSelection] = useState(false);
 
-    const {
-        board, tiles,
-        attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
-        saved, setSaved,
-        noTiles, setNoTiles,
-        puzzleName, setPuzzleName,
-        gridWidth, setGridWidth,
-        gridHeight, setGridHeight,
-        hexRadius, setHexRadius,
-        puzzleType, setPuzzleType,
-        hexagonOrientation, setHexagonOrientation,
-        dateFormat, setDateFormat,
-        renderBoard, setRenderBoard,
-        dayOfMonth, setDayOfMonth,
-        month, setMonth,
-        dayOfWeek, setDayOfWeek,
-        coordSpecialAttributes, setCoordSpecialAttributes,
-        tileCoordList, setTileCoordList,
-        totalCoordCount, setTotalCoordCount,
-        tileCoordsCoverageCount, setTileCoordsCoverageCount,
-        currX, setCurrX,
-        currY, setCurrY,
-        currTileSelected, setCurrTileSelected
-    } = useContext(PuzzleContext);
-    const {
-        mode, setMode,
-        displaySetCoordPopup, setDisplaySetCoordPopup,
-        displayTilePopup, setDisplayTilePopup,
-        displayLargeInstancePopup, setDisplayLargeInstancePopup,
-        displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
-        displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup,
-        notSavedPopup, setNotSavedPopup
-    } = useContext(DisplayContext);
+    const puzzleCxt = useContext(PuzzleContext);
+    const displayCxt = useContext(DisplayContext);
 
     const [localConfig, setLocalConfig] = useState({
         type: '',
@@ -405,40 +308,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
     }, [localConfig.type]);
 
     const handleClick = () => {
-        resetContextToDefault({
-            setMode,
-            setDisplaySetCoordPopup,
-            setDisplayTilePopup,
-            setDisplayLargeInstancePopup,
-            setDisplayUnableToSolvePopup,
-            setDisplayDateNotInPuzzlePopup,
-            setNotSavedPopup,
-            setDisplayedPopup
-        },
-            {
-                board, tiles,
-                attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
-                setSaved,
-                setNoTiles,
-                setPuzzleName,
-                setGridWidth,
-                setGridHeight,
-                setHexRadius,
-                setPuzzleType,
-                setHexagonOrientation,
-                setDateFormat,
-                setRenderBoard,
-                setDayOfMonth,
-                setMonth,
-                setDayOfWeek,
-                setCoordSpecialAttributes,
-                setTileCoordList,
-                setTotalCoordCount,
-                setTileCoordsCoverageCount,
-                setCurrX,
-                setCurrY,
-                setCurrTileSelected
-            });
+        resetContextToDefault(puzzleCxt, displayCxt);
         // Initialize the board
         if (localConfig.type === 'grid') {
             board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));
