@@ -11,7 +11,7 @@ import { RenderTileWindow, RenderTilePopup } from './MainPageTiles.jsx';
 import { solvePuzzle, isDateOnPuzzle } from '../api/Solve.js';
 import {
     RenderLargeInstancePopup, RenderUnableToSolvePopup, RenderDateNotInPuzzlePopup,
-    RenderNotSavedPopup
+    RenderNotSavedPopup, RenderSolvingPopup
 } from './MainPagePopups.jsx';
 import { RenderSolnBackButton, RenderMainPageSolveTime } from './MainPageSoln.jsx';
 import { savePuzzle } from '../api/Persistence.js';
@@ -351,9 +351,9 @@ function RenderPuzzleName() {
 // Render solve puzzle button
 function RenderSolvePuzzleButton() {
     const { setMode, mode, setDisplayLargeInstancePopup, setDisplayUnableToSolvePopup,
-        setDisplayDateNotInPuzzlePopup } = useContext(DisplayContext);
+        setDisplayDateNotInPuzzlePopup, setSolvingPopup } = useContext(DisplayContext);
     const { board, tiles, dayOfMonth, month, dayOfWeek, totalCoordCount, dateFormat,
-        tileCoordsCoverageCount, puzzleType, noTiles, solveTime } = useContext(PuzzleContext);
+        tileCoordsCoverageCount, puzzleType, noTiles, solveTime, abortController, aborted } = useContext(PuzzleContext);
 
 
     // condition where if dateFormat is chosen, do not display the button if date is not chosen
@@ -369,6 +369,7 @@ function RenderSolvePuzzleButton() {
     }, [dayOfWeek, dayOfMonth, month, dateFormat]);
 
     const handleClick = async () => {
+        aborted.current = false;
         const dateList = [];
         if (dateFormat[0]) dateList.push(dayOfWeek);
         if (dateFormat[2]) dateList.push(month);
@@ -376,10 +377,12 @@ function RenderSolvePuzzleButton() {
         if (!isDateOnPuzzle(dateList, board.current, puzzleType)) {
             setDisplayDateNotInPuzzlePopup(true);
         } else if ((puzzleType === 'grid' && totalCoordCount > 55 && noTiles > 8) ||
-            (puzzleType === 'hex' && totalCoordCount > 45 && noTiles > 8)) {
+            (puzzleType === 'hex' && totalCoordCount > 48 && noTiles > 8)) {
             setDisplayLargeInstancePopup(true);
         } else {
-            const response = await solvePuzzle(tiles.current, board.current, puzzleType, dateList, solveTime);
+            setSolvingPopup(true);
+            const response = await solvePuzzle(tiles.current, board.current, puzzleType, dateList, solveTime, abortController.current);
+            setSolvingPopup(false);
             if (response === 1) {
                 setDisplayUnableToSolvePopup(true);
             } else {
@@ -555,7 +558,6 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
-
     return (
         <>
             <RenderMainPageLeftSideTileList />
@@ -576,6 +578,7 @@ function RenderMainPage() {
             <RenderMainPageSolveTime />
             <RenderSolnBackButton />
             <RenderNotSavedPopup />
+            <RenderSolvingPopup />
         </>
     );
 }

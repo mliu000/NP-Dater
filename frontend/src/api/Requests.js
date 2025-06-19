@@ -5,12 +5,13 @@ General API requests (POST, GET, etc)
 */
 
 // General api post request
-export async function postRequest(url, jsonInput) {
+export async function postRequest(url, jsonInput, abortController = null) {
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jsonInput)
+            body: JSON.stringify(jsonInput),
+            signal: abortController ? abortController.signal : undefined
         });
 
         if (!response.ok) throw new Error('Response was not ok');

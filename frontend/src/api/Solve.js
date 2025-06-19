@@ -71,14 +71,15 @@ REQUIRES: listOfTiles: [Tile, Tile, ...]
           type: 'grid' | 'hex'
           date: [dayOfMonth, month, dayOfWeek]
           solveTime: integer, time in seconds to solve the puzzle
+          abortController: AbortController object to cancel the request (use .current)
 RETURNS: 0 if solved, 1 if solver error/no solution found, 2 if date not on puzzle
 */
-export async function solvePuzzle(listOfTiles, board, type, date, solveTime) {
+export async function solvePuzzle(listOfTiles, board, type, date, solveTime, abortController) {
 
     const jsonInput = setupJsonString(listOfTiles, board, type, date);
 
     try {
-        const data = await postRequest('http://localhost:3001/solver/solve', jsonInput);
+        const data = await postRequest('http://localhost:3001/solver/solve', jsonInput, abortController);
 
         // Populate the solve time and and solution tiles
         solveTime.current = data.timeToSolve;

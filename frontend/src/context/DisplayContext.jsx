@@ -17,6 +17,7 @@ export function DisplayProvider({ children }) {
     const [displayUnableToSolvePopup, setDisplayUnableToSolvePopup] = useState(false);
     const [displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup] = useState(false);
     const [notSavedPopup, setNotSavedPopup] = useState(false);
+    const [solvingPopup, setSolvingPopup] = useState(false);
 
     return (
         <DisplayContext.Provider value={{
@@ -27,7 +28,8 @@ export function DisplayProvider({ children }) {
             displayLargeInstancePopup, setDisplayLargeInstancePopup,
             displayUnableToSolvePopup, setDisplayUnableToSolvePopup,
             displayDateNotInPuzzlePopup, setDisplayDateNotInPuzzlePopup,
-            notSavedPopup, setNotSavedPopup
+            notSavedPopup, setNotSavedPopup,
+            solvingPopup, setSolvingPopup
         }}>
             {children}
         </DisplayContext.Provider>
