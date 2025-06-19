@@ -251,7 +251,7 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
     }, []);
 
     const handlePuzzleClick = async (puzzleName) => {
-        await loadExistingPuzzle(puzzleName, 
+        await loadExistingPuzzle(puzzleName,
             {
                 setMode,
                 setDisplaySetCoordPopup,
@@ -261,7 +261,7 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
                 setDisplayDateNotInPuzzlePopup,
                 setNotSavedPopup,
                 setDisplayedPopup
-            }, 
+            },
             {
                 board, tiles,
                 attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
@@ -273,13 +273,13 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
                 setHexRadius,
                 setPuzzleType,
                 setHexagonOrientation,
-                setDateFormat,
+                dateFormat, setDateFormat,
                 setRenderBoard,
                 setDayOfMonth,
                 setMonth,
                 setDayOfWeek,
-                setCoordSpecialAttributes,
-                setTileCoordList,
+                coordSpecialAttributes, setCoordSpecialAttributes,
+                tileCoordList, setTileCoordList,
                 setTotalCoordCount,
                 setTileCoordsCoverageCount,
                 setCurrX,
@@ -412,31 +412,33 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
             setDisplayLargeInstancePopup,
             setDisplayUnableToSolvePopup,
             setDisplayDateNotInPuzzlePopup,
-            setNotSavedPopup
-        }, {
-            board, tiles,
-            attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
-            setSaved,
-            setNoTiles,
-            setPuzzleName,
-            setGridWidth,
-            setGridHeight,
-            setHexRadius,
-            setPuzzleType,
-            setHexagonOrientation,
-            setDateFormat,
-            setRenderBoard,
-            setDayOfMonth,
-            setMonth,
-            setDayOfWeek,
-            setCoordSpecialAttributes,
-            setTileCoordList,
-            setTotalCoordCount,
-            setTileCoordsCoverageCount,
-            setCurrX,
-            setCurrY,
-            setCurrTileSelected
-        });
+            setNotSavedPopup,
+            setDisplayedPopup
+        },
+            {
+                board, tiles,
+                attributeOptionsRemaining, totalNoTileCreatedHistory, solveTime,
+                setSaved,
+                setNoTiles,
+                setPuzzleName,
+                setGridWidth,
+                setGridHeight,
+                setHexRadius,
+                setPuzzleType,
+                setHexagonOrientation,
+                setDateFormat,
+                setRenderBoard,
+                setDayOfMonth,
+                setMonth,
+                setDayOfWeek,
+                setCoordSpecialAttributes,
+                setTileCoordList,
+                setTotalCoordCount,
+                setTileCoordsCoverageCount,
+                setCurrX,
+                setCurrY,
+                setCurrTileSelected
+            });
         // Initialize the board
         if (localConfig.type === 'grid') {
             board.current = new GridBoard(parseInt(localConfig.gridWidth), parseInt(localConfig.gridHeight));

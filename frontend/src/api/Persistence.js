@@ -61,7 +61,7 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName, hex
     // Make the API request
 
     try {
-        await postRequest('/mysql/save', jsonInput);
+        await postRequest('http://localhost:3001/mysql/save', jsonInput);
         return true;
     } catch (err) {
         console.error("Error saving puzzle:", err);
@@ -73,7 +73,7 @@ export async function savePuzzle(listOfTiles, board, puzzleType, puzzleName, hex
 // Gets all the puzzle info
 export async function getAllPuzzleInfo() {
     try {
-        const data = await getRequest('/mysql/getAllPuzzleInfo');
+        const data = await getRequest('http://localhost:3001/mysql/getAllPuzzleInfo');
         return data;
     } catch (err) {
         console.error("Error fetching puzzle info:", err);
@@ -84,7 +84,7 @@ export async function getAllPuzzleInfo() {
 // Gets the specific puzzle by name
 export async function getSpecificPuzzle(puzzleName) {
     try {
-        const data = await getRequest(`/mysql/getSpecificPuzzle/${puzzleName}`);
+        const data = await getRequest(`http://localhost:3001/mysql/getSpecificPuzzle/${puzzleName}`);
         return data;
     } catch (err) {
         console.error("Error fetching specific puzzle:", err);
