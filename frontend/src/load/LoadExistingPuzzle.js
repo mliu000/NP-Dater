@@ -80,7 +80,8 @@ export async function loadExistingPuzzle(pName, displayCxt, puzzleCxt) {
         puzzleCxt.setDateFormat(freshDateFormat);
         puzzleCxt.setTotalCoordCount(
             (puzzleCxt.board.current.gridCoords ? puzzleCxt.board.current.gridCoords.length : puzzleCxt.board.current.hexCoords.length)
-            - freshDateFormat.filter(format => format).length
+            - freshDateFormat.filter(format => format).length 
+            - (puzzleData.board.type === 0 ? puzzleCxt.board.current.gridCoords : puzzleCxt.board.current.hexCoords).filter(c => c.specialAttribute === 'blocked').length
         );
         puzzleCxt.setTileCoordsCoverageCount(
             tileListForState.reduce((acc, tile) => acc + tile.coords.length, 0)
