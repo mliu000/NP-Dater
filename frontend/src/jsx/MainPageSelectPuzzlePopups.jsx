@@ -5,6 +5,7 @@ import GridBoard from '../model/GridBoard';
 import HexBoard from '../model/HexBoard';
 import { getAllPuzzleInfo } from '../api/Persistence';
 import { loadExistingPuzzle, resetContextToDefault } from '../load/LoadExistingPuzzle';
+import { getSpecificPuzzle } from '../api/Persistence';
 
 /*
 Mu Ye Liu - June 2025
@@ -163,6 +164,11 @@ function RenderCreateNewPuzzleMiddleComponent({ localConfig, setLocalConfig }) {
                     Please fill in all fields before proceeding.
                 </p>
             )}
+            {localConfig.userNameTaken && (
+                <p style={{ color: 'red', fontSize: '1.5vw' }}>
+                    This puzzle name is already taken. Please choose a different name.
+                </p>
+            )}
         </div>
     );
 }
@@ -264,8 +270,8 @@ function RenderChooseExistingPuzzlePopup({ setDisplayedPopup }) {
             }
             buttons={[
                 {
-                    label: "Select",
-                    onClick: () => setDisplayedPopup('createNewPuzzle')
+                    label: "Back",
+                    onClick: () => setDisplayedPopup('startup')
                 }
             ]}
             setDisplayedPopup={setDisplayedPopup}
@@ -289,6 +295,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         hexagonOrientation: '',
         dateFormat: [false, false, false],
         invalidInput: false,
+        userNameTaken: false
     });
 
     useEffect(() => {
@@ -307,7 +314,28 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
         }
     }, [localConfig.type]);
 
-    const handleClick = () => {
+    const handleClick = async () => {
+        // Check if the puzzle name is already taken
+        try {
+            const existing = await getSpecificPuzzle(localConfig.name);
+            if (existing) {
+                // 🚫 Name is taken — show error
+                setLocalConfig(prev => ({
+                    ...prev,
+                    userNameTaken: true,
+                    invalidInput: false
+                }));
+                return;
+            }
+        } catch (err) {
+            if (err.message.includes("not found")) {
+                // Proceed if not exists. 
+            } else {
+                console.error("Unexpected error while checking name:", err);
+                return;
+            }
+        }
+
         resetContextToDefault(displayCxt, puzzleCxt);
         // Initialize the board
         if (localConfig.type === 'grid') {
@@ -380,7 +408,7 @@ function RenderCreateNewPuzzlePopup({ setDisplayedPopup }) {
                         const isDateInvalid = localConfig.dateFormat.every(format => !format);
 
                         if (localConfig.name === '' || localConfig.type === '' || isGridInvalid || isHexInvalid || isDateInvalid) {
-                            setLocalConfig(prev => ({ ...prev, invalidInput: true }));
+                            setLocalConfig(prev => ({ ...prev, invalidInput: true, userNameTaken: false }));
                         } else {
                             handleClick();
                         }
