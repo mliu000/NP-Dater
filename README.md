@@ -89,25 +89,25 @@ Performance: Solves typical grid and hex puzzles (the ones shown in images) in a
 
 ## Setup Instructions: 
 
-Make sure you have Node.js and MySQL installed on your computer. 
+Make sure you have ```Node.js``` and ```MySQL``` installed on your computer. 
 
 To setup MySQL, follow the instructions below: 
 
-- Create a database called "np_dater"
-- From the root directory, go the /backend/mysql/MySQL.js, and change the following properties:
-    - port: By default is 3306, but change if your MySQL uses a different port
-    - user: By default is 'root', but change if your usename is different
-    - password: Change to your password.
+- Create a database called ```np_dater```
+- From the root directory, go the ```/backend/mysql/MySQL.js```, and change the following properties:
+    - ```port```: By default is 3306, but change if your MySQL uses a different port
+    - ```user```: By default is 'root', but change if your usename is different
+    - ```password```: Change to your password.
 
 If you are on Windows, you are all set. 
 
-If you are on a mac, you would need to recompile the C++ executable, which is simple. 
+If you are on MacOS, you would need to recompile the C++ executable, which is simple. 
 
-- From the root directory, simply go to /backend/cpp/cpp_runner, and type "make". 
+- From the root directory, simply go to ```/backend/cpp/cpp_runner```, and type ```make```. 
 - This will compile a mac version of the C++ executable. The Express.js will automatically determine the OS you are using.
 
 ### Run the program
 
-- From the root directory, go to just /frontend, and type the following: <strong>npm start</strong>
+- From the root directory, go to just /frontend, and type the following: ```npm start```
 
 
