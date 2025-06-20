@@ -106,4 +106,8 @@ If you are on a mac, you would need to recompile the C++ file, which is simple.
 - From the root directory, simply go to /backend/cpp/cpp_runner, and type "make". 
 - This will compile a mac version of the C++ executable. The Express.js will automatically determine the OS you are using.
 
+### Run the program
+
+- From the root directory, go to just /frontend, and type the following: <strong>npm start</strong>
+
 
