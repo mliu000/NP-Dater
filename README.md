@@ -71,7 +71,7 @@ Hex Puzzle:
 - Solver: C++ with Makefile
 - Server: Express.js that spawns the C++ executable via background process. 
 - Database: MySQL
-- Frontend/UI: Vite + React JS, CSS.
+- Frontend/UI: Vite + React.js, CSS.
 
 #### Solver specific details
 
@@ -89,7 +89,7 @@ Performance: Solves typical grid and hex puzzles (the ones shown in images) in a
 
 ## Setup Instructions: 
 
-Make sure you have ```Node.js``` and ```MySQL``` installed on your computer. 
+Make sure you have ```Node.js``` and ```MySQL``` installed on your computer. If you are on MacOS, you will also need to install ```Make```.
 
 To setup MySQL, follow the instructions below: 
 
