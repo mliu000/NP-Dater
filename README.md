@@ -101,13 +101,13 @@ To setup MySQL, follow the instructions below:
 
 If you are on Windows, you are all set. 
 
-If you are on MacOS, you would need to recompile the C++ executable, which is simple. 
+If you are on MacOS, you will need to recompile the C++ executable, which is done as follows:
 
 - From the root directory, simply go to ```/backend/cpp/cpp_runner```, and type ```make```. 
-- This will compile a mac version of the C++ executable. The Express.js will automatically determine the OS you are using.
+- This will compile a mac version of the C++ executable. The Express.js will automatically determine that you are on MacOS.
 
 ### Run the program
 
-- From the root directory, go to just /frontend, and type the following: ```npm start```
+- From the root directory, go to just ```/frontend```, and type the following: ```npm start```
 
 
