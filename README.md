@@ -2,7 +2,7 @@
 
 ## NP-Complete Date puzzle solver
 
-Tired of being stuck on those pesky (highly combinatorical) date puzzles for hours? <br>
+Tired of being stuck on those pesky (highly combinatorial) date puzzles for hours? <br>
 NP-Dater to the rescue.
 
 #### Table Of Contents (In Order)
