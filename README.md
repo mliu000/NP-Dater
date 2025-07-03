@@ -108,6 +108,6 @@ If you are on MacOS, you will need to recompile the C++ executable, which is don
 
 ### Run the program
 
-- From the root directory, go to just ```/frontend```, and type the following: ```npm start```
+- From the root directory, go to ```/frontend```, and type the following: ```npm start```
 
 
