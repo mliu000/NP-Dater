@@ -79,7 +79,7 @@ export async function solvePuzzle(listOfTiles, board, type, date, solveTime, abo
     const jsonInput = setupJsonString(listOfTiles, board, type, date);
 
     try {
-        const data = await postRequest('http://localhost:3001/solver/solve', jsonInput, abortController);
+        const data = await postRequest('/solver/solve', jsonInput, abortController);
 
         // Populate the solve time and and solution tiles
         solveTime.current = data.timeToSolve;
