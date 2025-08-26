@@ -15,6 +15,8 @@ app.use(express.json());
 app.use("/solver", solverRoute);
 app.use("/mysql", mysqlRoute);
 
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+
 async function initializeDatabase() {
 	try {
 		const initSQL = fs.readFileSync(path.join(__dirname, '..', 'backend/mysql', 'Init.sql'), 'utf-8');
@@ -22,7 +24,7 @@ async function initializeDatabase() {
 		const connection = await mysql.createConnection({
 			host: 'localhost',
 			user: 'root',
-			password: 'sqlparty000', 
+			password: 'Sqlparty@000', 
 			multipleStatements: true
 		});
 
@@ -40,8 +42,8 @@ async function startServer() {
 	try {
 		await initializeDatabase();
 
-		app.listen(PORT, () => {
-			console.log(`Server running at http://localhost:${PORT}`);
+		app.listen(PORT, '0.0.0.0', () => {
+			console.log(`Server running at http://0.0.0.0:${PORT}`);
 		});
 	} catch (err) {
 		console.error('Server startup failed.');
