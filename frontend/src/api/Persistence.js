@@ -94,7 +94,7 @@ export async function getSpecificPuzzle(puzzleName) {
 
 export async function deletePuzzle(puzzleName) {
     try {
-        await deleteRequest(`/mysql/deletePuzzle/${puzzleName}`);
+        await deleteRequest(`/mysql/deletePuzzle/${puzzleName}/${localStorage.getItem("browser-uuid-np-dater-6357")}`);
         return true;
     } catch (err) {
         console.error("Error deleting puzzle:", err);

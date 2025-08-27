@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Tile from '../model/Tile';
-import { useNavigate } from 'react-router-dom';
+import { href, useNavigate } from 'react-router-dom';
 import { calculateGridBounds } from '../model/GridBoard';
 import { calculateHexBounds } from '../model/HexBoard';
 import '../css/FrontPage.css'
@@ -196,21 +196,58 @@ function SetUpMainButtons() {
 // Sets up the slogan below the title
 function SetUpSlogan() {
     return (
-        <h1
-            className="slogan"
-            style={{
-                position: 'absolute',
-                left: '50%',
-                top: '30%',
-                width: '30%',
-                transform: 'translate(-50%)',
-                margin: '0',
-                textAlign: 'center',
-                color: 'var(--header-color)',
-            }}>
-            Tired of spending hours on a date puzzle? NP-Dater to the rescue!
-        </h1>
+            <h1
+                className="slogan"
+                style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '30%',
+                    width: '30%',
+                    transform: 'translate(-50%)',
+                    margin: '0',
+                    textAlign: 'center',
+                    color: 'var(--header-color)',
+                }}>
+                Tired of spending hours on a date puzzle? NP-Dater to the rescue! <br/><br/>
+                By: Mu Ye Liu
+            </h1>
     );
+}
+
+// Sets up the icons for the front page
+function SetUpIcons() {
+
+    const handleGithubClick = () => {
+        window.location.href = "https://github.com/mliu000/NP-Dater";
+    }
+
+    const handleLinkedinClick = () => {
+        window.location.href = "https://www.linkedin.com/in/muyeliu1208/";
+    }
+
+    return (
+        <div style={{
+            position: 'absolute', display: 'flex', justifyContent: 'top', flexDirection: 'column',
+            top: '0%', left: '0%'
+        }}>
+            <div className='top-left-icons' onClick={handleGithubClick}>
+                <img
+                    src='/iconImages/pngegg_github_logo.png'
+                    alt='github_image'
+                    style={{
+                        width: '100%', height: '100%'
+                    }} />
+            </div>
+            <div className='top-left-icons' onClick={handleLinkedinClick}>
+                <img
+                    src='/iconImages/linkedin_npdater.png'
+                    alt='linkedin_image'
+                    style={{
+                        width: '100%', height: '100%'
+                    }} />
+            </div>
+        </div>
+    )
 }
 
 // Create a function that toggles dark mode
@@ -230,6 +267,7 @@ export default function FrontPage() {
             <SetUpBackgroundTiles />
             <SetUpMainButtons />
             <SetUpSlogan />
+            <SetUpIcons />
         </>
     );
 }

@@ -13,13 +13,13 @@ async function savePuzzle(puzzleName, puzzleType, puzzleData, browserUuid) {
 
     try {
         const query = `
-            INSERT INTO Puzzles (puzzle_name, puzzle_type, puzzle_data, browser_uuid)
+            INSERT INTO Puzzles (puzzle_name, browser_uuid, puzzle_type, puzzle_data)
             VALUES (?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 puzzle_type = VALUES(puzzle_type),
                 puzzle_data = VALUES(puzzle_data)`;
 
-        const values = [puzzleName, puzzleType, JSON.stringify(puzzleData), browserUuid];
+        const values = [puzzleName, browserUuid, puzzleType, JSON.stringify(puzzleData)];
 
         await connection.execute(query, values);
     } catch (error) {
@@ -84,15 +84,16 @@ async function getSpecificPuzzle(puzzleName, browserUuid) {
 }
 
 // Deletes the puzzle 
-async function deletePuzzle(puzzleName) {
+async function deletePuzzle(puzzleName, browserUuid) {
     const connection = await mysql.getConnection();
 
     try {
         const query = `
             DELETE FROM Puzzles 
-            WHERE puzzle_name = ?`;
+            WHERE puzzle_name = ?
+            AND browser_uuid = ?`;
 
-        return await connection.execute(query, [puzzleName]);
+        return await connection.execute(query, [puzzleName, browserUuid]);
     } catch (error) {
         console.error("Error deleting puzzle:", error);
         throw error;

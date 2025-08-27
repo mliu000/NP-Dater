@@ -60,15 +60,16 @@ router.get("/getSpecificPuzzle/:puzzleName/:uuid", async (req, res) => {
     }
 });
 
-router.delete("/deletePuzzle/:puzzleName", async (req, res) => {
+router.delete("/deletePuzzle/:puzzleName/:uuid", async (req, res) => {
     const puzzleName = req.params.puzzleName;
+    const uuid = req.params.uuid;
 
     if (!puzzleName) {
         return res.status(400).send("Missing required field: puzzleName");
     }
 
     try {
-        await deletePuzzle(puzzleName);
+        await deletePuzzle(puzzleName, uuid);
         res.status(200).json({ message: "Puzzle deleted successfully" });
     } catch (error) {
         console.error("Error deleting puzzle:", error);

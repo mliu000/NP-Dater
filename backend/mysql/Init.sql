@@ -3,9 +3,10 @@ CREATE DATABASE IF NOT EXISTS np_dater;
 USE np_dater;
 
 CREATE TABLE IF NOT EXISTS Puzzles (
-    puzzle_name VARCHAR(255) PRIMARY KEY,
+    puzzle_name VARCHAR(255),
+    browser_uuid VARCHAR(36),
     puzzle_type INT NOT NULL, -- 0 for grid, 1 for hex. 
     puzzle_data JSON NOT NULL,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    browser_uuid VARCHAR(36) NOT NULL
+    PRIMARY KEY (puzzle_name, browser_uuid)
 );

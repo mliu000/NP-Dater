@@ -49,6 +49,19 @@
     transform: scale(1.05);
 }
 
+.top-left-icons {
+    width: 4vw;
+    aspect-ratio: 1;
+    border: 0.15vw solid white;
+    background-color: var(--box-shadow-color);
+    border-radius: 0.5vw;
+    cursor: pointer;
+}
+
+.top-left-icons:hover {
+    background-color: var(--text-color);
+}
+
 /* ///// KEYFRAMES ///// */
 
 /* Keyframes for infinite rotation clockwise */
