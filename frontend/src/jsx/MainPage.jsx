@@ -558,6 +558,7 @@ function RenderCoordsCount() {
 
 // Render main page
 function RenderMainPage() {
+
     return (
         <>
             <RenderMainPageLeftSideTileList />
@@ -590,6 +591,11 @@ export default function MainPage() {
     useEffect(() => {
         // Set the page title
         document.title = 'NP-Dater - Main Page';
+
+        // Set the uuid if it doesn't exist yet.
+        if (!localStorage.getItem("browser-uuid-np-dater-6357")) {
+            localStorage.setItem("browser-uuid-np-dater-6357", crypto.randomUUID());
+        }
     }, []);
 
     return (

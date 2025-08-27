@@ -7,19 +7,19 @@ Represents the MySQLService for handling MySQL database operations
 */
 
 // Saves the puzzle to the MySQL database
-async function savePuzzle(puzzleName, puzzleType, puzzleData) {
+async function savePuzzle(puzzleName, puzzleType, puzzleData, browserUuid) {
 
     const connection = await mysql.getConnection();
 
     try {
         const query = `
-            INSERT INTO Puzzles (puzzle_name, puzzle_type, puzzle_data)
-            VALUES (?, ?, ?)
+            INSERT INTO Puzzles (puzzle_name, puzzle_type, puzzle_data, browser_uuid)
+            VALUES (?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 puzzle_type = VALUES(puzzle_type),
                 puzzle_data = VALUES(puzzle_data)`;
 
-        const values = [puzzleName, puzzleType, JSON.stringify(puzzleData)];
+        const values = [puzzleName, puzzleType, JSON.stringify(puzzleData), browserUuid];
 
         await connection.execute(query, values);
     } catch (error) {
@@ -30,16 +30,17 @@ async function savePuzzle(puzzleName, puzzleType, puzzleData) {
     }
 }
 
-async function getAllPuzzleInfo() {
+async function getAllPuzzleInfo(browserUuid) {
     const connection = await mysql.getConnection();
 
     try {
         const query = `
             SELECT puzzle_name, puzzle_type, DATE_FORMAT(date_created, '%Y-%m-%d') AS date_created
             FROM Puzzles 
+            WHERE browser_uuid = ?
             ORDER BY date_created DESC`;
 
-        const [rows] = await connection.execute(query);
+        const [rows] = await connection.execute(query, [browserUuid]);
         return rows.map(row => ({
             puzzleName: row.puzzle_name,
             puzzleType: row.puzzle_type,
@@ -54,16 +55,17 @@ async function getAllPuzzleInfo() {
     }
 }
 
-async function getSpecificPuzzle(puzzleName) {
+async function getSpecificPuzzle(puzzleName, browserUuid) {
     const connection = await mysql.getConnection();
 
     try {
         const query = `
             SELECT puzzle_name, puzzle_data
             FROM Puzzles 
-            WHERE puzzle_name = ?`;
+            WHERE puzzle_name = ?
+            AND browser_uuid = ?`;
 
-        const [rows] = await connection.execute(query, [puzzleName]);
+        const [rows] = await connection.execute(query, [puzzleName, browserUuid]);
 
         if (rows.length === 0) {
             throw new Error(`Puzzle with name ${puzzleName} not found`);

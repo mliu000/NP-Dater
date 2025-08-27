@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS Puzzles (
     puzzle_name VARCHAR(255) PRIMARY KEY,
     puzzle_type INT NOT NULL, -- 0 for grid, 1 for hex. 
     puzzle_data JSON NOT NULL,
-    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    browser_uuid VARCHAR(36) NOT NULL
 );

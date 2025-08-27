@@ -4,6 +4,7 @@ import MainPage from './MainPage';
 import InstructionsPage from './InstructionsPage';
 
 export default function Pages() {
+
     return (
         <BrowserRouter>
             <Routes>

@@ -8,15 +8,16 @@ Mu Ye Liu - June 2025
 Represents the MySQLController for handling MySQL database operations
 */
 
-router.post("/save", async (req, res) => {
+router.post("/save/:uuid", async (req, res) => {
     const { pname, ptype, pjson } = req.body;
+    const uuid = req.params.uuid;
 
     if (!pname || ptype === undefined || !pjson) {
         return res.status(400).send("Missing required fields: pname, ptype, or pjson");
     }
 
     try {
-        await savePuzzle(pname, ptype, pjson);
+        await savePuzzle(pname, ptype, pjson, uuid);
 
         res.status(200).json({ message: "Puzzle saved successfully" });
     } catch (error) {
@@ -26,9 +27,12 @@ router.post("/save", async (req, res) => {
 
 });
 
-router.get("/getAllPuzzleInfo", async (req, res) => {
+router.get("/getAllPuzzleInfo/:uuid", async (req, res) => {
+
+    const uuid = req.params.uuid;
+
     try {
-        const puzzles = await getAllPuzzleInfo();
+        const puzzles = await getAllPuzzleInfo(uuid);
         res.status(200).json(puzzles);
     } catch (error) {
         console.error("Error fetching all puzzle info:", error);
@@ -36,15 +40,16 @@ router.get("/getAllPuzzleInfo", async (req, res) => {
     }
 });
 
-router.get("/getSpecificPuzzle/:puzzleName", async (req, res) => {
+router.get("/getSpecificPuzzle/:puzzleName/:uuid", async (req, res) => {
     const puzzleName = req.params.puzzleName;
+    const uuid = req.params.uuid;
 
     if (!puzzleName) {
         return res.status(400).send("Missing required field: puzzleName");
     }
 
     try {
-        const puzzle = await getSpecificPuzzle(puzzleName);
+        const puzzle = await getSpecificPuzzle(puzzleName, uuid);
         if (!puzzle) {
             return res.status(404).json({ error: "Puzzle not found" });
         }
