@@ -7,11 +7,18 @@ NP-Dater to the rescue.
 
 #### Table Of Contents (In Order)
 
+- Link
 - Project Showcase
 - Technical Details
-- Setup Instructions. 
+- Setup Instructions (If you want to run locally)
 
 <img src="frontend/images/readmeImages/ReadmeBeginning.png" alt="Gameplay Screenshot" width="200"/>
+
+## Link: 
+
+[🔗 npdater.ca](https://npdater.ca/front-page)
+
+*\* Note: When running project on cloud, the VCPU will throttle since it is using a t3.micro on AWS. So, if you want to bring out the best performance, clone project and run locally.*
 
 ## Project Showcase:
 
@@ -72,6 +79,7 @@ Hex Puzzle:
 - Server: Express.js that spawns the C++ executable via background process. 
 - Database: MySQL
 - Frontend/UI: Vite + React.js, CSS.
+- Cloud: AWS EC2 with Nginx and PM2.
 
 #### Solver specific details
 
@@ -87,7 +95,7 @@ down on the searching required.
 
 Performance: Solves typical grid and hex puzzles (the ones shown in images) in around 1 and 4 seconds respectively on average.
 
-## Setup Instructions: 
+## Setup Instructions (If you want to run locally): 
 
 Make sure you have ```Node.js``` and ```MySQL``` installed on your computer. If you are on MacOS, you will also need to install ```Make```.
 
